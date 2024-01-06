@@ -8,12 +8,12 @@
   <div id="yasgui"></div>
   <script>
     const yasgui = new Yasgui(document.getElementById("yasgui"), {
-      requestConfig: { endpoint: "/ldsparql" },
+      requestConfig: { endpoint: "/ldsparql/ldsparql" },
       yasqe: {
         value: `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT *
-FROM <https://lod.humanatlas.io>
+FROM <https://cdn.humanatlas.io/digital-objects/catalog.ttl>
 WHERE {
   ?sub ?pred ?obj .
 } LIMIT 10
