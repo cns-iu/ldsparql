@@ -1,7 +1,7 @@
 import { ldsparql } from '../library/ldsparql.js';
 
 function routes(app) {
-  return app.post('/ldsparql', async function (req, res) {
+  return app.post('/api/ld/sparql', async function (req, res) {
     const query = (await req.formData()).get('query');
     /** Content Negotiation */
     let mediaType = 'application/sparql-results+json';

@@ -1,7 +1,7 @@
 if ('serviceWorker' in navigator) {
   const scope = location.pathname.replace(/\/[^\/]+$/, '/');
   if (navigator.serviceWorker.controller === null) {
-    //location.reload();
+    location.reload();
   }
   navigator.serviceWorker
     .register('sw.js', { scope, type: 'module' })

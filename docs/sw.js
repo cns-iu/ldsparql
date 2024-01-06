@@ -70363,7 +70363,7 @@ async function ldsparql(query, mimetype) {
 
 // src/service-worker/ldsparql.js
 function routes(app2) {
-  return app2.post("/ldsparql", async function(req, res) {
+  return app2.post("/api/ld/sparql", async function(req, res) {
     const query = (await req.formData()).get("query");
     let mediaType = "application/sparql-results+json";
     const results = await ldsparql(query, mediaType);
