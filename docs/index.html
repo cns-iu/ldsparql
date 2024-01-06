@@ -1,0 +1,23 @@
+<head>
+  <link href="https://unpkg.com/@triply/yasgui/build/yasgui.min.css" rel="stylesheet" type="text/css" />
+  <script src="https://unpkg.com/@triply/yasgui/build/yasgui.min.js"></script>
+  <script src="sw-loader.js"></script>
+</head>
+
+<body>
+  <div id="yasgui"></div>
+  <script>
+    const yasgui = new Yasgui(document.getElementById("yasgui"), {
+      requestConfig: { endpoint: "/ldsparql" },
+      yasqe: {
+        value: `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT *
+FROM <https://lod.humanatlas.io>
+WHERE {
+  ?sub ?pred ?obj .
+} LIMIT 10
+` }
+    });
+  </script>
+</body>

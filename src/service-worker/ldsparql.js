@@ -1,0 +1,14 @@
+import { ldsparql } from '../library/ldsparql.js';
+
+function routes(app) {
+  return app.post('/ldsparql', async function (req, res) {
+    const query = (await req.formData()).get('query');
+    /** Content Negotiation */
+    let mediaType = 'application/sparql-results+json';
+
+    const results = await ldsparql(query, mediaType);
+    res.json(results);
+  });
+}
+
+export default routes;
