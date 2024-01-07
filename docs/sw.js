@@ -78298,7 +78298,7 @@ async function addToStore(url, store) {
     }
   } else if (parsers2.has(type)) {
     const body = patchResponse_browser_default(res).body;
-    const stream = parsers2.import(type, body, { baseIRI: url });
+    const stream = parsers2.import(type, body, { baseIRI: url, factory: store.factory });
     for await (const quad of stream) {
       quad.graph = graph;
       store.add(quad);
