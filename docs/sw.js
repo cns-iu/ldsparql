@@ -209,8 +209,8 @@ var require_lib = __commonJS({
 // node_modules/immutable/dist/immutable.js
 var require_immutable = __commonJS({
   "node_modules/immutable/dist/immutable.js"(exports, module) {
-    (function(global2, factory3) {
-      typeof exports === "object" && typeof module !== "undefined" ? factory3(exports) : typeof define === "function" && define.amd ? define(["exports"], factory3) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory3(global2.Immutable = {}));
+    (function(global2, factory2) {
+      typeof exports === "object" && typeof module !== "undefined" ? factory2(exports) : typeof define === "function" && define.amd ? define(["exports"], factory2) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory2(global2.Immutable = {}));
     })(exports, function(exports2) {
       "use strict";
       var DELETE = "delete";
@@ -9235,7 +9235,7 @@ var require_SparqlGenerator = __commonJS({
       var prefixIris = [];
       for (var prefix in prefixes) {
         var iri = prefixes[prefix];
-        if (isString2(iri)) {
+        if (isString(iri)) {
           this._prefixByIri[iri] = prefix;
           prefixIris.push(iri);
         }
@@ -9244,8 +9244,8 @@ var require_SparqlGenerator = __commonJS({
       this._prefixRegex = new RegExp("^(" + iriList + ")([a-zA-Z][\\-_a-zA-Z0-9]*)$");
       this._usedPrefixes = {};
       this._sparqlStar = options.sparqlStar;
-      this._indent = isString2(options.indent) ? options.indent : "  ";
-      this._newline = isString2(options.newline) ? options.newline : "\n";
+      this._indent = isString(options.indent) ? options.indent : "  ";
+      this._newline = isString(options.newline) ? options.newline : "\n";
       this._explicitDatatype = Boolean(options.explicitDatatype);
     }
     Generator.prototype.toQuery = function(q) {
@@ -9424,7 +9424,7 @@ var require_SparqlGenerator = __commonJS({
             case "notin":
               operator = "NOT IN";
             case "in":
-              return this.toExpression(args[0]) + " " + operator + "(" + (isString2(args[1]) ? args[1] : mapJoin(args[1], ", ", this.toExpression, this)) + ")";
+              return this.toExpression(args[0]) + " " + operator + "(" + (isString(args[1]) ? args[1] : mapJoin(args[1], ", ", this.toExpression, this)) + ")";
             case "notexists":
               operator = "NOT EXISTS";
             case "exists":
@@ -9541,7 +9541,7 @@ var require_SparqlGenerator = __commonJS({
     function variableToString(variable) {
       return "?" + variable.value;
     }
-    function isString2(object) {
+    function isString(object) {
       return typeof object === "string";
     }
     function isTerm(object) {
@@ -9567,7 +9567,7 @@ var require_SparqlGenerator = __commonJS({
       }
     }
     function mapJoin(array, sep, func, self2) {
-      return array.map(func, self2).join(isString2(sep) ? sep : " ");
+      return array.map(func, self2).join(isString(sep) ? sep : " ");
     }
     module.exports = function SparqlGenerator(options = {}) {
       return {
@@ -9603,7 +9603,7 @@ var require_sparql = __commonJS({
        *   skipUngroupedVariableCheck?: boolean
        * }
        */
-      Parser: function({ prefixes, baseIRI, factory: factory3, sparqlStar, skipValidation, skipUngroupedVariableCheck, pathOnly } = {}) {
+      Parser: function({ prefixes, baseIRI, factory: factory2, sparqlStar, skipValidation, skipUngroupedVariableCheck, pathOnly } = {}) {
         var prefixesCopy = {};
         for (var prefix in prefixes || {})
           prefixesCopy[prefix] = prefixes[prefix];
@@ -9611,7 +9611,7 @@ var require_sparql = __commonJS({
         parser.parse = function() {
           Parser4.base = baseIRI || "";
           Parser4.prefixes = Object.create(prefixesCopy);
-          Parser4.factory = factory3 || new DataFactory3();
+          Parser4.factory = factory2 || new DataFactory3();
           Parser4.sparqlStar = Boolean(sparqlStar);
           Parser4.pathOnly = Boolean(pathOnly);
           Parser4.skipValidation = Boolean(skipValidation) || Boolean(skipUngroupedVariableCheck);
@@ -9667,7 +9667,7 @@ var require_factory = __commonJS({
     var rdf_data_factory_1 = require_rdf_data_factory();
     var rdf_string_1 = require_rdf_string();
     var sparqljs_1 = require_sparql();
-    var Factory2 = class {
+    var Factory = class {
       constructor(dataFactory) {
         this.dataFactory = dataFactory || new rdf_data_factory_1.DataFactory();
         this.stringType = this.createTerm("http://www.w3.org/2001/XMLSchema#string");
@@ -9863,7 +9863,7 @@ var require_factory = __commonJS({
         return input;
       }
     };
-    exports.default = Factory2;
+    exports.default = Factory;
   }
 });
 
@@ -10163,14 +10163,14 @@ var require_util = __commonJS({
        * @param {Factory} factory - Factory used to create new Operations. Will use default factory if none is provided.
        * @returns {Operation} - The copied result.
        */
-      static mapOperation(op, callbacks, factory3) {
+      static mapOperation(op, callbacks, factory2) {
         let result = op;
         let doRecursion = true;
         let copyMetadata = true;
-        factory3 = factory3 || new factory_1.default();
+        factory2 = factory2 || new factory_1.default();
         const callback = callbacks[op.type];
         if (callback) {
-          const recurseResult = callback(op, factory3);
+          const recurseResult = callback(op, factory2);
           result = recurseResult.result;
           doRecursion = recurseResult.recurse;
           copyMetadata = recurseResult.copyMetadata !== false;
@@ -10185,130 +10185,130 @@ var require_util = __commonJS({
           }
           return result;
         }
-        let mapOp = (op2) => _Util.mapOperation(op2, callbacks, factory3);
+        let mapOp = (op2) => _Util.mapOperation(op2, callbacks, factory2);
         switch (result.type) {
           case algebra_1.types.ALT:
-            result = factory3.createAlt(result.input.map(mapOp));
+            result = factory2.createAlt(result.input.map(mapOp));
             break;
           case algebra_1.types.ASK:
-            result = factory3.createAsk(mapOp(result.input));
+            result = factory2.createAsk(mapOp(result.input));
             break;
           case algebra_1.types.BGP:
-            result = factory3.createBgp(result.patterns.map(mapOp));
+            result = factory2.createBgp(result.patterns.map(mapOp));
             break;
           case algebra_1.types.CONSTRUCT:
-            result = factory3.createConstruct(mapOp(result.input), result.template.map(mapOp));
+            result = factory2.createConstruct(mapOp(result.input), result.template.map(mapOp));
             break;
           case algebra_1.types.DESCRIBE:
-            result = factory3.createDescribe(mapOp(result.input), result.terms);
+            result = factory2.createDescribe(mapOp(result.input), result.terms);
             break;
           case algebra_1.types.DISTINCT:
-            result = factory3.createDistinct(mapOp(result.input));
+            result = factory2.createDistinct(mapOp(result.input));
             break;
           case algebra_1.types.EXPRESSION:
-            result = _Util.mapExpression(result, callbacks, factory3);
+            result = _Util.mapExpression(result, callbacks, factory2);
             break;
           case algebra_1.types.EXTEND:
-            result = factory3.createExtend(mapOp(result.input), result.variable, mapOp(result.expression));
+            result = factory2.createExtend(mapOp(result.input), result.variable, mapOp(result.expression));
             break;
           case algebra_1.types.FILTER:
-            result = factory3.createFilter(mapOp(result.input), mapOp(result.expression));
+            result = factory2.createFilter(mapOp(result.input), mapOp(result.expression));
             break;
           case algebra_1.types.FROM:
-            result = factory3.createFrom(mapOp(result.input), [...result.default], [...result.named]);
+            result = factory2.createFrom(mapOp(result.input), [...result.default], [...result.named]);
             break;
           case algebra_1.types.GRAPH:
-            result = factory3.createGraph(mapOp(result.input), result.name);
+            result = factory2.createGraph(mapOp(result.input), result.name);
             break;
           case algebra_1.types.GROUP:
-            result = factory3.createGroup(mapOp(result.input), [].concat(result.variables), result.aggregates.map(mapOp));
+            result = factory2.createGroup(mapOp(result.input), [].concat(result.variables), result.aggregates.map(mapOp));
             break;
           case algebra_1.types.INV:
-            result = factory3.createInv(mapOp(result.path));
+            result = factory2.createInv(mapOp(result.path));
             break;
           case algebra_1.types.JOIN:
-            result = factory3.createJoin(result.input.map(mapOp));
+            result = factory2.createJoin(result.input.map(mapOp));
             break;
           case algebra_1.types.LEFT_JOIN:
-            result = factory3.createLeftJoin(mapOp(result.input[0]), mapOp(result.input[1]), result.expression ? mapOp(result.expression) : void 0);
+            result = factory2.createLeftJoin(mapOp(result.input[0]), mapOp(result.input[1]), result.expression ? mapOp(result.expression) : void 0);
             break;
           case algebra_1.types.LINK:
-            result = factory3.createLink(result.iri);
+            result = factory2.createLink(result.iri);
             break;
           case algebra_1.types.MINUS:
-            result = factory3.createMinus(mapOp(result.input[0]), mapOp(result.input[1]));
+            result = factory2.createMinus(mapOp(result.input[0]), mapOp(result.input[1]));
             break;
           case algebra_1.types.NOP:
-            result = factory3.createNop();
+            result = factory2.createNop();
             break;
           case algebra_1.types.NPS:
-            result = factory3.createNps([].concat(result.iris));
+            result = factory2.createNps([].concat(result.iris));
             break;
           case algebra_1.types.ONE_OR_MORE_PATH:
-            result = factory3.createOneOrMorePath(mapOp(result.path));
+            result = factory2.createOneOrMorePath(mapOp(result.path));
             break;
           case algebra_1.types.ORDER_BY:
-            result = factory3.createOrderBy(mapOp(result.input), result.expressions.map(mapOp));
+            result = factory2.createOrderBy(mapOp(result.input), result.expressions.map(mapOp));
             break;
           case algebra_1.types.PATH:
-            result = factory3.createPath(result.subject, mapOp(result.predicate), result.object, result.graph);
+            result = factory2.createPath(result.subject, mapOp(result.predicate), result.object, result.graph);
             break;
           case algebra_1.types.PATTERN:
-            result = factory3.createPattern(result.subject, result.predicate, result.object, result.graph);
+            result = factory2.createPattern(result.subject, result.predicate, result.object, result.graph);
             break;
           case algebra_1.types.PROJECT:
-            result = factory3.createProject(mapOp(result.input), [...result.variables]);
+            result = factory2.createProject(mapOp(result.input), [...result.variables]);
             break;
           case algebra_1.types.REDUCED:
-            result = factory3.createReduced(mapOp(result.input));
+            result = factory2.createReduced(mapOp(result.input));
             break;
           case algebra_1.types.SEQ:
-            result = factory3.createSeq(result.input.map(mapOp));
+            result = factory2.createSeq(result.input.map(mapOp));
             break;
           case algebra_1.types.SERVICE:
-            result = factory3.createService(mapOp(result.input), result.name, result.silent);
+            result = factory2.createService(mapOp(result.input), result.name, result.silent);
             break;
           case algebra_1.types.SLICE:
-            result = factory3.createSlice(mapOp(result.input), result.start, result.length);
+            result = factory2.createSlice(mapOp(result.input), result.start, result.length);
             break;
           case algebra_1.types.UNION:
-            result = factory3.createUnion(result.input.map(mapOp));
+            result = factory2.createUnion(result.input.map(mapOp));
             break;
           case algebra_1.types.VALUES:
-            result = factory3.createValues([].concat(result.variables), result.bindings.map((b) => Object.assign({}, b)));
+            result = factory2.createValues([].concat(result.variables), result.bindings.map((b) => Object.assign({}, b)));
             break;
           case algebra_1.types.ZERO_OR_MORE_PATH:
-            result = factory3.createZeroOrMorePath(mapOp(result.path));
+            result = factory2.createZeroOrMorePath(mapOp(result.path));
             break;
           case algebra_1.types.ZERO_OR_ONE_PATH:
-            result = factory3.createZeroOrOnePath(mapOp(result.path));
+            result = factory2.createZeroOrOnePath(mapOp(result.path));
             break;
           case algebra_1.types.COMPOSITE_UPDATE:
-            result = factory3.createCompositeUpdate(result.updates.map(mapOp));
+            result = factory2.createCompositeUpdate(result.updates.map(mapOp));
             break;
           case algebra_1.types.DELETE_INSERT:
-            result = factory3.createDeleteInsert(result.delete ? result.delete.map(mapOp) : void 0, result.insert ? result.insert.map(mapOp) : void 0, result.where ? mapOp(result.where) : void 0);
+            result = factory2.createDeleteInsert(result.delete ? result.delete.map(mapOp) : void 0, result.insert ? result.insert.map(mapOp) : void 0, result.where ? mapOp(result.where) : void 0);
             break;
           case algebra_1.types.LOAD:
-            result = factory3.createLoad(result.source, result.destination, result.silent);
+            result = factory2.createLoad(result.source, result.destination, result.silent);
             break;
           case algebra_1.types.CLEAR:
-            result = factory3.createClear(result.source, result.silent);
+            result = factory2.createClear(result.source, result.silent);
             break;
           case algebra_1.types.CREATE:
-            result = factory3.createCreate(result.source, result.silent);
+            result = factory2.createCreate(result.source, result.silent);
             break;
           case algebra_1.types.DROP:
-            result = factory3.createDrop(result.source, result.silent);
+            result = factory2.createDrop(result.source, result.silent);
             break;
           case algebra_1.types.ADD:
-            result = factory3.createAdd(result.source, result.destination);
+            result = factory2.createAdd(result.source, result.destination);
             break;
           case algebra_1.types.MOVE:
-            result = factory3.createMove(result.source, result.destination);
+            result = factory2.createMove(result.source, result.destination);
             break;
           case algebra_1.types.COPY:
-            result = factory3.createCopy(result.source, result.destination);
+            result = factory2.createCopy(result.source, result.destination);
             break;
           default:
             throw new Error(`Unknown Operation type ${result.type}`);
@@ -10327,32 +10327,32 @@ var require_util = __commonJS({
        * @param {Factory} factory - Factory used to create new Operations. Will use default factory if none is provided.
        * @returns {Operation} - The copied result.
        */
-      static mapExpression(expr, callbacks, factory3) {
+      static mapExpression(expr, callbacks, factory2) {
         let result = expr;
         let doRecursion = true;
-        factory3 = factory3 || new factory_1.default();
+        factory2 = factory2 || new factory_1.default();
         const callback = callbacks[expr.expressionType];
         if (callback)
-          ({ result, recurse: doRecursion } = callback(expr, factory3));
+          ({ result, recurse: doRecursion } = callback(expr, factory2));
         if (!doRecursion)
           return result;
-        let mapOp = (op) => _Util.mapOperation(op, callbacks, factory3);
+        let mapOp = (op) => _Util.mapOperation(op, callbacks, factory2);
         switch (expr.expressionType) {
           case algebra_1.expressionTypes.AGGREGATE:
             if (expr.variable) {
-              return factory3.createBoundAggregate(expr.variable, expr.aggregator, mapOp(expr.expression), expr.distinct, expr.separator);
+              return factory2.createBoundAggregate(expr.variable, expr.aggregator, mapOp(expr.expression), expr.distinct, expr.separator);
             }
-            return factory3.createAggregateExpression(expr.aggregator, mapOp(expr.expression), expr.distinct, expr.separator);
+            return factory2.createAggregateExpression(expr.aggregator, mapOp(expr.expression), expr.distinct, expr.separator);
           case algebra_1.expressionTypes.EXISTENCE:
-            return factory3.createExistenceExpression(expr.not, mapOp(expr.input));
+            return factory2.createExistenceExpression(expr.not, mapOp(expr.input));
           case algebra_1.expressionTypes.NAMED:
-            return factory3.createNamedExpression(expr.name, expr.args.map(mapOp));
+            return factory2.createNamedExpression(expr.name, expr.args.map(mapOp));
           case algebra_1.expressionTypes.OPERATOR:
-            return factory3.createOperatorExpression(expr.operator, expr.args.map(mapOp));
+            return factory2.createOperatorExpression(expr.operator, expr.args.map(mapOp));
           case algebra_1.expressionTypes.TERM:
-            return factory3.createTermExpression(expr.term);
+            return factory2.createTermExpression(expr.term);
           case algebra_1.expressionTypes.WILDCARD:
-            return factory3.createWildcardExpression();
+            return factory2.createWildcardExpression();
           default:
             throw new Error(`Unknown Expression type ${expr.expressionType}`);
         }
@@ -10451,12 +10451,12 @@ var require_sparqlAlgebra = __commonJS({
     var variables = /* @__PURE__ */ new Set();
     var varCount = 0;
     var useQuads = false;
-    var factory3;
+    var factory2;
     function translate(sparql, options) {
       options = options || {};
-      factory3 = new factory_1.default(options.dataFactory);
+      factory2 = new factory_1.default(options.dataFactory);
       let query;
-      if (isString2(sparql)) {
+      if (isString(sparql)) {
         let parser = new Parser4(options);
         parser._resetBlanks();
         query = parser.parse(sparql);
@@ -10471,7 +10471,7 @@ var require_sparqlAlgebra = __commonJS({
       varCount = 0;
       useQuads = Boolean(quads);
       if (!sparql.type)
-        return factory3.createNop();
+        return factory2.createNop();
       if (sparql.type !== "query" && sparql.type !== "update")
         throw new Error("Translate only works on complete query or update objects.");
       let res;
@@ -10488,7 +10488,7 @@ var require_sparqlAlgebra = __commonJS({
       }
       return res;
     }
-    function isString2(str) {
+    function isString(str) {
       return typeof str === "string";
     }
     function isTerm(term) {
@@ -10543,7 +10543,7 @@ var require_sparqlAlgebra = __commonJS({
         Object.assign(inScope, inScopeVariables(thingy.variable));
       } else if (thingy.type === "values") {
         if (thingy.values.length > 0) {
-          const vars = Object.keys(thingy.values[0]).map((v) => factory3.createTerm(v));
+          const vars = Object.keys(thingy.values[0]).map((v) => factory2.createTerm(v));
           Object.assign(inScope, ...vars.map(inScopeVariables));
         }
       } else if (thingy.type === "query") {
@@ -10582,7 +10582,7 @@ var require_sparqlAlgebra = __commonJS({
         return translateBgp(thingy);
       let result;
       if (thingy.type === "union")
-        result = factory3.createUnion(nonfilters.map((p) => {
+        result = factory2.createUnion(nonfilters.map((p) => {
           if (p.type !== "group")
             p = { type: "group", patterns: [p] };
           return translateGroupGraphPattern(p);
@@ -10590,7 +10590,7 @@ var require_sparqlAlgebra = __commonJS({
       else if (thingy.type === "graph")
         return translateGraph(thingy);
       else if (thingy.type === "group")
-        result = nonfilters.reduce(accumulateGroupGraphPattern, factory3.createBgp([]));
+        result = nonfilters.reduce(accumulateGroupGraphPattern, factory2.createBgp([]));
       else if (thingy.type === "values")
         result = translateInlineData(thingy);
       else if (thingy.type === "query")
@@ -10600,35 +10600,35 @@ var require_sparqlAlgebra = __commonJS({
       if (filters.length > 0) {
         let expressions = filters.map((filter) => translateExpression(filter.expression));
         if (expressions.length > 0)
-          result = factory3.createFilter(result, expressions.reduce((acc, exp) => factory3.createOperatorExpression("&&", [acc, exp])));
+          result = factory2.createFilter(result, expressions.reduce((acc, exp) => factory2.createOperatorExpression("&&", [acc, exp])));
       }
       return result;
     }
     function translateExpression(exp) {
       if (util_1.default.isSimpleTerm(exp))
-        return factory3.createTermExpression(exp);
+        return factory2.createTermExpression(exp);
       if (util_1.default.isQuad(exp)) {
         if (util_1.default.hasQuadVariables(exp))
-          return factory3.createOperatorExpression("triple", [
+          return factory2.createOperatorExpression("triple", [
             translateExpression(exp.subject),
             translateExpression(exp.predicate),
             translateExpression(exp.object)
           ]);
         else
-          return factory3.createTermExpression(exp);
+          return factory2.createTermExpression(exp);
       }
       if (util_1.default.isWildcard(exp))
-        return factory3.createWildcardExpression();
+        return factory2.createWildcardExpression();
       if ("aggregation" in exp)
-        return factory3.createAggregateExpression(exp.aggregation, translateExpression(exp.expression), Boolean(exp.distinct), exp.separator);
+        return factory2.createAggregateExpression(exp.aggregation, translateExpression(exp.expression), Boolean(exp.distinct), exp.separator);
       if ("function" in exp)
-        return factory3.createNamedExpression(exp.function, exp.args.map(translateExpression));
+        return factory2.createNamedExpression(exp.function, exp.args.map(translateExpression));
       if ("operator" in exp) {
         if (exp.operator === "exists" || exp.operator === "notexists")
-          return factory3.createExistenceExpression(exp.operator === "notexists", translateGroupGraphPattern(exp.args[0]));
+          return factory2.createExistenceExpression(exp.operator === "notexists", translateGroupGraphPattern(exp.args[0]));
         if (exp.operator === "in" || exp.operator === "notin")
           exp.args = [exp.args[0]].concat(exp.args[1]);
-        return factory3.createOperatorExpression(exp.operator, exp.args.map(translateExpression));
+        return factory2.createOperatorExpression(exp.operator, exp.args.map(translateExpression));
       }
       throw new Error(`Unknown expression: ${JSON.stringify(exp)}`);
     }
@@ -10641,7 +10641,7 @@ var require_sparqlAlgebra = __commonJS({
           for (let p of path) {
             if (p.type === types.PATH) {
               if (patterns.length > 0)
-                joins.push(factory3.createBgp(patterns));
+                joins.push(factory2.createBgp(patterns));
               patterns = [];
               joins.push(p);
             } else
@@ -10651,10 +10651,10 @@ var require_sparqlAlgebra = __commonJS({
           patterns.push(translateQuad(t));
       }
       if (patterns.length > 0)
-        joins.push(factory3.createBgp(patterns));
+        joins.push(factory2.createBgp(patterns));
       if (joins.length === 1)
         return joins[0];
-      return factory3.createJoin(joins);
+      return factory2.createJoin(joins);
     }
     function translatePath(triple) {
       let sub = triple.subject;
@@ -10665,12 +10665,12 @@ var require_sparqlAlgebra = __commonJS({
     function translatePathPredicate(predicate) {
       if (util_1.default.isSimpleTerm(predicate)) {
         if (predicate.termType === "NamedNode")
-          return factory3.createLink(predicate);
+          return factory2.createLink(predicate);
         else
           throw new Error(`Path predicate should be a NamedNode, got ${JSON.stringify(predicate)}`);
       }
       if (predicate.pathType === "^")
-        return factory3.createInv(translatePathPredicate(predicate.items[0]));
+        return factory2.createInv(translatePathPredicate(predicate.items[0]));
       if (predicate.pathType === "!") {
         let normals = [];
         let inverted = [];
@@ -10687,29 +10687,29 @@ var require_sparqlAlgebra = __commonJS({
           else
             throw new Error(`Unexpected item: ${JSON.stringify(item)}`);
         }
-        let normalElement = factory3.createNps(normals);
-        let invertedElement = factory3.createInv(factory3.createNps(inverted));
+        let normalElement = factory2.createNps(normals);
+        let invertedElement = factory2.createInv(factory2.createNps(inverted));
         if (inverted.length === 0)
           return normalElement;
         if (normals.length === 0)
           return invertedElement;
-        return factory3.createAlt([normalElement, invertedElement]);
+        return factory2.createAlt([normalElement, invertedElement]);
       }
       if (predicate.pathType === "/")
-        return factory3.createSeq(predicate.items.map(translatePathPredicate));
+        return factory2.createSeq(predicate.items.map(translatePathPredicate));
       if (predicate.pathType === "|")
-        return factory3.createAlt(predicate.items.map(translatePathPredicate));
+        return factory2.createAlt(predicate.items.map(translatePathPredicate));
       if (predicate.pathType === "*")
-        return factory3.createZeroOrMorePath(translatePathPredicate(predicate.items[0]));
+        return factory2.createZeroOrMorePath(translatePathPredicate(predicate.items[0]));
       if (predicate.pathType === "+")
-        return factory3.createOneOrMorePath(translatePathPredicate(predicate.items[0]));
+        return factory2.createOneOrMorePath(translatePathPredicate(predicate.items[0]));
       if (predicate.pathType === "?")
-        return factory3.createZeroOrOnePath(translatePathPredicate(predicate.items[0]));
+        return factory2.createZeroOrOnePath(translatePathPredicate(predicate.items[0]));
       throw new Error(`Unable to translate path expression ${JSON.stringify(predicate)}`);
     }
     function simplifyPath(subject, predicate, object) {
       if (predicate.type === types.LINK)
-        return [factory3.createPattern(subject, predicate.iri, object)];
+        return [factory2.createPattern(subject, predicate.iri, object)];
       if (predicate.type === types.INV)
         return simplifyPath(object, predicate.path, subject);
       if (predicate.type === types.SEQ) {
@@ -10723,20 +10723,20 @@ var require_sparqlAlgebra = __commonJS({
           return simplifiedPath;
         }));
       }
-      return [factory3.createPath(subject, predicate, object)];
+      return [factory2.createPath(subject, predicate, object)];
     }
     function generateFreshVar() {
       let v = `?var${varCount++}`;
       if (variables.has(v))
         return generateFreshVar();
       variables.add(v);
-      return factory3.createTerm(v);
+      return factory2.createTerm(v);
     }
     function translateQuad(quad) {
       if ("pathType" in quad.predicate) {
         throw new Error("Trying to translate property path to quad.");
       }
-      return factory3.createPattern(quad.subject, quad.predicate, quad.object, quad.graph);
+      return factory2.createPattern(quad.subject, quad.predicate, quad.object, quad.graph);
     }
     function translateGraph(graph) {
       const group = { type: "group", patterns: graph.patterns };
@@ -10744,7 +10744,7 @@ var require_sparqlAlgebra = __commonJS({
       if (useQuads)
         result = recurseGraph(result, graph.name);
       else
-        result = factory3.createGraph(result, graph.name);
+        result = factory2.createGraph(result, graph.name);
       return result;
     }
     var typeVals = Object.values(types);
@@ -10802,17 +10802,17 @@ var require_sparqlAlgebra = __commonJS({
       if (E.type === "optional") {
         const A = translateGroupGraphPattern({ type: "group", patterns: E.patterns });
         if (A.type === types.FILTER) {
-          G = factory3.createLeftJoin(G, A.input, A.expression);
+          G = factory2.createLeftJoin(G, A.input, A.expression);
         } else
-          G = factory3.createLeftJoin(G, A);
+          G = factory2.createLeftJoin(G, A);
       } else if (E.type === "minus") {
         const A = translateGroupGraphPattern({ type: "group", patterns: E.patterns });
-        G = factory3.createMinus(G, A);
+        G = factory2.createMinus(G, A);
       } else if (E.type === "bind")
-        G = factory3.createExtend(G, E.variable, translateExpression(E.expression));
+        G = factory2.createExtend(G, E.variable, translateExpression(E.expression));
       else if (E.type === "service") {
         const group = { type: "group", patterns: E.patterns };
-        const A = factory3.createService(translateGroupGraphPattern(group), E.name, E.silent);
+        const A = factory2.createService(translateGroupGraphPattern(group), E.name, E.silent);
         G = simplifiedJoin(G, A);
       } else {
         const A = translateGroupGraphPattern(E);
@@ -10822,16 +10822,16 @@ var require_sparqlAlgebra = __commonJS({
     }
     function simplifiedJoin(G, A) {
       if (G.type === types.BGP && A.type === types.BGP)
-        G = factory3.createBgp([...G.patterns, ...A.patterns]);
+        G = factory2.createBgp([...G.patterns, ...A.patterns]);
       else if (G.type === types.BGP && G.patterns.length === 0)
         G = A;
       else if (A.type === types.BGP && A.patterns.length === 0) {
       } else
-        G = factory3.createJoin([G, A]);
+        G = factory2.createJoin([G, A]);
       return G;
     }
     function translateInlineData(values) {
-      let variables2 = (values.values.length === 0 ? [] : Object.keys(values.values[0])).map(factory3.createTerm.bind(factory3));
+      let variables2 = (values.values.length === 0 ? [] : Object.keys(values.values[0])).map(factory2.createTerm.bind(factory2));
       let bindings = values.values.map((binding) => {
         let keys = Object.keys(binding);
         keys = keys.filter((k) => binding[k] !== void 0);
@@ -10840,7 +10840,7 @@ var require_sparqlAlgebra = __commonJS({
           map[key] = binding[key];
         return map;
       });
-      return factory3.createValues(variables2, bindings);
+      return factory2.createValues(variables2, bindings);
     }
     function translateAggregates(query, res) {
       const select = query;
@@ -10850,7 +10850,7 @@ var require_sparqlAlgebra = __commonJS({
       select.having = select.having && select.having.map((val) => mapAggregate(val, A));
       select.order = select.order && select.order.map((val) => mapAggregate(val, A));
       if (select.group || Object.keys(A).length > 0) {
-        const aggregates = Object.keys(A).map((v) => translateBoundAggregate(A[v], factory3.createTerm(v)));
+        const aggregates = Object.keys(A).map((v) => translateBoundAggregate(A[v], factory2.createTerm(v)));
         const vars = [];
         if (select.group) {
           for (const e of select.group) {
@@ -10858,18 +10858,18 @@ var require_sparqlAlgebra = __commonJS({
               vars.push(e.expression);
             } else {
               const v = "variable" in e ? e.variable : generateFreshVar();
-              res = factory3.createExtend(res, v, translateExpression(e.expression));
+              res = factory2.createExtend(res, v, translateExpression(e.expression));
               vars.push(v);
             }
           }
         }
-        res = factory3.createGroup(res, vars, aggregates);
+        res = factory2.createGroup(res, vars, aggregates);
       }
       if (select.having)
         for (let filter of select.having)
-          res = factory3.createFilter(res, translateExpression(filter));
+          res = factory2.createFilter(res, translateExpression(filter));
       if (query.values)
-        res = factory3.createJoin([res, translateInlineData(query)]);
+        res = factory2.createJoin([res, translateInlineData(query)]);
       let PV = [];
       if (query.queryType === "SELECT" || query.queryType === "DESCRIBE") {
         if (query.variables.some((e) => e && util_1.default.isWildcard(e)))
@@ -10886,30 +10886,30 @@ var require_sparqlAlgebra = __commonJS({
         }
       }
       for (let v of E)
-        res = factory3.createExtend(res, v.variable, translateExpression(v.expression));
+        res = factory2.createExtend(res, v.variable, translateExpression(v.expression));
       if (select.order)
-        res = factory3.createOrderBy(res, select.order.map((exp) => {
+        res = factory2.createOrderBy(res, select.order.map((exp) => {
           let result = translateExpression(exp.expression);
           if (exp.descending)
-            result = factory3.createOperatorExpression("desc", [result]);
+            result = factory2.createOperatorExpression("desc", [result]);
           return result;
         }));
       if (query.queryType === "SELECT")
-        res = factory3.createProject(res, PV);
+        res = factory2.createProject(res, PV);
       if (select.distinct)
-        res = factory3.createDistinct(res);
+        res = factory2.createDistinct(res);
       if (select.reduced)
-        res = factory3.createReduced(res);
+        res = factory2.createReduced(res);
       if (query.queryType === "CONSTRUCT")
-        res = factory3.createConstruct(res, (query.template || []).map(translateQuad));
+        res = factory2.createConstruct(res, (query.template || []).map(translateQuad));
       else if (query.queryType === "ASK")
-        res = factory3.createAsk(res);
+        res = factory2.createAsk(res);
       else if (query.queryType === "DESCRIBE")
-        res = factory3.createDescribe(res, PV);
+        res = factory2.createDescribe(res, PV);
       if (select.offset || select.limit)
-        res = factory3.createSlice(res, select.offset || 0, select.limit);
+        res = factory2.createSlice(res, select.offset || 0, select.limit);
       if (select.from)
-        res = factory3.createFrom(res, select.from.default, select.from.named);
+        res = factory2.createFrom(res, select.from.default, select.from.named);
       return res;
     }
     function mapAggregate(thingy, aggregates) {
@@ -10918,7 +10918,7 @@ var require_sparqlAlgebra = __commonJS({
         let v;
         for (let key of Object.keys(aggregates)) {
           if (equal(aggregates[key], thingy)) {
-            v = factory3.createTerm(key);
+            v = factory2.createTerm(key);
             found = true;
             break;
           }
@@ -10945,7 +10945,7 @@ var require_sparqlAlgebra = __commonJS({
     function translateUpdate(thingy) {
       if (thingy.updates.length === 1)
         return translateSingleUpdate(thingy.updates[0]);
-      return factory3.createCompositeUpdate(thingy.updates.map(translateSingleUpdate));
+      return factory2.createCompositeUpdate(thingy.updates.map(translateSingleUpdate));
     }
     function translateSingleUpdate(thingy) {
       if ("type" in thingy) {
@@ -10973,13 +10973,13 @@ var require_sparqlAlgebra = __commonJS({
         where = translateGroupGraphPattern({ type: "group", patterns: thingy.where });
         const using = thingy.using;
         if (using)
-          where = factory3.createFrom(where, using.default, using.named);
+          where = factory2.createFrom(where, using.default, using.named);
         else if (thingy.graph)
           where = recurseGraph(where, thingy.graph);
       } else if (thingy.updateType === "deletewhere" && deleteTriples.length > 0) {
-        where = factory3.createBgp(deleteTriples);
+        where = factory2.createBgp(deleteTriples);
       }
-      return factory3.createDeleteInsert(deleteTriples.length > 0 ? deleteTriples : void 0, insertTriples.length > 0 ? insertTriples : void 0, where);
+      return factory2.createDeleteInsert(deleteTriples.length > 0 ? deleteTriples : void 0, insertTriples.length > 0 ? insertTriples : void 0, where);
     }
     function translateUpdateTriplesBlock(thingy, graph) {
       let currentGraph = graph;
@@ -11004,26 +11004,26 @@ var require_sparqlAlgebra = __commonJS({
         source = thingy.graph.name;
       switch (thingy.type) {
         case "clear":
-          return factory3.createClear(source, thingy.silent);
+          return factory2.createClear(source, thingy.silent);
         case "create":
-          return factory3.createCreate(source, thingy.silent);
+          return factory2.createCreate(source, thingy.silent);
         case "drop":
-          return factory3.createDrop(source, thingy.silent);
+          return factory2.createDrop(source, thingy.silent);
       }
     }
     function translateUpdateGraphLoad(thingy) {
-      return factory3.createLoad(thingy.source, thingy.destination, thingy.silent);
+      return factory2.createLoad(thingy.source, thingy.destination, thingy.silent);
     }
     function translateUpdateGraphShortcut(thingy) {
       const source = thingy.source.default ? "DEFAULT" : thingy.source.name;
       const destination = thingy.destination.default ? "DEFAULT" : thingy.destination.name;
       switch (thingy.type) {
         case "copy":
-          return factory3.createCopy(source, destination, thingy.silent);
+          return factory2.createCopy(source, destination, thingy.silent);
         case "move":
-          return factory3.createMove(source, destination, thingy.silent);
+          return factory2.createMove(source, destination, thingy.silent);
         case "add":
-          return factory3.createAdd(source, destination, thingy.silent);
+          return factory2.createAdd(source, destination, thingy.silent);
       }
     }
     function translateBlankNodesToVariables(res) {
@@ -11036,21 +11036,21 @@ var require_sparqlAlgebra = __commonJS({
         [Algebra.types.DELETE_INSERT]: (op) => {
           return { result: op, recurse: false };
         },
-        [Algebra.types.PATH]: (op, factory4) => {
+        [Algebra.types.PATH]: (op, factory3) => {
           return {
-            result: factory4.createPath(blankToVariable(op.subject), op.predicate, blankToVariable(op.object), blankToVariable(op.graph)),
+            result: factory3.createPath(blankToVariable(op.subject), op.predicate, blankToVariable(op.object), blankToVariable(op.graph)),
             recurse: false
           };
         },
-        [Algebra.types.PATTERN]: (op, factory4) => {
+        [Algebra.types.PATTERN]: (op, factory3) => {
           return {
-            result: factory4.createPattern(blankToVariable(op.subject), blankToVariable(op.predicate), blankToVariable(op.object), blankToVariable(op.graph)),
+            result: factory3.createPattern(blankToVariable(op.subject), blankToVariable(op.predicate), blankToVariable(op.object), blankToVariable(op.graph)),
             recurse: false
           };
         },
         [Algebra.types.CONSTRUCT]: (op) => {
           return {
-            result: factory3.createConstruct(translateBlankNodesToVariables(op.input), op.template),
+            result: factory2.createConstruct(translateBlankNodesToVariables(op.input), op.template),
             recurse: false
           };
         }
@@ -11059,7 +11059,7 @@ var require_sparqlAlgebra = __commonJS({
         if (term.termType === "BlankNode") {
           let variable = blankToVariableMapping[term.value];
           if (!variable) {
-            variable = util_1.default.createUniqueVariable(term.value, variablesRaw, factory3.dataFactory);
+            variable = util_1.default.createUniqueVariable(term.value, variablesRaw, factory2.dataFactory);
             variablesRaw[variable.value] = true;
             blankToVariableMapping[term.value] = variable;
           }
@@ -13039,7 +13039,7 @@ var require_sparql2 = __commonJS({
     var types = Algebra.types;
     var eTypes = Algebra.expressionTypes;
     var context;
-    var factory3 = new factory_1.default();
+    var factory2 = new factory_1.default();
     function toSparql(op, options = {}) {
       let generator = new sparqljs_1.Generator(options);
       return generator.stringify(toSparqlJs(op));
@@ -13739,7 +13739,7 @@ var require_sparql2 = __commonJS({
       if ((op.type === types.PATTERN || op.type === types.PATH) && op.graph) {
         graphs.push(op.graph);
         if (op.graph.name !== "")
-          return op.type === types.PATTERN ? factory3.createPattern(op.subject, op.predicate, op.object) : factory3.createPath(op.subject, op.predicate, op.object);
+          return op.type === types.PATTERN ? factory2.createPattern(op.subject, op.predicate, op.object) : factory2.createPath(op.subject, op.predicate, op.object);
         return op;
       }
       const result = {};
@@ -13765,9 +13765,9 @@ var require_sparql2 = __commonJS({
           for (let key of Object.keys(keyGraphs)) {
             const value = result[key];
             if (Array.isArray(value))
-              result[key] = value.map((child, idx) => keyGraphs[key][0].value === "" ? child : factory3.createGraph(child, keyGraphs[key][idx]));
+              result[key] = value.map((child, idx) => keyGraphs[key][0].value === "" ? child : factory2.createGraph(child, keyGraphs[key][idx]));
             else if (keyGraphs[key][0].value !== "")
-              result[key] = factory3.createGraph(value, keyGraphs[key][0]);
+              result[key] = factory2.createGraph(value, keyGraphs[key][0]);
           }
         }
       }
@@ -13784,12 +13784,12 @@ var require_sparql2 = __commonJS({
       }
       let children = [];
       for (const [graphName, { patterns, graph }] of Object.entries(graphPatterns)) {
-        const bgp = factory3.createBgp(patterns);
-        children.push(graphName === "" ? bgp : factory3.createGraph(bgp, graph));
+        const bgp = factory2.createBgp(patterns);
+        children.push(graphName === "" ? bgp : factory2.createGraph(bgp, graph));
       }
       let join = children[0];
       for (let i2 = 1; i2 < children.length; ++i2)
-        join = factory3.createJoin([join, children[i2]]);
+        join = factory2.createJoin([join, children[i2]]);
       return join;
     }
   }
@@ -13884,16 +13884,16 @@ var require_Bindings3 = __commonJS({
         bindFilter: "bindFilter" in options ? options.bindFilter : true
       };
       return sparqlalgebrajs_1.Util.mapOperation(operation, {
-        path(op, factory3) {
+        path(op, factory2) {
           return {
             recurse: false,
-            result: factory3.createPath(materializeTerm(op.subject, bindings), op.predicate, materializeTerm(op.object, bindings), materializeTerm(op.graph, bindings))
+            result: factory2.createPath(materializeTerm(op.subject, bindings), op.predicate, materializeTerm(op.object, bindings), materializeTerm(op.graph, bindings))
           };
         },
-        pattern(op, factory3) {
+        pattern(op, factory2) {
           return {
             recurse: false,
-            result: factory3.createPattern(materializeTerm(op.subject, bindings), materializeTerm(op.predicate, bindings), materializeTerm(op.object, bindings), materializeTerm(op.graph, bindings))
+            result: factory2.createPattern(materializeTerm(op.subject, bindings), materializeTerm(op.predicate, bindings), materializeTerm(op.object, bindings), materializeTerm(op.graph, bindings))
           };
         },
         extend(op) {
@@ -13912,7 +13912,7 @@ var require_Bindings3 = __commonJS({
             result: op
           };
         },
-        group(op, factory3) {
+        group(op, factory2) {
           if (options.strictTargetVariables) {
             for (const variable of op.variables) {
               if (bindings.has(variable)) {
@@ -13927,10 +13927,10 @@ var require_Bindings3 = __commonJS({
           const variables = op.variables.filter((variable) => !bindings.has(variable));
           return {
             recurse: true,
-            result: factory3.createGroup(op.input, variables, op.aggregates)
+            result: factory2.createGroup(op.input, variables, op.aggregates)
           };
         },
-        project(op, factory3) {
+        project(op, factory2) {
           if (options.strictTargetVariables) {
             for (const variable of op.variables) {
               if (bindings.has(variable)) {
@@ -13952,10 +13952,10 @@ var require_Bindings3 = __commonJS({
           }).filter((entry) => Boolean(entry)));
           return {
             recurse: false,
-            result: factory3.createProject(materializeOperation(op.input, subBindings, options), variables)
+            result: factory2.createProject(materializeOperation(op.input, subBindings, options), variables)
           };
         },
-        values(op, factory3) {
+        values(op, factory2) {
           if (options.strictTargetVariables) {
             for (const variable of op.variables) {
               if (bindings.has(variable)) {
@@ -13980,7 +13980,7 @@ var require_Bindings3 = __commonJS({
             }).filter(Boolean);
             return {
               recurse: true,
-              result: factory3.createValues(variables, valueBindings)
+              result: factory2.createValues(variables, valueBindings)
             };
           }
           return {
@@ -13988,7 +13988,7 @@ var require_Bindings3 = __commonJS({
             result: op
           };
         },
-        expression(op, factory3) {
+        expression(op, factory2) {
           if (!options.bindFilter) {
             return {
               recurse: false,
@@ -13998,7 +13998,7 @@ var require_Bindings3 = __commonJS({
           if (op.expressionType === "term") {
             return {
               recurse: false,
-              result: factory3.createTermExpression(materializeTerm(op.term, bindings))
+              result: factory2.createTermExpression(materializeTerm(op.term, bindings))
             };
           }
           if (op.expressionType === "aggregate" && "variable" in op && bindings.has(op.variable)) {
@@ -17330,11 +17330,11 @@ var require_ActorOptimizeQueryOperationJoinBgp = __commonJS({
       }
       async run(action) {
         const operation = sparqlalgebrajs_1.Util.mapOperation(action.operation, {
-          join(op, factory3) {
+          join(op, factory2) {
             if (op.input.every((subInput) => subInput.type === "bgp")) {
               return {
                 recurse: false,
-                result: factory3.createBgp(op.input.flatMap((subInput) => subInput.patterns))
+                result: factory2.createBgp(op.input.flatMap((subInput) => subInput.patterns))
               };
             }
             return {
@@ -17393,10 +17393,10 @@ var require_ActorOptimizeQueryOperationBgpToJoin = __commonJS({
       }
       async run(action) {
         const operation = sparqlalgebrajs_1.Util.mapOperation(action.operation, {
-          bgp(op, factory3) {
+          bgp(op, factory2) {
             return {
               recurse: false,
-              result: factory3.createJoin(op.patterns)
+              result: factory2.createJoin(op.patterns)
             };
           }
         });
@@ -17450,10 +17450,10 @@ var require_ActorOptimizeQueryOperationJoinConnected = __commonJS({
       }
       async run(action) {
         const operation = sparqlalgebrajs_1.Util.mapOperation(action.operation, {
-          join(op, factory3) {
+          join(op, factory2) {
             return {
               recurse: false,
-              result: _ActorOptimizeQueryOperationJoinConnected.cluster(op, factory3)
+              result: _ActorOptimizeQueryOperationJoinConnected.cluster(op, factory2)
             };
           }
         });
@@ -17464,7 +17464,7 @@ var require_ActorOptimizeQueryOperationJoinConnected = __commonJS({
        * @param op A join operation.
        * @param factory An algebra factory.
        */
-      static cluster(op, factory3) {
+      static cluster(op, factory2) {
         const initialClusters = op.input.map((subOp) => ({
           inScopeVariables: Object.fromEntries(sparqlalgebrajs_1.Util.inScopeVariables(subOp).map((variable) => [variable.value, true])),
           entries: [subOp]
@@ -17475,8 +17475,8 @@ var require_ActorOptimizeQueryOperationJoinConnected = __commonJS({
           oldClusters = newClusters;
           newClusters = _ActorOptimizeQueryOperationJoinConnected.clusterIteration(oldClusters);
         } while (oldClusters.length !== newClusters.length);
-        const subJoins = newClusters.map((cluster) => factory3.createJoin(cluster.entries));
-        return subJoins.length === 1 ? subJoins[0] : factory3.createJoin(subJoins, false);
+        const subJoins = newClusters.map((cluster) => factory2.createJoin(cluster.entries));
+        return subJoins.length === 1 ? subJoins[0] : factory2.createJoin(subJoins, false);
       }
       /**
        * Perform a single clustering iteration.
@@ -18431,16 +18431,16 @@ var require_NodeHandlerDocument = __commonJS({
           return acc;
         }, {});
         return sparqlalgebrajs_1.Util.mapOperation(operation, {
-          path: (op, factory3) => {
+          path: (op, factory2) => {
             return {
               recurse: false,
-              result: factory3.createPath(blankToVariable(op.subject), op.predicate, blankToVariable(op.object), blankToVariable(op.graph))
+              result: factory2.createPath(blankToVariable(op.subject), op.predicate, blankToVariable(op.object), blankToVariable(op.graph))
             };
           },
-          pattern: (op, factory3) => {
+          pattern: (op, factory2) => {
             return {
               recurse: false,
-              result: factory3.createPattern(blankToVariable(op.subject), blankToVariable(op.predicate), blankToVariable(op.object), blankToVariable(op.graph))
+              result: factory2.createPattern(blankToVariable(op.subject), blankToVariable(op.predicate), blankToVariable(op.object), blankToVariable(op.graph))
             };
           }
         });
@@ -21945,9 +21945,9 @@ var require_browser_polyfill = __commonJS({
           }
           return iterator;
         }
-        function Headers3(headers) {
+        function Headers2(headers) {
           this.map = {};
-          if (headers instanceof Headers3) {
+          if (headers instanceof Headers2) {
             headers.forEach(function(value, name) {
               this.append(name, value);
             }, this);
@@ -21961,47 +21961,47 @@ var require_browser_polyfill = __commonJS({
             }, this);
           }
         }
-        Headers3.prototype.append = function(name, value) {
+        Headers2.prototype.append = function(name, value) {
           name = normalizeName(name);
           value = normalizeValue(value);
           var oldValue = this.map[name];
           this.map[name] = oldValue ? oldValue + ", " + value : value;
         };
-        Headers3.prototype["delete"] = function(name) {
+        Headers2.prototype["delete"] = function(name) {
           delete this.map[normalizeName(name)];
         };
-        Headers3.prototype.get = function(name) {
+        Headers2.prototype.get = function(name) {
           name = normalizeName(name);
           return this.has(name) ? this.map[name] : null;
         };
-        Headers3.prototype.has = function(name) {
+        Headers2.prototype.has = function(name) {
           return this.map.hasOwnProperty(normalizeName(name));
         };
-        Headers3.prototype.set = function(name, value) {
+        Headers2.prototype.set = function(name, value) {
           this.map[normalizeName(name)] = normalizeValue(value);
         };
-        Headers3.prototype.forEach = function(callback, thisArg) {
+        Headers2.prototype.forEach = function(callback, thisArg) {
           for (var name in this.map) {
             if (this.map.hasOwnProperty(name)) {
               callback.call(thisArg, this.map[name], name, this);
             }
           }
         };
-        Headers3.prototype.keys = function() {
+        Headers2.prototype.keys = function() {
           var items = [];
           this.forEach(function(value, name) {
             items.push(name);
           });
           return iteratorFor(items);
         };
-        Headers3.prototype.values = function() {
+        Headers2.prototype.values = function() {
           var items = [];
           this.forEach(function(value) {
             items.push(value);
           });
           return iteratorFor(items);
         };
-        Headers3.prototype.entries = function() {
+        Headers2.prototype.entries = function() {
           var items = [];
           this.forEach(function(value, name) {
             items.push([name, value]);
@@ -22009,7 +22009,7 @@ var require_browser_polyfill = __commonJS({
           return iteratorFor(items);
         };
         if (support.iterable) {
-          Headers3.prototype[Symbol.iterator] = Headers3.prototype.entries;
+          Headers2.prototype[Symbol.iterator] = Headers2.prototype.entries;
         }
         function consumed(body) {
           if (body.bodyUsed) {
@@ -22152,7 +22152,7 @@ var require_browser_polyfill = __commonJS({
             this.url = input.url;
             this.credentials = input.credentials;
             if (!options.headers) {
-              this.headers = new Headers3(input.headers);
+              this.headers = new Headers2(input.headers);
             }
             this.method = input.method;
             this.mode = input.mode;
@@ -22166,7 +22166,7 @@ var require_browser_polyfill = __commonJS({
           }
           this.credentials = options.credentials || this.credentials || "same-origin";
           if (options.headers || !this.headers) {
-            this.headers = new Headers3(options.headers);
+            this.headers = new Headers2(options.headers);
           }
           this.method = normalizeMethod(options.method || this.method || "GET");
           this.mode = options.mode || this.mode || null;
@@ -22193,7 +22193,7 @@ var require_browser_polyfill = __commonJS({
           return form;
         }
         function parseHeaders(rawHeaders) {
-          var headers = new Headers3();
+          var headers = new Headers2();
           var preProcessedHeaders = rawHeaders.replace(/\r?\n[\t ]+/g, " ");
           preProcessedHeaders.split(/\r?\n/).forEach(function(line) {
             var parts = line.split(":");
@@ -22214,7 +22214,7 @@ var require_browser_polyfill = __commonJS({
           this.status = options.status === void 0 ? 200 : options.status;
           this.ok = this.status >= 200 && this.status < 300;
           this.statusText = "statusText" in options ? options.statusText : "OK";
-          this.headers = new Headers3(options.headers);
+          this.headers = new Headers2(options.headers);
           this.url = options.url || "";
           this._initBody(bodyInit);
         }
@@ -22223,7 +22223,7 @@ var require_browser_polyfill = __commonJS({
           return new Response2(this._bodyInit, {
             status: this.status,
             statusText: this.statusText,
-            headers: new Headers3(this.headers),
+            headers: new Headers2(this.headers),
             url: this.url
           });
         };
@@ -22307,11 +22307,11 @@ var require_browser_polyfill = __commonJS({
         fetch2.polyfill = true;
         if (!self2.fetch) {
           self2.fetch = fetch2;
-          self2.Headers = Headers3;
+          self2.Headers = Headers2;
           self2.Request = Request2;
           self2.Response = Response2;
         }
-        exports2.Headers = Headers3;
+        exports2.Headers = Headers2;
         exports2.Request = Request2;
         exports2.Response = Response2;
         exports2.fetch = fetch2;
@@ -27492,7 +27492,7 @@ var require_utils2 = __commonJS({
     function isNodeStream(obj) {
       return obj && (obj._readableState || obj._writableState || typeof obj.write === "function" && typeof obj.on === "function" || typeof obj.pipe === "function" && typeof obj.on === "function");
     }
-    function isReadableStream2(obj) {
+    function isReadableStream(obj) {
       return !!(obj && !isNodeStream(obj) && typeof obj.pipeThrough === "function" && typeof obj.getReader === "function" && typeof obj.cancel === "function");
     }
     function isWritableStream(obj) {
@@ -27502,7 +27502,7 @@ var require_utils2 = __commonJS({
       return !!(obj && !isNodeStream(obj) && typeof obj.readable === "object" && typeof obj.writable === "object");
     }
     function isWebStream(obj) {
-      return isReadableStream2(obj) || isWritableStream(obj) || isTransformStream(obj);
+      return isReadableStream(obj) || isWritableStream(obj) || isTransformStream(obj);
     }
     function isIterable(obj, isAsync) {
       if (obj == null)
@@ -27680,7 +27680,7 @@ var require_utils2 = __commonJS({
       isFinished,
       isIterable,
       isReadableNodeStream,
-      isReadableStream: isReadableStream2,
+      isReadableStream,
       isReadableEnded,
       isReadableFinished,
       isReadableErrored,
@@ -27713,7 +27713,7 @@ var require_end_of_stream = __commonJS({
       isClosed,
       isReadable,
       isReadableNodeStream,
-      isReadableStream: isReadableStream2,
+      isReadableStream,
       isReadableFinished,
       isReadableErrored,
       isWritable,
@@ -27744,7 +27744,7 @@ var require_end_of_stream = __commonJS({
       validateFunction(callback, "callback");
       validateAbortSignal(options.signal, "options.signal");
       callback = once2(callback);
-      if (isReadableStream2(stream) || isWritableStream(stream)) {
+      if (isReadableStream(stream) || isWritableStream(stream)) {
         return eosWeb(stream, options, callback);
       }
       if (!isNodeStream(stream)) {
@@ -28891,10 +28891,10 @@ var require_from = __commonJS({
     var { PromisePrototypeThen, SymbolAsyncIterator, SymbolIterator } = require_primordials();
     var { Buffer: Buffer2 } = require_buffer();
     var { ERR_INVALID_ARG_TYPE: ERR_INVALID_ARG_TYPE2, ERR_STREAM_NULL_VALUES } = require_errors().codes;
-    function from(Readable6, iterable, opts) {
+    function from(Readable5, iterable, opts) {
       let iterator;
       if (typeof iterable === "string" || iterable instanceof Buffer2) {
-        return new Readable6({
+        return new Readable5({
           objectMode: true,
           ...opts,
           read() {
@@ -28913,7 +28913,7 @@ var require_from = __commonJS({
       } else {
         throw new ERR_INVALID_ARG_TYPE2("iterable", ["Iterable"], iterable);
       }
-      const readable2 = new Readable6({
+      const readable2 = new Readable5({
         objectMode: true,
         highWaterMark: 1,
         // TODO(ronag): What options should be allowed?
@@ -28996,8 +28996,8 @@ var require_readable = __commonJS({
       SymbolAsyncIterator,
       Symbol: Symbol2
     } = require_primordials();
-    module.exports = Readable6;
-    Readable6.ReadableState = ReadableState;
+    module.exports = Readable5;
+    Readable5.ReadableState = ReadableState;
     var { EventEmitter: EE } = require_events();
     var { Stream, prependListener } = require_legacy();
     var { Buffer: Buffer2 } = require_buffer();
@@ -29024,8 +29024,8 @@ var require_readable = __commonJS({
     var kPaused = Symbol2("kPaused");
     var { StringDecoder } = require_string_decoder();
     var from = require_from();
-    ObjectSetPrototypeOf(Readable6.prototype, Stream.prototype);
-    ObjectSetPrototypeOf(Readable6, Stream);
+    ObjectSetPrototypeOf(Readable5.prototype, Stream.prototype);
+    ObjectSetPrototypeOf(Readable5, Stream);
     var nop = () => {
     };
     var { errorOrDestroy } = destroyImpl;
@@ -29127,9 +29127,9 @@ var require_readable = __commonJS({
         this.encoding = options.encoding;
       }
     }
-    function Readable6(options) {
-      if (!(this instanceof Readable6))
-        return new Readable6(options);
+    function Readable5(options) {
+      if (!(this instanceof Readable5))
+        return new Readable5(options);
       const isDuplex = this instanceof require_duplex();
       this._readableState = new ReadableState(options, this, isDuplex);
       if (options) {
@@ -29149,15 +29149,15 @@ var require_readable = __commonJS({
         }
       });
     }
-    Readable6.prototype.destroy = destroyImpl.destroy;
-    Readable6.prototype._undestroy = destroyImpl.undestroy;
-    Readable6.prototype._destroy = function(err, cb) {
+    Readable5.prototype.destroy = destroyImpl.destroy;
+    Readable5.prototype._undestroy = destroyImpl.undestroy;
+    Readable5.prototype._destroy = function(err, cb) {
       cb(err);
     };
-    Readable6.prototype[EE.captureRejectionSymbol] = function(err) {
+    Readable5.prototype[EE.captureRejectionSymbol] = function(err) {
       this.destroy(err);
     };
-    Readable6.prototype[SymbolAsyncDispose] = function() {
+    Readable5.prototype[SymbolAsyncDispose] = function() {
       let error2;
       if (!this.destroyed) {
         error2 = this.readableEnded ? null : new AbortError();
@@ -29165,10 +29165,10 @@ var require_readable = __commonJS({
       }
       return new Promise2((resolve, reject) => eos(this, (err) => err && err !== error2 ? reject(err) : resolve(null)));
     };
-    Readable6.prototype.push = function(chunk, encoding) {
+    Readable5.prototype.push = function(chunk, encoding) {
       return readableAddChunk(this, chunk, encoding, false);
     };
-    Readable6.prototype.unshift = function(chunk, encoding) {
+    Readable5.prototype.unshift = function(chunk, encoding) {
       return readableAddChunk(this, chunk, encoding, true);
     };
     function readableAddChunk(stream, chunk, encoding, addToFront) {
@@ -29250,11 +29250,11 @@ var require_readable = __commonJS({
       }
       maybeReadMore(stream, state);
     }
-    Readable6.prototype.isPaused = function() {
+    Readable5.prototype.isPaused = function() {
       const state = this._readableState;
       return state[kPaused] === true || state.flowing === false;
     };
-    Readable6.prototype.setEncoding = function(enc) {
+    Readable5.prototype.setEncoding = function(enc) {
       const decoder = new StringDecoder(enc);
       this._readableState.decoder = decoder;
       this._readableState.encoding = this._readableState.decoder.encoding;
@@ -29298,7 +29298,7 @@ var require_readable = __commonJS({
         return n;
       return state.ended ? state.length : 0;
     }
-    Readable6.prototype.read = function(n) {
+    Readable5.prototype.read = function(n) {
       debug("read", n);
       if (n === void 0) {
         n = NaN;
@@ -29432,10 +29432,10 @@ var require_readable = __commonJS({
       }
       state.readingMore = false;
     }
-    Readable6.prototype._read = function(n) {
+    Readable5.prototype._read = function(n) {
       throw new ERR_METHOD_NOT_IMPLEMENTED("_read()");
     };
-    Readable6.prototype.pipe = function(dest, pipeOpts) {
+    Readable5.prototype.pipe = function(dest, pipeOpts) {
       const src = this;
       const state = this._readableState;
       if (state.pipes.length === 1) {
@@ -29563,7 +29563,7 @@ var require_readable = __commonJS({
         }
       };
     }
-    Readable6.prototype.unpipe = function(dest) {
+    Readable5.prototype.unpipe = function(dest) {
       const state = this._readableState;
       const unpipeInfo = {
         hasUnpiped: false
@@ -29589,7 +29589,7 @@ var require_readable = __commonJS({
       dest.emit("unpipe", this, unpipeInfo);
       return this;
     };
-    Readable6.prototype.on = function(ev, fn) {
+    Readable5.prototype.on = function(ev, fn) {
       const res = Stream.prototype.on.call(this, ev, fn);
       const state = this._readableState;
       if (ev === "data") {
@@ -29611,16 +29611,16 @@ var require_readable = __commonJS({
       }
       return res;
     };
-    Readable6.prototype.addListener = Readable6.prototype.on;
-    Readable6.prototype.removeListener = function(ev, fn) {
+    Readable5.prototype.addListener = Readable5.prototype.on;
+    Readable5.prototype.removeListener = function(ev, fn) {
       const res = Stream.prototype.removeListener.call(this, ev, fn);
       if (ev === "readable") {
         process2.nextTick(updateReadableListening, this);
       }
       return res;
     };
-    Readable6.prototype.off = Readable6.prototype.removeListener;
-    Readable6.prototype.removeAllListeners = function(ev) {
+    Readable5.prototype.off = Readable5.prototype.removeListener;
+    Readable5.prototype.removeAllListeners = function(ev) {
       const res = Stream.prototype.removeAllListeners.apply(this, arguments);
       if (ev === "readable" || ev === void 0) {
         process2.nextTick(updateReadableListening, this);
@@ -29642,7 +29642,7 @@ var require_readable = __commonJS({
       debug("readable nexttick read 0");
       self2.read(0);
     }
-    Readable6.prototype.resume = function() {
+    Readable5.prototype.resume = function() {
       const state = this._readableState;
       if (!state.flowing) {
         debug("resume");
@@ -29669,7 +29669,7 @@ var require_readable = __commonJS({
       if (state.flowing && !state.reading)
         stream.read(0);
     }
-    Readable6.prototype.pause = function() {
+    Readable5.prototype.pause = function() {
       debug("call pause flowing=%j", this._readableState.flowing);
       if (this._readableState.flowing !== false) {
         debug("pause");
@@ -29685,7 +29685,7 @@ var require_readable = __commonJS({
       while (state.flowing && stream.read() !== null)
         ;
     }
-    Readable6.prototype.wrap = function(stream) {
+    Readable5.prototype.wrap = function(stream) {
       let paused = false;
       stream.on("data", (chunk) => {
         if (!this.push(chunk) && stream.pause) {
@@ -29720,10 +29720,10 @@ var require_readable = __commonJS({
       }
       return this;
     };
-    Readable6.prototype[SymbolAsyncIterator] = function() {
+    Readable5.prototype[SymbolAsyncIterator] = function() {
       return streamToAsyncIterator(this);
     };
-    Readable6.prototype.iterator = function(options) {
+    Readable5.prototype.iterator = function(options) {
       if (options !== void 0) {
         validateObject(options, "options");
       }
@@ -29731,7 +29731,7 @@ var require_readable = __commonJS({
     };
     function streamToAsyncIterator(stream, options) {
       if (typeof stream.read !== "function") {
-        stream = Readable6.wrap(stream, {
+        stream = Readable5.wrap(stream, {
           objectMode: true
         });
       }
@@ -29787,7 +29787,7 @@ var require_readable = __commonJS({
         }
       }
     }
-    ObjectDefineProperties(Readable6.prototype, {
+    ObjectDefineProperties(Readable5.prototype, {
       readable: {
         __proto__: null,
         get() {
@@ -29914,7 +29914,7 @@ var require_readable = __commonJS({
         }
       }
     });
-    Readable6._fromList = fromList;
+    Readable5._fromList = fromList;
     function fromList(n, state) {
       if (state.length === 0)
         return null;
@@ -29966,8 +29966,8 @@ var require_readable = __commonJS({
         stream.end();
       }
     }
-    Readable6.from = function(iterable, opts) {
-      return from(Readable6, iterable, opts);
+    Readable5.from = function(iterable, opts) {
+      return from(Readable5, iterable, opts);
     };
     var webStreamsAdapters;
     function lazyWebStreams() {
@@ -29975,15 +29975,15 @@ var require_readable = __commonJS({
         webStreamsAdapters = {};
       return webStreamsAdapters;
     }
-    Readable6.fromWeb = function(readableStream, options) {
+    Readable5.fromWeb = function(readableStream, options) {
       return lazyWebStreams().newStreamReadableFromReadableStream(readableStream, options);
     };
-    Readable6.toWeb = function(streamReadable, options) {
+    Readable5.toWeb = function(streamReadable, options) {
       return lazyWebStreams().newReadableStreamFromStreamReadable(streamReadable, options);
     };
-    Readable6.wrap = function(src, options) {
+    Readable5.wrap = function(src, options) {
       var _ref, _src$readableObjectMo;
-      return new Readable6({
+      return new Readable5({
         objectMode: (_ref = (_src$readableObjectMo = src.readableObjectMode) !== null && _src$readableObjectMo !== void 0 ? _src$readableObjectMo : src.objectMode) !== null && _ref !== void 0 ? _ref : true,
         ...options,
         destroy(err, callback) {
@@ -30346,9 +30346,9 @@ var require_writable = __commonJS({
             buffered[n].callback(err);
           }
         };
-        const chunks2 = state.allNoop && i2 === 0 ? buffered : ArrayPrototypeSlice(buffered, i2);
-        chunks2.allBuffers = state.allBuffers;
-        doWrite(stream, state, true, state.length, chunks2, "", callback);
+        const chunks = state.allNoop && i2 === 0 ? buffered : ArrayPrototypeSlice(buffered, i2);
+        chunks.allBuffers = state.allBuffers;
+        doWrite(stream, state, true, state.length, chunks, "", callback);
         resetBuffer(state);
       } else {
         do {
@@ -30651,7 +30651,7 @@ var require_duplexify = __commonJS({
       isReadableNodeStream,
       isWritableNodeStream,
       isDuplexNodeStream,
-      isReadableStream: isReadableStream2,
+      isReadableStream,
       isWritableStream
     } = require_utils2();
     var eos = require_end_of_stream();
@@ -30661,7 +30661,7 @@ var require_duplexify = __commonJS({
     } = require_errors();
     var { destroyer } = require_destroy();
     var Duplex = require_duplex();
-    var Readable6 = require_readable();
+    var Readable5 = require_readable();
     var Writable = require_writable();
     var { createDeferredPromise } = require_util2();
     var from = require_from();
@@ -30709,9 +30709,9 @@ var require_duplexify = __commonJS({
           readable: false
         });
       }
-      if (isReadableStream2(body)) {
+      if (isReadableStream(body)) {
         return _duplexify({
-          readable: Readable6.fromWeb(body)
+          readable: Readable5.fromWeb(body)
         });
       }
       if (isWritableStream(body)) {
@@ -30775,7 +30775,7 @@ var require_duplexify = __commonJS({
           writable: false
         });
       }
-      if (isReadableStream2(body === null || body === void 0 ? void 0 : body.readable) && isWritableStream(body === null || body === void 0 ? void 0 : body.writable)) {
+      if (isReadableStream(body === null || body === void 0 ? void 0 : body.readable) && isWritableStream(body === null || body === void 0 ? void 0 : body.writable)) {
         return Duplexify.fromWeb(body);
       }
       if (typeof (body === null || body === void 0 ? void 0 : body.writable) === "object" || typeof (body === null || body === void 0 ? void 0 : body.readable) === "object") {
@@ -30876,7 +30876,7 @@ var require_duplexify = __commonJS({
       };
     }
     function _duplexify(pair) {
-      const r = pair.readable && typeof pair.readable.read !== "function" ? Readable6.wrap(pair.readable) : pair.readable;
+      const r = pair.readable && typeof pair.readable.read !== "function" ? Readable5.wrap(pair.readable) : pair.readable;
       const w = pair.writable;
       let readable2 = !!isReadable(r);
       let writable = !!isWritable(w);
@@ -30997,10 +30997,10 @@ var require_duplex = __commonJS({
       ObjectSetPrototypeOf
     } = require_primordials();
     module.exports = Duplex;
-    var Readable6 = require_readable();
+    var Readable5 = require_readable();
     var Writable = require_writable();
-    ObjectSetPrototypeOf(Duplex.prototype, Readable6.prototype);
-    ObjectSetPrototypeOf(Duplex, Readable6);
+    ObjectSetPrototypeOf(Duplex.prototype, Readable5.prototype);
+    ObjectSetPrototypeOf(Duplex, Readable5);
     {
       const keys = ObjectKeys(Writable.prototype);
       for (let i2 = 0; i2 < keys.length; i2++) {
@@ -31012,7 +31012,7 @@ var require_duplex = __commonJS({
     function Duplex(options) {
       if (!(this instanceof Duplex))
         return new Duplex(options);
-      Readable6.call(this, options);
+      Readable5.call(this, options);
       Writable.call(this, options);
       if (options) {
         this.allowHalfOpen = options.allowHalfOpen !== false;
@@ -31259,12 +31259,12 @@ var require_pipeline = __commonJS({
       isNodeStream,
       isTransformStream,
       isWebStream,
-      isReadableStream: isReadableStream2,
+      isReadableStream,
       isReadableFinished
     } = require_utils2();
     var AbortController = globalThis.AbortController || require_browser2().AbortController;
     var PassThrough;
-    var Readable6;
+    var Readable5;
     var addAbortListener;
     function destroyer(stream, reading, writing) {
       let finished = false;
@@ -31304,10 +31304,10 @@ var require_pipeline = __commonJS({
       throw new ERR_INVALID_ARG_TYPE2("val", ["Readable", "Iterable", "AsyncIterable"], val);
     }
     async function* fromReadable(val) {
-      if (!Readable6) {
-        Readable6 = require_readable();
+      if (!Readable5) {
+        Readable5 = require_readable();
       }
-      yield* Readable6.prototype[SymbolAsyncIterator].call(val);
+      yield* Readable5.prototype[SymbolAsyncIterator].call(val);
     }
     async function pumpToNode(iterable, writable, finish, { end }) {
       let error2;
@@ -31528,7 +31528,7 @@ var require_pipeline = __commonJS({
               pumpToNode(ret, pt, finish, {
                 end
               });
-            } else if (isReadableStream2(ret) || isTransformStream(ret)) {
+            } else if (isReadableStream(ret) || isTransformStream(ret)) {
               const toRead = ret.readable || ret;
               finishCount++;
               pumpToNode(toRead, pt, finish, {
@@ -31553,7 +31553,7 @@ var require_pipeline = __commonJS({
             if (isReadable(stream) && isLastStream) {
               lastStreamCleanup.push(cleanup);
             }
-          } else if (isTransformStream(ret) || isReadableStream2(ret)) {
+          } else if (isTransformStream(ret) || isReadableStream(ret)) {
             const toRead = ret.readable || ret;
             finishCount++;
             pumpToNode(toRead, stream, finish, {
@@ -31578,7 +31578,7 @@ var require_pipeline = __commonJS({
             pumpToWeb(makeAsyncIterable(ret), stream, finish, {
               end
             });
-          } else if (isReadableStream2(ret) || isIterable(ret)) {
+          } else if (isReadableStream(ret) || isIterable(ret)) {
             finishCount++;
             pumpToWeb(ret, stream, finish, {
               end
@@ -31674,7 +31674,7 @@ var require_compose = __commonJS({
       isWebStream,
       isTransformStream,
       isWritableStream,
-      isReadableStream: isReadableStream2
+      isReadableStream
     } = require_utils2();
     var {
       AbortError,
@@ -31700,7 +31700,7 @@ var require_compose = __commonJS({
         if (!isNodeStream(streams[n]) && !isWebStream(streams[n])) {
           continue;
         }
-        if (n < streams.length - 1 && !(isReadable(streams[n]) || isReadableStream2(streams[n]) || isTransformStream(streams[n]))) {
+        if (n < streams.length - 1 && !(isReadable(streams[n]) || isReadableStream(streams[n]) || isTransformStream(streams[n]))) {
           throw new ERR_INVALID_ARG_VALUE(`streams[${n}]`, orgStreams[n], "must be readable");
         }
         if (n > 0 && !(isWritable(streams[n]) || isWritableStream(streams[n]) || isTransformStream(streams[n]))) {
@@ -31726,7 +31726,7 @@ var require_compose = __commonJS({
       const head = streams[0];
       const tail = pipeline(streams, onfinished);
       const writable = !!(isWritable(head) || isWritableStream(head) || isTransformStream(head));
-      const readable2 = !!(isReadable(tail) || isReadableStream2(tail) || isTransformStream(tail));
+      const readable2 = !!(isReadable(tail) || isReadableStream(tail) || isTransformStream(tail));
       d = new Duplex({
         // TODO (ronag): highWaterMark?
         writableObjectMode: !!(head !== null && head !== void 0 && head.writableObjectMode),
@@ -36314,21 +36314,21 @@ var require_N3Util = __commonJS({
     function inDefaultGraph(quad) {
       return isDefaultGraph(quad.graph);
     }
-    function prefix(iri, factory3) {
+    function prefix(iri, factory2) {
       return prefixes({
         "": iri.value || iri
-      }, factory3)("");
+      }, factory2)("");
     }
-    function prefixes(defaultPrefixes, factory3) {
+    function prefixes(defaultPrefixes, factory2) {
       const prefixes2 = /* @__PURE__ */ Object.create(null);
       for (const prefix2 in defaultPrefixes)
         processPrefix(prefix2, defaultPrefixes[prefix2]);
-      factory3 = factory3 || _N3DataFactory.default;
+      factory2 = factory2 || _N3DataFactory.default;
       function processPrefix(prefix2, iri) {
         if (typeof iri === "string") {
           const cache = /* @__PURE__ */ Object.create(null);
           prefixes2[prefix2] = (local) => {
-            return cache[local] || (cache[local] = factory3.namedNode(iri + local));
+            return cache[local] || (cache[local] = factory2.namedNode(iri + local));
           };
         } else if (!(prefix2 in prefixes2)) {
           throw new Error(`Unknown prefix: ${prefix2}`);
@@ -36348,9 +36348,9 @@ var require_N3DataFactory = __commonJS({
       value: true
     });
     exports.default = exports.Variable = exports.Triple = exports.Term = exports.Quad = exports.NamedNode = exports.Literal = exports.DefaultGraph = exports.BlankNode = void 0;
-    exports.escapeQuotes = escapeQuotes2;
+    exports.escapeQuotes = escapeQuotes;
     exports.termFromId = termFromId;
-    exports.termToId = termToId2;
+    exports.termToId = termToId;
     exports.unescapeQuotes = unescapeQuotes;
     var _IRIs = _interopRequireDefault(require_IRIs());
     var _N3Util = require_N3Util();
@@ -36363,7 +36363,7 @@ var require_N3DataFactory = __commonJS({
     } = _IRIs.default;
     var DEFAULTGRAPH;
     var _blankNodeCounter = 0;
-    var escapedLiteral2 = /^"(.*".*)(?="[^"]*$)/;
+    var escapedLiteral = /^"(.*".*)(?="[^"]*$)/;
     var DataFactory3 = {
       namedNode,
       blankNode,
@@ -36500,33 +36500,33 @@ var require_N3DataFactory = __commonJS({
     };
     exports.DefaultGraph = DefaultGraph2;
     DEFAULTGRAPH = new DefaultGraph2();
-    function termFromId(id, factory3, nested) {
-      factory3 = factory3 || DataFactory3;
+    function termFromId(id, factory2, nested) {
+      factory2 = factory2 || DataFactory3;
       if (!id)
-        return factory3.defaultGraph();
+        return factory2.defaultGraph();
       switch (id[0]) {
         case "?":
-          return factory3.variable(id.substr(1));
+          return factory2.variable(id.substr(1));
         case "_":
-          return factory3.blankNode(id.substr(2));
+          return factory2.blankNode(id.substr(2));
         case '"':
-          if (factory3 === DataFactory3)
+          if (factory2 === DataFactory3)
             return new Literal2(id);
           if (id[id.length - 1] === '"')
-            return factory3.literal(id.substr(1, id.length - 2));
+            return factory2.literal(id.substr(1, id.length - 2));
           const endPos = id.lastIndexOf('"', id.length - 1);
-          return factory3.literal(id.substr(1, endPos - 1), id[endPos + 1] === "@" ? id.substr(endPos + 2) : factory3.namedNode(id.substr(endPos + 3)));
+          return factory2.literal(id.substr(1, endPos - 1), id[endPos + 1] === "@" ? id.substr(endPos + 2) : factory2.namedNode(id.substr(endPos + 3)));
         case "[":
           id = JSON.parse(id);
           break;
         default:
           if (!nested || !Array.isArray(id)) {
-            return factory3.namedNode(id);
+            return factory2.namedNode(id);
           }
       }
-      return factory3.quad(termFromId(id[0], factory3, true), termFromId(id[1], factory3, true), termFromId(id[2], factory3, true), id[3] && termFromId(id[3], factory3, true));
+      return factory2.quad(termFromId(id[0], factory2, true), termFromId(id[1], factory2, true), termFromId(id[2], factory2, true), id[3] && termFromId(id[3], factory2, true));
     }
-    function termToId2(term, nested) {
+    function termToId(term, nested) {
       if (typeof term === "string")
         return term;
       if (term instanceof Term && term.termType !== "Quad")
@@ -36545,9 +36545,9 @@ var require_N3DataFactory = __commonJS({
         case "Literal":
           return `"${term.value}"${term.language ? `@${term.language}` : term.datatype && term.datatype.value !== xsd.string ? `^^${term.datatype.value}` : ""}`;
         case "Quad":
-          const res = [termToId2(term.subject, true), termToId2(term.predicate, true), termToId2(term.object, true)];
+          const res = [termToId(term.subject, true), termToId(term.predicate, true), termToId(term.object, true)];
           if (!(0, _N3Util.isDefaultGraph)(term.graph)) {
-            res.push(termToId2(term.graph, true));
+            res.push(termToId(term.graph, true));
           }
           return nested ? res : JSON.stringify(res);
         default:
@@ -36594,11 +36594,11 @@ var require_N3DataFactory = __commonJS({
       }
     };
     exports.Triple = exports.Quad = Quad2;
-    function escapeQuotes2(id) {
-      return id.replace(escapedLiteral2, (_, quoted) => `"${quoted.replace(/"/g, '""')}`);
+    function escapeQuotes(id) {
+      return id.replace(escapedLiteral, (_, quoted) => `"${quoted.replace(/"/g, '""')}`);
     }
     function unescapeQuotes(id) {
-      return id.replace(escapedLiteral2, (_, quoted) => `"${quoted.replace(/""/g, '"')}`);
+      return id.replace(escapedLiteral, (_, quoted) => `"${quoted.replace(/""/g, '"')}`);
     }
     function namedNode(iri) {
       return new NamedNode2(iri);
@@ -37456,14 +37456,14 @@ var require_N3Parser = __commonJS({
     exports.default = N3Parser;
     function noop() {
     }
-    function initDataFactory(parser, factory3) {
-      const namedNode = factory3.namedNode;
+    function initDataFactory(parser, factory2) {
+      const namedNode = factory2.namedNode;
       parser._namedNode = namedNode;
-      parser._blankNode = factory3.blankNode;
-      parser._literal = factory3.literal;
-      parser._variable = factory3.variable;
-      parser._quad = factory3.quad;
-      parser.DEFAULTGRAPH = factory3.defaultGraph();
+      parser._blankNode = factory2.blankNode;
+      parser._literal = factory2.literal;
+      parser._variable = factory2.variable;
+      parser._quad = factory2.quad;
+      parser.DEFAULTGRAPH = factory2.defaultGraph();
       parser.RDF_FIRST = namedNode(_IRIs.default.rdf.first);
       parser.RDF_REST = namedNode(_IRIs.default.rdf.rest);
       parser.RDF_NIL = namedNode(_IRIs.default.rdf.nil);
@@ -37889,14 +37889,14 @@ var require_N3Store = __commonJS({
         if (quads)
           this.addQuads(quads);
       }
-      _termFromId(id, factory3) {
+      _termFromId(id, factory2) {
         if (id[0] === ".") {
           const entities = this._entities;
           const terms = id.split(".");
           const q = this._factory.quad(this._termFromId(entities[terms[1]]), this._termFromId(entities[terms[2]]), this._termFromId(entities[terms[3]]), terms[4] && this._termFromId(entities[terms[4]]));
           return q;
         }
-        return (0, _N3DataFactory.termFromId)(id, factory3);
+        return (0, _N3DataFactory.termFromId)(id, factory2);
       }
       _termToNumericId(term) {
         if (term.termType === "Quad") {
@@ -38039,7 +38039,7 @@ var require_N3Store = __commonJS({
       // ### `_getGraphs` returns an array with the given graph,
       // or all graphs if the argument is null or undefined.
       _getGraphs(graph) {
-        if (!isString2(graph))
+        if (!isString(graph))
           return this._graphs;
         const graphs = {};
         graphs[graph] = this._graphs[graph];
@@ -38469,7 +38469,7 @@ var require_N3Store = __commonJS({
       }
     };
     exports.default = N3Store;
-    function isString2(s) {
+    function isString(s) {
       return typeof s === "string" || s instanceof String;
     }
     var DatasetCoreAndReadableStream = class _DatasetCoreAndReadableStream extends _readableStream.Readable {
@@ -39579,9 +39579,9 @@ var require_browser_ponyfill = __commonJS({
           }
           return iterator;
         }
-        function Headers3(headers) {
+        function Headers2(headers) {
           this.map = {};
-          if (headers instanceof Headers3) {
+          if (headers instanceof Headers2) {
             headers.forEach(function(value, name) {
               this.append(name, value);
             }, this);
@@ -39595,47 +39595,47 @@ var require_browser_ponyfill = __commonJS({
             }, this);
           }
         }
-        Headers3.prototype.append = function(name, value) {
+        Headers2.prototype.append = function(name, value) {
           name = normalizeName(name);
           value = normalizeValue(value);
           var oldValue = this.map[name];
           this.map[name] = oldValue ? oldValue + ", " + value : value;
         };
-        Headers3.prototype["delete"] = function(name) {
+        Headers2.prototype["delete"] = function(name) {
           delete this.map[normalizeName(name)];
         };
-        Headers3.prototype.get = function(name) {
+        Headers2.prototype.get = function(name) {
           name = normalizeName(name);
           return this.has(name) ? this.map[name] : null;
         };
-        Headers3.prototype.has = function(name) {
+        Headers2.prototype.has = function(name) {
           return this.map.hasOwnProperty(normalizeName(name));
         };
-        Headers3.prototype.set = function(name, value) {
+        Headers2.prototype.set = function(name, value) {
           this.map[normalizeName(name)] = normalizeValue(value);
         };
-        Headers3.prototype.forEach = function(callback, thisArg) {
+        Headers2.prototype.forEach = function(callback, thisArg) {
           for (var name in this.map) {
             if (this.map.hasOwnProperty(name)) {
               callback.call(thisArg, this.map[name], name, this);
             }
           }
         };
-        Headers3.prototype.keys = function() {
+        Headers2.prototype.keys = function() {
           var items = [];
           this.forEach(function(value, name) {
             items.push(name);
           });
           return iteratorFor(items);
         };
-        Headers3.prototype.values = function() {
+        Headers2.prototype.values = function() {
           var items = [];
           this.forEach(function(value) {
             items.push(value);
           });
           return iteratorFor(items);
         };
-        Headers3.prototype.entries = function() {
+        Headers2.prototype.entries = function() {
           var items = [];
           this.forEach(function(value, name) {
             items.push([name, value]);
@@ -39643,7 +39643,7 @@ var require_browser_ponyfill = __commonJS({
           return iteratorFor(items);
         };
         if (support.iterable) {
-          Headers3.prototype[Symbol.iterator] = Headers3.prototype.entries;
+          Headers2.prototype[Symbol.iterator] = Headers2.prototype.entries;
         }
         function consumed(body) {
           if (body.bodyUsed) {
@@ -39786,7 +39786,7 @@ var require_browser_ponyfill = __commonJS({
             this.url = input.url;
             this.credentials = input.credentials;
             if (!options.headers) {
-              this.headers = new Headers3(input.headers);
+              this.headers = new Headers2(input.headers);
             }
             this.method = input.method;
             this.mode = input.mode;
@@ -39800,7 +39800,7 @@ var require_browser_ponyfill = __commonJS({
           }
           this.credentials = options.credentials || this.credentials || "same-origin";
           if (options.headers || !this.headers) {
-            this.headers = new Headers3(options.headers);
+            this.headers = new Headers2(options.headers);
           }
           this.method = normalizeMethod(options.method || this.method || "GET");
           this.mode = options.mode || this.mode || null;
@@ -39827,7 +39827,7 @@ var require_browser_ponyfill = __commonJS({
           return form;
         }
         function parseHeaders(rawHeaders) {
-          var headers = new Headers3();
+          var headers = new Headers2();
           var preProcessedHeaders = rawHeaders.replace(/\r?\n[\t ]+/g, " ");
           preProcessedHeaders.split(/\r?\n/).forEach(function(line) {
             var parts = line.split(":");
@@ -39848,7 +39848,7 @@ var require_browser_ponyfill = __commonJS({
           this.status = options.status === void 0 ? 200 : options.status;
           this.ok = this.status >= 200 && this.status < 300;
           this.statusText = "statusText" in options ? options.statusText : "OK";
-          this.headers = new Headers3(options.headers);
+          this.headers = new Headers2(options.headers);
           this.url = options.url || "";
           this._initBody(bodyInit);
         }
@@ -39857,7 +39857,7 @@ var require_browser_ponyfill = __commonJS({
           return new Response2(this._bodyInit, {
             status: this.status,
             statusText: this.statusText,
-            headers: new Headers3(this.headers),
+            headers: new Headers2(this.headers),
             url: this.url
           });
         };
@@ -39941,11 +39941,11 @@ var require_browser_ponyfill = __commonJS({
         fetch2.polyfill = true;
         if (!self2.fetch) {
           self2.fetch = fetch2;
-          self2.Headers = Headers3;
+          self2.Headers = Headers2;
           self2.Request = Request2;
           self2.Response = Response2;
         }
-        exports2.Headers = Headers3;
+        exports2.Headers = Headers2;
         exports2.Request = Request2;
         exports2.Response = Response2;
         exports2.fetch = fetch2;
@@ -43037,9 +43037,9 @@ var require_stream_duplex = __commonJS({
       return keys2;
     };
     module.exports = Duplex;
-    var Readable6 = require_stream_readable();
+    var Readable5 = require_stream_readable();
     var Writable = require_stream_writable();
-    require_inherits_browser()(Duplex, Readable6);
+    require_inherits_browser()(Duplex, Readable5);
     {
       keys = objectKeys(Writable.prototype);
       for (v = 0; v < keys.length; v++) {
@@ -43054,7 +43054,7 @@ var require_stream_duplex = __commonJS({
     function Duplex(options) {
       if (!(this instanceof Duplex))
         return new Duplex(options);
-      Readable6.call(this, options);
+      Readable5.call(this, options);
       Writable.call(this, options);
       this.allowHalfOpen = true;
       if (options) {
@@ -43424,9 +43424,9 @@ var require_from_browser = __commonJS({
 var require_stream_readable = __commonJS({
   "node_modules/readable-web-to-node-stream/node_modules/readable-stream/lib/_stream_readable.js"(exports, module) {
     "use strict";
-    module.exports = Readable6;
+    module.exports = Readable5;
     var Duplex;
-    Readable6.ReadableState = ReadableState;
+    Readable5.ReadableState = ReadableState;
     var EE = require_events().EventEmitter;
     var EElistenerCount = function EElistenerCount2(emitter, type) {
       return emitter.listeners(type).length;
@@ -43461,7 +43461,7 @@ var require_stream_readable = __commonJS({
     var StringDecoder;
     var createReadableStreamAsyncIterator;
     var from;
-    require_inherits_browser()(Readable6, Stream);
+    require_inherits_browser()(Readable5, Stream);
     var errorOrDestroy = destroyImpl.errorOrDestroy;
     var kProxyEvents = ["error", "close", "destroy", "pause", "resume"];
     function prependListener(emitter, event, fn) {
@@ -43512,10 +43512,10 @@ var require_stream_readable = __commonJS({
         this.encoding = options.encoding;
       }
     }
-    function Readable6(options) {
+    function Readable5(options) {
       Duplex = Duplex || require_stream_duplex();
-      if (!(this instanceof Readable6))
-        return new Readable6(options);
+      if (!(this instanceof Readable5))
+        return new Readable5(options);
       var isDuplex = this instanceof Duplex;
       this._readableState = new ReadableState(options, this, isDuplex);
       this.readable = true;
@@ -43527,7 +43527,7 @@ var require_stream_readable = __commonJS({
       }
       Stream.call(this);
     }
-    Object.defineProperty(Readable6.prototype, "destroyed", {
+    Object.defineProperty(Readable5.prototype, "destroyed", {
       // making it explicit this property is not enumerable
       // because otherwise some prototype manipulation in
       // userland will fail
@@ -43545,12 +43545,12 @@ var require_stream_readable = __commonJS({
         this._readableState.destroyed = value;
       }
     });
-    Readable6.prototype.destroy = destroyImpl.destroy;
-    Readable6.prototype._undestroy = destroyImpl.undestroy;
-    Readable6.prototype._destroy = function(err, cb) {
+    Readable5.prototype.destroy = destroyImpl.destroy;
+    Readable5.prototype._undestroy = destroyImpl.undestroy;
+    Readable5.prototype._destroy = function(err, cb) {
       cb(err);
     };
-    Readable6.prototype.push = function(chunk, encoding) {
+    Readable5.prototype.push = function(chunk, encoding) {
       var state = this._readableState;
       var skipChunkCheck;
       if (!state.objectMode) {
@@ -43567,7 +43567,7 @@ var require_stream_readable = __commonJS({
       }
       return readableAddChunk(this, chunk, encoding, false, skipChunkCheck);
     };
-    Readable6.prototype.unshift = function(chunk) {
+    Readable5.prototype.unshift = function(chunk) {
       return readableAddChunk(this, chunk, null, true, false);
     };
     function readableAddChunk(stream, chunk, encoding, addToFront, skipChunkCheck) {
@@ -43636,10 +43636,10 @@ var require_stream_readable = __commonJS({
       }
       return er;
     }
-    Readable6.prototype.isPaused = function() {
+    Readable5.prototype.isPaused = function() {
       return this._readableState.flowing === false;
     };
-    Readable6.prototype.setEncoding = function(enc) {
+    Readable5.prototype.setEncoding = function(enc) {
       if (!StringDecoder)
         StringDecoder = require_string_decoder().StringDecoder;
       var decoder = new StringDecoder(enc);
@@ -43693,7 +43693,7 @@ var require_stream_readable = __commonJS({
       }
       return state.length;
     }
-    Readable6.prototype.read = function(n) {
+    Readable5.prototype.read = function(n) {
       debug("read", n);
       n = parseInt(n, 10);
       var state = this._readableState;
@@ -43814,10 +43814,10 @@ var require_stream_readable = __commonJS({
       }
       state.readingMore = false;
     }
-    Readable6.prototype._read = function(n) {
+    Readable5.prototype._read = function(n) {
       errorOrDestroy(this, new ERR_METHOD_NOT_IMPLEMENTED("_read()"));
     };
-    Readable6.prototype.pipe = function(dest, pipeOpts) {
+    Readable5.prototype.pipe = function(dest, pipeOpts) {
       var src = this;
       var state = this._readableState;
       switch (state.pipesCount) {
@@ -43925,7 +43925,7 @@ var require_stream_readable = __commonJS({
         }
       };
     }
-    Readable6.prototype.unpipe = function(dest) {
+    Readable5.prototype.unpipe = function(dest) {
       var state = this._readableState;
       var unpipeInfo = {
         hasUnpiped: false
@@ -43966,7 +43966,7 @@ var require_stream_readable = __commonJS({
       dest.emit("unpipe", this, unpipeInfo);
       return this;
     };
-    Readable6.prototype.on = function(ev, fn) {
+    Readable5.prototype.on = function(ev, fn) {
       var res = Stream.prototype.on.call(this, ev, fn);
       var state = this._readableState;
       if (ev === "data") {
@@ -43988,15 +43988,15 @@ var require_stream_readable = __commonJS({
       }
       return res;
     };
-    Readable6.prototype.addListener = Readable6.prototype.on;
-    Readable6.prototype.removeListener = function(ev, fn) {
+    Readable5.prototype.addListener = Readable5.prototype.on;
+    Readable5.prototype.removeListener = function(ev, fn) {
       var res = Stream.prototype.removeListener.call(this, ev, fn);
       if (ev === "readable") {
         process.nextTick(updateReadableListening, this);
       }
       return res;
     };
-    Readable6.prototype.removeAllListeners = function(ev) {
+    Readable5.prototype.removeAllListeners = function(ev) {
       var res = Stream.prototype.removeAllListeners.apply(this, arguments);
       if (ev === "readable" || ev === void 0) {
         process.nextTick(updateReadableListening, this);
@@ -44016,7 +44016,7 @@ var require_stream_readable = __commonJS({
       debug("readable nexttick read 0");
       self2.read(0);
     }
-    Readable6.prototype.resume = function() {
+    Readable5.prototype.resume = function() {
       var state = this._readableState;
       if (!state.flowing) {
         debug("resume");
@@ -44043,7 +44043,7 @@ var require_stream_readable = __commonJS({
       if (state.flowing && !state.reading)
         stream.read(0);
     }
-    Readable6.prototype.pause = function() {
+    Readable5.prototype.pause = function() {
       debug("call pause flowing=%j", this._readableState.flowing);
       if (this._readableState.flowing !== false) {
         debug("pause");
@@ -44059,7 +44059,7 @@ var require_stream_readable = __commonJS({
       while (state.flowing && stream.read() !== null)
         ;
     }
-    Readable6.prototype.wrap = function(stream) {
+    Readable5.prototype.wrap = function(stream) {
       var _this = this;
       var state = this._readableState;
       var paused = false;
@@ -44108,14 +44108,14 @@ var require_stream_readable = __commonJS({
       return this;
     };
     if (typeof Symbol === "function") {
-      Readable6.prototype[Symbol.asyncIterator] = function() {
+      Readable5.prototype[Symbol.asyncIterator] = function() {
         if (createReadableStreamAsyncIterator === void 0) {
           createReadableStreamAsyncIterator = require_async_iterator();
         }
         return createReadableStreamAsyncIterator(this);
       };
     }
-    Object.defineProperty(Readable6.prototype, "readableHighWaterMark", {
+    Object.defineProperty(Readable5.prototype, "readableHighWaterMark", {
       // making it explicit this property is not enumerable
       // because otherwise some prototype manipulation in
       // userland will fail
@@ -44124,7 +44124,7 @@ var require_stream_readable = __commonJS({
         return this._readableState.highWaterMark;
       }
     });
-    Object.defineProperty(Readable6.prototype, "readableBuffer", {
+    Object.defineProperty(Readable5.prototype, "readableBuffer", {
       // making it explicit this property is not enumerable
       // because otherwise some prototype manipulation in
       // userland will fail
@@ -44133,7 +44133,7 @@ var require_stream_readable = __commonJS({
         return this._readableState && this._readableState.buffer;
       }
     });
-    Object.defineProperty(Readable6.prototype, "readableFlowing", {
+    Object.defineProperty(Readable5.prototype, "readableFlowing", {
       // making it explicit this property is not enumerable
       // because otherwise some prototype manipulation in
       // userland will fail
@@ -44147,8 +44147,8 @@ var require_stream_readable = __commonJS({
         }
       }
     });
-    Readable6._fromList = fromList;
-    Object.defineProperty(Readable6.prototype, "readableLength", {
+    Readable5._fromList = fromList;
+    Object.defineProperty(Readable5.prototype, "readableLength", {
       // making it explicit this property is not enumerable
       // because otherwise some prototype manipulation in
       // userland will fail
@@ -44199,11 +44199,11 @@ var require_stream_readable = __commonJS({
       }
     }
     if (typeof Symbol === "function") {
-      Readable6.from = function(iterable, opts) {
+      Readable5.from = function(iterable, opts) {
         if (from === void 0) {
           from = require_from_browser();
         }
-        return from(Readable6, iterable, opts);
+        return from(Readable5, iterable, opts);
       };
     }
     function indexOf(xs, x) {
@@ -44873,7 +44873,7 @@ var require_polyfill_ie11_min = __commonJS({
           function formatValue(e, r, t) {
             if (e.customInspect && r && isFunction(r.inspect) && r.inspect !== exports3.inspect && (!r.constructor || r.constructor.prototype !== r)) {
               var n = r.inspect(t, e);
-              return isString2(n) || (n = formatValue(e, n, t)), n;
+              return isString(n) || (n = formatValue(e, n, t)), n;
             }
             var i2 = formatPrimitive(e, r);
             if (i2)
@@ -44907,7 +44907,7 @@ var require_polyfill_ie11_min = __commonJS({
           function formatPrimitive(e, r) {
             if (isUndefined(r))
               return e.stylize("undefined", "undefined");
-            if (isString2(r)) {
+            if (isString(r)) {
               var t = "'" + JSON.stringify(r).replace(/^"|"$/g, "").replace(/'/g, "\\'").replace(/\\"/g, '"') + "'";
               return e.stylize(t, "string");
             }
@@ -44957,7 +44957,7 @@ var require_polyfill_ie11_min = __commonJS({
           function isNumber(e) {
             return "number" == typeof e;
           }
-          function isString2(e) {
+          function isString(e) {
             return "string" == typeof e;
           }
           function isSymbol(e) {
@@ -44999,7 +44999,7 @@ var require_polyfill_ie11_min = __commonJS({
           }
           var formatRegExp = /%[sdj%]/g;
           exports3.format = function(e) {
-            if (!isString2(e)) {
+            if (!isString(e)) {
               for (var r = [], t = 0; t < arguments.length; t++)
                 r.push(inspect(arguments[t]));
               return r.join(" ");
@@ -45056,7 +45056,7 @@ var require_polyfill_ie11_min = __commonJS({
                 debugs[e] = function() {
                 };
             return debugs[e];
-          }, exports3.inspect = inspect, inspect.colors = { bold: [1, 22], italic: [3, 23], underline: [4, 24], inverse: [7, 27], white: [37, 39], grey: [90, 39], black: [30, 39], blue: [34, 39], cyan: [36, 39], green: [32, 39], magenta: [35, 39], red: [31, 39], yellow: [33, 39] }, inspect.styles = { special: "cyan", number: "yellow", boolean: "yellow", undefined: "grey", null: "bold", string: "green", date: "magenta", regexp: "red" }, exports3.isArray = isArray, exports3.isBoolean = isBoolean, exports3.isNull = isNull, exports3.isNullOrUndefined = isNullOrUndefined, exports3.isNumber = isNumber, exports3.isString = isString2, exports3.isSymbol = isSymbol, exports3.isUndefined = isUndefined, exports3.isRegExp = isRegExp, exports3.isObject = isObject, exports3.isDate = isDate, exports3.isError = isError, exports3.isFunction = isFunction, exports3.isPrimitive = isPrimitive, exports3.isBuffer = _dereq_("./support/isBuffer");
+          }, exports3.inspect = inspect, inspect.colors = { bold: [1, 22], italic: [3, 23], underline: [4, 24], inverse: [7, 27], white: [37, 39], grey: [90, 39], black: [30, 39], blue: [34, 39], cyan: [36, 39], green: [32, 39], magenta: [35, 39], red: [31, 39], yellow: [33, 39] }, inspect.styles = { special: "cyan", number: "yellow", boolean: "yellow", undefined: "grey", null: "bold", string: "green", date: "magenta", regexp: "red" }, exports3.isArray = isArray, exports3.isBoolean = isBoolean, exports3.isNull = isNull, exports3.isNullOrUndefined = isNullOrUndefined, exports3.isNumber = isNumber, exports3.isString = isString, exports3.isSymbol = isSymbol, exports3.isUndefined = isUndefined, exports3.isRegExp = isRegExp, exports3.isObject = isObject, exports3.isDate = isDate, exports3.isError = isError, exports3.isFunction = isFunction, exports3.isPrimitive = isPrimitive, exports3.isBuffer = _dereq_("./support/isBuffer");
           var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
           exports3.log = function() {
             console.log("%s - %s", timestamp(), exports3.format.apply(exports3, arguments));
@@ -46826,12 +46826,12 @@ var require_polyfill_ie11_min = __commonJS({
 var require_is_stream = __commonJS({
   "node_modules/is-stream/index.js"(exports, module) {
     "use strict";
-    var isStream2 = (stream) => stream !== null && typeof stream === "object" && typeof stream.pipe === "function";
-    isStream2.writable = (stream) => isStream2(stream) && stream.writable !== false && typeof stream._write === "function" && typeof stream._writableState === "object";
-    isStream2.readable = (stream) => isStream2(stream) && stream.readable !== false && typeof stream._read === "function" && typeof stream._readableState === "object";
-    isStream2.duplex = (stream) => isStream2.writable(stream) && isStream2.readable(stream);
-    isStream2.transform = (stream) => isStream2.duplex(stream) && typeof stream._transform === "function";
-    module.exports = isStream2;
+    var isStream = (stream) => stream !== null && typeof stream === "object" && typeof stream.pipe === "function";
+    isStream.writable = (stream) => isStream(stream) && stream.writable !== false && typeof stream._write === "function" && typeof stream._writableState === "object";
+    isStream.readable = (stream) => isStream(stream) && stream.readable !== false && typeof stream._read === "function" && typeof stream._readableState === "object";
+    isStream.duplex = (stream) => isStream.writable(stream) && isStream.readable(stream);
+    isStream.transform = (stream) => isStream.duplex(stream) && typeof stream._transform === "function";
+    module.exports = isStream;
   }
 });
 
@@ -46904,7 +46904,7 @@ var require_ActorHttp = __commonJS({
     if (!globalThis.ReadableStream) {
       globalThis.ReadableStream = require_polyfill_ie11_min().ReadableStream;
     }
-    var isStream2 = require_is_stream();
+    var isStream = require_is_stream();
     var toWebReadableStream = require_readable_stream_node_to_web();
     var ActorHttp = class extends core_1.Actor {
       /**
@@ -46920,7 +46920,7 @@ var require_ActorHttp = __commonJS({
        * @returns {NodeJS.ReadableStream}
        */
       static toNodeReadable(body) {
-        return isStream2(body) || body === null ? body : new readable_web_to_node_stream_1.ReadableWebToNodeStream(body);
+        return isStream(body) || body === null ? body : new readable_web_to_node_stream_1.ReadableWebToNodeStream(body);
       }
       /**
        * Converts Node streams to WhatWG streams.
@@ -54805,11 +54805,11 @@ var require_bignumber = __commonJS({
 // node_modules/spark-md5/spark-md5.js
 var require_spark_md5 = __commonJS({
   "node_modules/spark-md5/spark-md5.js"(exports, module) {
-    (function(factory3) {
+    (function(factory2) {
       if (typeof exports === "object") {
-        module.exports = factory3();
+        module.exports = factory2();
       } else if (typeof define === "function" && define.amd) {
-        define(factory3);
+        define(factory2);
       } else {
         var glob;
         try {
@@ -54817,7 +54817,7 @@ var require_spark_md5 = __commonJS({
         } catch (e) {
           glob = self;
         }
-        glob.SparkMD5 = factory3();
+        glob.SparkMD5 = factory2();
       }
     })(function(undefined2) {
       "use strict";
@@ -64092,7 +64092,7 @@ var require_SparqlEndpointFetcher = __commonJS({
     var stringifyStream = require_stream_to_string();
     var readable_web_to_node_stream_1 = require_lib50();
     var n3 = require_lib43();
-    var isStream2 = require_is_stream();
+    var isStream = require_is_stream();
     var SparqlEndpointFetcher = class _SparqlEndpointFetcher {
       constructor(args) {
         args = args || {};
@@ -64258,7 +64258,7 @@ var require_SparqlEndpointFetcher = __commonJS({
         clearTimeout(timeoutId);
         let responseStream;
         if (!options.ignoreBody) {
-          responseStream = isStream2(httpResponse.body) ? httpResponse.body : new readable_web_to_node_stream_1.ReadableWebToNodeStream(httpResponse.body);
+          responseStream = isStream(httpResponse.body) ? httpResponse.body : new readable_web_to_node_stream_1.ReadableWebToNodeStream(httpResponse.body);
         }
         let contentType = httpResponse.headers.get("Content-Type") || "";
         if (contentType.indexOf(";") > 0) {
@@ -65259,255 +65259,6 @@ var require_index_browser2 = __commonJS({
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     __exportStar(require_QueryEngine(), exports);
-  }
-});
-
-// node_modules/lodash/_trimmedEndIndex.js
-var require_trimmedEndIndex = __commonJS({
-  "node_modules/lodash/_trimmedEndIndex.js"(exports, module) {
-    var reWhitespace = /\s/;
-    function trimmedEndIndex(string) {
-      var index = string.length;
-      while (index-- && reWhitespace.test(string.charAt(index))) {
-      }
-      return index;
-    }
-    module.exports = trimmedEndIndex;
-  }
-});
-
-// node_modules/lodash/_baseTrim.js
-var require_baseTrim = __commonJS({
-  "node_modules/lodash/_baseTrim.js"(exports, module) {
-    var trimmedEndIndex = require_trimmedEndIndex();
-    var reTrimStart = /^\s+/;
-    function baseTrim(string) {
-      return string ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, "") : string;
-    }
-    module.exports = baseTrim;
-  }
-});
-
-// node_modules/lodash/isObject.js
-var require_isObject = __commonJS({
-  "node_modules/lodash/isObject.js"(exports, module) {
-    function isObject(value) {
-      var type = typeof value;
-      return value != null && (type == "object" || type == "function");
-    }
-    module.exports = isObject;
-  }
-});
-
-// node_modules/lodash/_freeGlobal.js
-var require_freeGlobal = __commonJS({
-  "node_modules/lodash/_freeGlobal.js"(exports, module) {
-    var freeGlobal = typeof global == "object" && global && global.Object === Object && global;
-    module.exports = freeGlobal;
-  }
-});
-
-// node_modules/lodash/_root.js
-var require_root = __commonJS({
-  "node_modules/lodash/_root.js"(exports, module) {
-    var freeGlobal = require_freeGlobal();
-    var freeSelf = typeof self == "object" && self && self.Object === Object && self;
-    var root = freeGlobal || freeSelf || Function("return this")();
-    module.exports = root;
-  }
-});
-
-// node_modules/lodash/_Symbol.js
-var require_Symbol = __commonJS({
-  "node_modules/lodash/_Symbol.js"(exports, module) {
-    var root = require_root();
-    var Symbol2 = root.Symbol;
-    module.exports = Symbol2;
-  }
-});
-
-// node_modules/lodash/_getRawTag.js
-var require_getRawTag = __commonJS({
-  "node_modules/lodash/_getRawTag.js"(exports, module) {
-    var Symbol2 = require_Symbol();
-    var objectProto = Object.prototype;
-    var hasOwnProperty = objectProto.hasOwnProperty;
-    var nativeObjectToString = objectProto.toString;
-    var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
-    function getRawTag(value) {
-      var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
-      try {
-        value[symToStringTag] = void 0;
-        var unmasked = true;
-      } catch (e) {
-      }
-      var result = nativeObjectToString.call(value);
-      if (unmasked) {
-        if (isOwn) {
-          value[symToStringTag] = tag;
-        } else {
-          delete value[symToStringTag];
-        }
-      }
-      return result;
-    }
-    module.exports = getRawTag;
-  }
-});
-
-// node_modules/lodash/_objectToString.js
-var require_objectToString = __commonJS({
-  "node_modules/lodash/_objectToString.js"(exports, module) {
-    var objectProto = Object.prototype;
-    var nativeObjectToString = objectProto.toString;
-    function objectToString(value) {
-      return nativeObjectToString.call(value);
-    }
-    module.exports = objectToString;
-  }
-});
-
-// node_modules/lodash/_baseGetTag.js
-var require_baseGetTag = __commonJS({
-  "node_modules/lodash/_baseGetTag.js"(exports, module) {
-    var Symbol2 = require_Symbol();
-    var getRawTag = require_getRawTag();
-    var objectToString = require_objectToString();
-    var nullTag = "[object Null]";
-    var undefinedTag = "[object Undefined]";
-    var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
-    function baseGetTag(value) {
-      if (value == null) {
-        return value === void 0 ? undefinedTag : nullTag;
-      }
-      return symToStringTag && symToStringTag in Object(value) ? getRawTag(value) : objectToString(value);
-    }
-    module.exports = baseGetTag;
-  }
-});
-
-// node_modules/lodash/isObjectLike.js
-var require_isObjectLike2 = __commonJS({
-  "node_modules/lodash/isObjectLike.js"(exports, module) {
-    function isObjectLike(value) {
-      return value != null && typeof value == "object";
-    }
-    module.exports = isObjectLike;
-  }
-});
-
-// node_modules/lodash/isSymbol.js
-var require_isSymbol = __commonJS({
-  "node_modules/lodash/isSymbol.js"(exports, module) {
-    var baseGetTag = require_baseGetTag();
-    var isObjectLike = require_isObjectLike2();
-    var symbolTag = "[object Symbol]";
-    function isSymbol(value) {
-      return typeof value == "symbol" || isObjectLike(value) && baseGetTag(value) == symbolTag;
-    }
-    module.exports = isSymbol;
-  }
-});
-
-// node_modules/lodash/toNumber.js
-var require_toNumber = __commonJS({
-  "node_modules/lodash/toNumber.js"(exports, module) {
-    var baseTrim = require_baseTrim();
-    var isObject = require_isObject();
-    var isSymbol = require_isSymbol();
-    var NAN = 0 / 0;
-    var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
-    var reIsBinary = /^0b[01]+$/i;
-    var reIsOctal = /^0o[0-7]+$/i;
-    var freeParseInt = parseInt;
-    function toNumber(value) {
-      if (typeof value == "number") {
-        return value;
-      }
-      if (isSymbol(value)) {
-        return NAN;
-      }
-      if (isObject(value)) {
-        var other = typeof value.valueOf == "function" ? value.valueOf() : value;
-        value = isObject(other) ? other + "" : other;
-      }
-      if (typeof value != "string") {
-        return value === 0 ? value : +value;
-      }
-      value = baseTrim(value);
-      var isBinary = reIsBinary.test(value);
-      return isBinary || reIsOctal.test(value) ? freeParseInt(value.slice(2), isBinary ? 2 : 8) : reIsBadHex.test(value) ? NAN : +value;
-    }
-    module.exports = toNumber;
-  }
-});
-
-// node_modules/lodash/toFinite.js
-var require_toFinite = __commonJS({
-  "node_modules/lodash/toFinite.js"(exports, module) {
-    var toNumber = require_toNumber();
-    var INFINITY = 1 / 0;
-    var MAX_INTEGER = 17976931348623157e292;
-    function toFinite(value) {
-      if (!value) {
-        return value === 0 ? value : 0;
-      }
-      value = toNumber(value);
-      if (value === INFINITY || value === -INFINITY) {
-        var sign = value < 0 ? -1 : 1;
-        return sign * MAX_INTEGER;
-      }
-      return value === value ? value : 0;
-    }
-    module.exports = toFinite;
-  }
-});
-
-// node_modules/lodash/toInteger.js
-var require_toInteger = __commonJS({
-  "node_modules/lodash/toInteger.js"(exports, module) {
-    var toFinite = require_toFinite();
-    function toInteger(value) {
-      var result = toFinite(value), remainder = result % 1;
-      return result === result ? remainder ? result - remainder : result : 0;
-    }
-    module.exports = toInteger;
-  }
-});
-
-// node_modules/lodash/before.js
-var require_before = __commonJS({
-  "node_modules/lodash/before.js"(exports, module) {
-    var toInteger = require_toInteger();
-    var FUNC_ERROR_TEXT = "Expected a function";
-    function before(n, func) {
-      var result;
-      if (typeof func != "function") {
-        throw new TypeError(FUNC_ERROR_TEXT);
-      }
-      n = toInteger(n);
-      return function() {
-        if (--n > 0) {
-          result = func.apply(this, arguments);
-        }
-        if (n <= 1) {
-          func = void 0;
-        }
-        return result;
-      };
-    }
-    module.exports = before;
-  }
-});
-
-// node_modules/lodash/once.js
-var require_once = __commonJS({
-  "node_modules/lodash/once.js"(exports, module) {
-    var before = require_before();
-    function once2(func) {
-      return before(2, func);
-    }
-    module.exports = once2;
   }
 });
 
@@ -68938,6 +68689,8711 @@ var require_rdfxml_streaming_parser = __commonJS({
   }
 });
 
+// node_modules/rdf-canonize/lib/IdentifierIssuer.js
+var require_IdentifierIssuer = __commonJS({
+  "node_modules/rdf-canonize/lib/IdentifierIssuer.js"(exports, module) {
+    "use strict";
+    module.exports = class IdentifierIssuer {
+      /**
+       * Creates a new IdentifierIssuer. A IdentifierIssuer issues unique
+       * identifiers, keeping track of any previously issued identifiers.
+       *
+       * @param prefix the prefix to use ('<prefix><counter>').
+       * @param existing an existing Map to use.
+       * @param counter the counter to use.
+       */
+      constructor(prefix, existing = /* @__PURE__ */ new Map(), counter = 0) {
+        this.prefix = prefix;
+        this._existing = existing;
+        this.counter = counter;
+      }
+      /**
+       * Copies this IdentifierIssuer.
+       *
+       * @return a copy of this IdentifierIssuer.
+       */
+      clone() {
+        const { prefix, _existing, counter } = this;
+        return new IdentifierIssuer(prefix, new Map(_existing), counter);
+      }
+      /**
+       * Gets the new identifier for the given old identifier, where if no old
+       * identifier is given a new identifier will be generated.
+       *
+       * @param [old] the old identifier to get the new identifier for.
+       *
+       * @return the new identifier.
+       */
+      getId(old) {
+        const existing = old && this._existing.get(old);
+        if (existing) {
+          return existing;
+        }
+        const identifier = this.prefix + this.counter;
+        this.counter++;
+        if (old) {
+          this._existing.set(old, identifier);
+        }
+        return identifier;
+      }
+      /**
+       * Returns true if the given old identifer has already been assigned a new
+       * identifier.
+       *
+       * @param old the old identifier to check.
+       *
+       * @return true if the old identifier has been assigned a new identifier,
+       *   false if not.
+       */
+      hasId(old) {
+        return this._existing.has(old);
+      }
+      /**
+       * Returns all of the IDs that have been issued new IDs in the order in
+       * which they were issued new IDs.
+       *
+       * @return the list of old IDs that has been issued new IDs in order.
+       */
+      getOldIds() {
+        return [...this._existing.keys()];
+      }
+    };
+  }
+});
+
+// node_modules/setimmediate/setImmediate.js
+var require_setImmediate = __commonJS({
+  "node_modules/setimmediate/setImmediate.js"(exports) {
+    (function(global2, undefined2) {
+      "use strict";
+      if (global2.setImmediate) {
+        return;
+      }
+      var nextHandle = 1;
+      var tasksByHandle = {};
+      var currentlyRunningATask = false;
+      var doc = global2.document;
+      var registerImmediate;
+      function setImmediate2(callback) {
+        if (typeof callback !== "function") {
+          callback = new Function("" + callback);
+        }
+        var args = new Array(arguments.length - 1);
+        for (var i2 = 0; i2 < args.length; i2++) {
+          args[i2] = arguments[i2 + 1];
+        }
+        var task = { callback, args };
+        tasksByHandle[nextHandle] = task;
+        registerImmediate(nextHandle);
+        return nextHandle++;
+      }
+      function clearImmediate(handle) {
+        delete tasksByHandle[handle];
+      }
+      function run(task) {
+        var callback = task.callback;
+        var args = task.args;
+        switch (args.length) {
+          case 0:
+            callback();
+            break;
+          case 1:
+            callback(args[0]);
+            break;
+          case 2:
+            callback(args[0], args[1]);
+            break;
+          case 3:
+            callback(args[0], args[1], args[2]);
+            break;
+          default:
+            callback.apply(undefined2, args);
+            break;
+        }
+      }
+      function runIfPresent(handle) {
+        if (currentlyRunningATask) {
+          setTimeout(runIfPresent, 0, handle);
+        } else {
+          var task = tasksByHandle[handle];
+          if (task) {
+            currentlyRunningATask = true;
+            try {
+              run(task);
+            } finally {
+              clearImmediate(handle);
+              currentlyRunningATask = false;
+            }
+          }
+        }
+      }
+      function installNextTickImplementation() {
+        registerImmediate = function(handle) {
+          process.nextTick(function() {
+            runIfPresent(handle);
+          });
+        };
+      }
+      function canUsePostMessage() {
+        if (global2.postMessage && !global2.importScripts) {
+          var postMessageIsAsynchronous = true;
+          var oldOnMessage = global2.onmessage;
+          global2.onmessage = function() {
+            postMessageIsAsynchronous = false;
+          };
+          global2.postMessage("", "*");
+          global2.onmessage = oldOnMessage;
+          return postMessageIsAsynchronous;
+        }
+      }
+      function installPostMessageImplementation() {
+        var messagePrefix = "setImmediate$" + Math.random() + "$";
+        var onGlobalMessage = function(event) {
+          if (event.source === global2 && typeof event.data === "string" && event.data.indexOf(messagePrefix) === 0) {
+            runIfPresent(+event.data.slice(messagePrefix.length));
+          }
+        };
+        if (global2.addEventListener) {
+          global2.addEventListener("message", onGlobalMessage, false);
+        } else {
+          global2.attachEvent("onmessage", onGlobalMessage);
+        }
+        registerImmediate = function(handle) {
+          global2.postMessage(messagePrefix + handle, "*");
+        };
+      }
+      function installMessageChannelImplementation() {
+        var channel = new MessageChannel();
+        channel.port1.onmessage = function(event) {
+          var handle = event.data;
+          runIfPresent(handle);
+        };
+        registerImmediate = function(handle) {
+          channel.port2.postMessage(handle);
+        };
+      }
+      function installReadyStateChangeImplementation() {
+        var html2 = doc.documentElement;
+        registerImmediate = function(handle) {
+          var script = doc.createElement("script");
+          script.onreadystatechange = function() {
+            runIfPresent(handle);
+            script.onreadystatechange = null;
+            html2.removeChild(script);
+            script = null;
+          };
+          html2.appendChild(script);
+        };
+      }
+      function installSetTimeoutImplementation() {
+        registerImmediate = function(handle) {
+          setTimeout(runIfPresent, 0, handle);
+        };
+      }
+      var attachTo = Object.getPrototypeOf && Object.getPrototypeOf(global2);
+      attachTo = attachTo && attachTo.setTimeout ? attachTo : global2;
+      if ({}.toString.call(global2.process) === "[object process]") {
+        installNextTickImplementation();
+      } else if (canUsePostMessage()) {
+        installPostMessageImplementation();
+      } else if (global2.MessageChannel) {
+        installMessageChannelImplementation();
+      } else if (doc && "onreadystatechange" in doc.createElement("script")) {
+        installReadyStateChangeImplementation();
+      } else {
+        installSetTimeoutImplementation();
+      }
+      attachTo.setImmediate = setImmediate2;
+      attachTo.clearImmediate = clearImmediate;
+    })(typeof self === "undefined" ? typeof global === "undefined" ? exports : global : self);
+  }
+});
+
+// node_modules/rdf-canonize/lib/MessageDigest-browser.js
+var require_MessageDigest_browser = __commonJS({
+  "node_modules/rdf-canonize/lib/MessageDigest-browser.js"(exports, module) {
+    "use strict";
+    require_setImmediate();
+    var crypto2 = self.crypto || self.msCrypto;
+    module.exports = class MessageDigest {
+      /**
+       * Creates a new MessageDigest.
+       *
+       * @param algorithm the algorithm to use.
+       */
+      constructor(algorithm) {
+        if (!(crypto2 && crypto2.subtle)) {
+          throw new Error("crypto.subtle not found.");
+        }
+        if (algorithm === "sha256") {
+          this.algorithm = { name: "SHA-256" };
+        } else if (algorithm === "sha1") {
+          this.algorithm = { name: "SHA-1" };
+        } else {
+          throw new Error(`Unsupported algorithm "${algorithm}".`);
+        }
+        this._content = "";
+      }
+      update(msg) {
+        this._content += msg;
+      }
+      async digest() {
+        const data = new TextEncoder().encode(this._content);
+        const buffer2 = new Uint8Array(
+          await crypto2.subtle.digest(this.algorithm, data)
+        );
+        let hex = "";
+        for (let i2 = 0; i2 < buffer2.length; ++i2) {
+          hex += buffer2[i2].toString(16).padStart(2, "0");
+        }
+        return hex;
+      }
+    };
+  }
+});
+
+// node_modules/rdf-canonize/lib/Permuter.js
+var require_Permuter = __commonJS({
+  "node_modules/rdf-canonize/lib/Permuter.js"(exports, module) {
+    "use strict";
+    module.exports = class Permuter {
+      /**
+       * A Permuter iterates over all possible permutations of the given array
+       * of elements.
+       *
+       * @param list the array of elements to iterate over.
+       */
+      constructor(list) {
+        this.current = list.sort();
+        this.done = false;
+        this.dir = /* @__PURE__ */ new Map();
+        for (let i2 = 0; i2 < list.length; ++i2) {
+          this.dir.set(list[i2], true);
+        }
+      }
+      /**
+       * Returns true if there is another permutation.
+       *
+       * @return true if there is another permutation, false if not.
+       */
+      hasNext() {
+        return !this.done;
+      }
+      /**
+       * Gets the next permutation. Call hasNext() to ensure there is another one
+       * first.
+       *
+       * @return the next permutation.
+       */
+      next() {
+        const { current, dir } = this;
+        const rval = current.slice();
+        let k = null;
+        let pos = 0;
+        const length = current.length;
+        for (let i2 = 0; i2 < length; ++i2) {
+          const element = current[i2];
+          const left = dir.get(element);
+          if ((k === null || element > k) && (left && i2 > 0 && element > current[i2 - 1] || !left && i2 < length - 1 && element > current[i2 + 1])) {
+            k = element;
+            pos = i2;
+          }
+        }
+        if (k === null) {
+          this.done = true;
+        } else {
+          const swap = dir.get(k) ? pos - 1 : pos + 1;
+          current[pos] = current[swap];
+          current[swap] = k;
+          for (const element of current) {
+            if (element > k) {
+              dir.set(element, !dir.get(element));
+            }
+          }
+        }
+        return rval;
+      }
+    };
+  }
+});
+
+// node_modules/rdf-canonize/lib/NQuads.js
+var require_NQuads = __commonJS({
+  "node_modules/rdf-canonize/lib/NQuads.js"(exports, module) {
+    "use strict";
+    var RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+    var RDF_LANGSTRING = RDF + "langString";
+    var XSD_STRING = "http://www.w3.org/2001/XMLSchema#string";
+    var TYPE_NAMED_NODE = "NamedNode";
+    var TYPE_BLANK_NODE = "BlankNode";
+    var TYPE_LITERAL = "Literal";
+    var TYPE_DEFAULT_GRAPH = "DefaultGraph";
+    var REGEX = {};
+    (() => {
+      const iri = "(?:<([^:]+:[^>]*)>)";
+      const PN_CHARS_BASE = "A-Za-z\xC0-\xD6\xD8-\xF6\xF8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD";
+      const PN_CHARS_U = PN_CHARS_BASE + "_";
+      const PN_CHARS = PN_CHARS_U + "0-9-\xB7\u0300-\u036F\u203F-\u2040";
+      const BLANK_NODE_LABEL = "(_:(?:[" + PN_CHARS_U + "0-9])(?:(?:[" + PN_CHARS + ".])*(?:[" + PN_CHARS + "]))?)";
+      const bnode = BLANK_NODE_LABEL;
+      const plain = '"([^"\\\\]*(?:\\\\.[^"\\\\]*)*)"';
+      const datatype = "(?:\\^\\^" + iri + ")";
+      const language = "(?:@([a-zA-Z]+(?:-[a-zA-Z0-9]+)*))";
+      const literal = "(?:" + plain + "(?:" + datatype + "|" + language + ")?)";
+      const ws = "[ \\t]+";
+      const wso = "[ \\t]*";
+      const subject = "(?:" + iri + "|" + bnode + ")" + ws;
+      const property = iri + ws;
+      const object = "(?:" + iri + "|" + bnode + "|" + literal + ")" + wso;
+      const graphName = "(?:\\.|(?:(?:" + iri + "|" + bnode + ")" + wso + "\\.))";
+      REGEX.eoln = /(?:\r\n)|(?:\n)|(?:\r)/g;
+      REGEX.empty = new RegExp("^" + wso + "$");
+      REGEX.quad = new RegExp(
+        "^" + wso + subject + property + object + graphName + wso + "$"
+      );
+    })();
+    module.exports = class NQuads {
+      /**
+       * Parses RDF in the form of N-Quads.
+       *
+       * @param input the N-Quads input to parse.
+       *
+       * @return an RDF dataset (an array of quads per http://rdf.js.org/).
+       */
+      static parse(input) {
+        const dataset = [];
+        const graphs = {};
+        const lines = input.split(REGEX.eoln);
+        let lineNumber = 0;
+        for (const line of lines) {
+          lineNumber++;
+          if (REGEX.empty.test(line)) {
+            continue;
+          }
+          const match = line.match(REGEX.quad);
+          if (match === null) {
+            throw new Error("N-Quads parse error on line " + lineNumber + ".");
+          }
+          const quad = { subject: null, predicate: null, object: null, graph: null };
+          if (match[1] !== void 0) {
+            quad.subject = { termType: TYPE_NAMED_NODE, value: match[1] };
+          } else {
+            quad.subject = { termType: TYPE_BLANK_NODE, value: match[2] };
+          }
+          quad.predicate = { termType: TYPE_NAMED_NODE, value: match[3] };
+          if (match[4] !== void 0) {
+            quad.object = { termType: TYPE_NAMED_NODE, value: match[4] };
+          } else if (match[5] !== void 0) {
+            quad.object = { termType: TYPE_BLANK_NODE, value: match[5] };
+          } else {
+            quad.object = {
+              termType: TYPE_LITERAL,
+              value: void 0,
+              datatype: {
+                termType: TYPE_NAMED_NODE
+              }
+            };
+            if (match[7] !== void 0) {
+              quad.object.datatype.value = match[7];
+            } else if (match[8] !== void 0) {
+              quad.object.datatype.value = RDF_LANGSTRING;
+              quad.object.language = match[8];
+            } else {
+              quad.object.datatype.value = XSD_STRING;
+            }
+            quad.object.value = _unescape(match[6]);
+          }
+          if (match[9] !== void 0) {
+            quad.graph = {
+              termType: TYPE_NAMED_NODE,
+              value: match[9]
+            };
+          } else if (match[10] !== void 0) {
+            quad.graph = {
+              termType: TYPE_BLANK_NODE,
+              value: match[10]
+            };
+          } else {
+            quad.graph = {
+              termType: TYPE_DEFAULT_GRAPH,
+              value: ""
+            };
+          }
+          if (!(quad.graph.value in graphs)) {
+            graphs[quad.graph.value] = [quad];
+            dataset.push(quad);
+          } else {
+            let unique = true;
+            const quads = graphs[quad.graph.value];
+            for (const q of quads) {
+              if (_compareTriples(q, quad)) {
+                unique = false;
+                break;
+              }
+            }
+            if (unique) {
+              quads.push(quad);
+              dataset.push(quad);
+            }
+          }
+        }
+        return dataset;
+      }
+      /**
+       * Converts an RDF dataset to N-Quads.
+       *
+       * @param dataset (array of quads) the RDF dataset to convert.
+       *
+       * @return the N-Quads string.
+       */
+      static serialize(dataset) {
+        if (!Array.isArray(dataset)) {
+          dataset = NQuads.legacyDatasetToQuads(dataset);
+        }
+        const quads = [];
+        for (const quad of dataset) {
+          quads.push(NQuads.serializeQuad(quad));
+        }
+        return quads.sort().join("");
+      }
+      /**
+       * Converts RDF quad components to an N-Quad string (a single quad).
+       *
+       * @param {Object} s - N-Quad subject component.
+       * @param {Object} p - N-Quad predicate component.
+       * @param {Object} o - N-Quad object component.
+       * @param {Object} g - N-Quad graph component.
+       *
+       * @return {string} the N-Quad.
+       */
+      static serializeQuadComponents(s, p, o, g) {
+        let nquad = "";
+        if (s.termType === TYPE_NAMED_NODE) {
+          nquad += `<${s.value}>`;
+        } else {
+          nquad += `${s.value}`;
+        }
+        nquad += ` <${p.value}> `;
+        if (o.termType === TYPE_NAMED_NODE) {
+          nquad += `<${o.value}>`;
+        } else if (o.termType === TYPE_BLANK_NODE) {
+          nquad += o.value;
+        } else {
+          nquad += `"${_escape(o.value)}"`;
+          if (o.datatype.value === RDF_LANGSTRING) {
+            if (o.language) {
+              nquad += `@${o.language}`;
+            }
+          } else if (o.datatype.value !== XSD_STRING) {
+            nquad += `^^<${o.datatype.value}>`;
+          }
+        }
+        if (g.termType === TYPE_NAMED_NODE) {
+          nquad += ` <${g.value}>`;
+        } else if (g.termType === TYPE_BLANK_NODE) {
+          nquad += ` ${g.value}`;
+        }
+        nquad += " .\n";
+        return nquad;
+      }
+      /**
+       * Converts an RDF quad to an N-Quad string (a single quad).
+       *
+       * @param quad the RDF quad convert.
+       *
+       * @return the N-Quad string.
+       */
+      static serializeQuad(quad) {
+        return NQuads.serializeQuadComponents(
+          quad.subject,
+          quad.predicate,
+          quad.object,
+          quad.graph
+        );
+      }
+      /**
+       * Converts a legacy-formatted dataset to an array of quads dataset per
+       * http://rdf.js.org/.
+       *
+       * @param dataset the legacy dataset to convert.
+       *
+       * @return the array of quads dataset.
+       */
+      static legacyDatasetToQuads(dataset) {
+        const quads = [];
+        const termTypeMap = {
+          "blank node": TYPE_BLANK_NODE,
+          IRI: TYPE_NAMED_NODE,
+          literal: TYPE_LITERAL
+        };
+        for (const graphName in dataset) {
+          const triples = dataset[graphName];
+          triples.forEach((triple) => {
+            const quad = {};
+            for (const componentName in triple) {
+              const oldComponent = triple[componentName];
+              const newComponent = {
+                termType: termTypeMap[oldComponent.type],
+                value: oldComponent.value
+              };
+              if (newComponent.termType === TYPE_LITERAL) {
+                newComponent.datatype = {
+                  termType: TYPE_NAMED_NODE
+                };
+                if ("datatype" in oldComponent) {
+                  newComponent.datatype.value = oldComponent.datatype;
+                }
+                if ("language" in oldComponent) {
+                  if (!("datatype" in oldComponent)) {
+                    newComponent.datatype.value = RDF_LANGSTRING;
+                  }
+                  newComponent.language = oldComponent.language;
+                } else if (!("datatype" in oldComponent)) {
+                  newComponent.datatype.value = XSD_STRING;
+                }
+              }
+              quad[componentName] = newComponent;
+            }
+            if (graphName === "@default") {
+              quad.graph = {
+                termType: TYPE_DEFAULT_GRAPH,
+                value: ""
+              };
+            } else {
+              quad.graph = {
+                termType: graphName.startsWith("_:") ? TYPE_BLANK_NODE : TYPE_NAMED_NODE,
+                value: graphName
+              };
+            }
+            quads.push(quad);
+          });
+        }
+        return quads;
+      }
+    };
+    function _compareTriples(t1, t2) {
+      if (!(t1.subject.termType === t2.subject.termType && t1.object.termType === t2.object.termType)) {
+        return false;
+      }
+      if (!(t1.subject.value === t2.subject.value && t1.predicate.value === t2.predicate.value && t1.object.value === t2.object.value)) {
+        return false;
+      }
+      if (t1.object.termType !== TYPE_LITERAL) {
+        return true;
+      }
+      return t1.object.datatype.termType === t2.object.datatype.termType && t1.object.language === t2.object.language && t1.object.datatype.value === t2.object.datatype.value;
+    }
+    var _escapeRegex = /["\\\n\r]/g;
+    function _escape(s) {
+      return s.replace(_escapeRegex, function(match) {
+        switch (match) {
+          case '"':
+            return '\\"';
+          case "\\":
+            return "\\\\";
+          case "\n":
+            return "\\n";
+          case "\r":
+            return "\\r";
+        }
+      });
+    }
+    var _unescapeRegex = /(?:\\([tbnrf"'\\]))|(?:\\u([0-9A-Fa-f]{4}))|(?:\\U([0-9A-Fa-f]{8}))/g;
+    function _unescape(s) {
+      return s.replace(_unescapeRegex, function(match, code, u, U) {
+        if (code) {
+          switch (code) {
+            case "t":
+              return "	";
+            case "b":
+              return "\b";
+            case "n":
+              return "\n";
+            case "r":
+              return "\r";
+            case "f":
+              return "\f";
+            case '"':
+              return '"';
+            case "'":
+              return "'";
+            case "\\":
+              return "\\";
+          }
+        }
+        if (u) {
+          return String.fromCharCode(parseInt(u, 16));
+        }
+        if (U) {
+          throw new Error("Unsupported U escape");
+        }
+      });
+    }
+  }
+});
+
+// node_modules/rdf-canonize/lib/URDNA2015.js
+var require_URDNA2015 = __commonJS({
+  "node_modules/rdf-canonize/lib/URDNA2015.js"(exports, module) {
+    "use strict";
+    var IdentifierIssuer = require_IdentifierIssuer();
+    var MessageDigest = require_MessageDigest_browser();
+    var Permuter = require_Permuter();
+    var NQuads = require_NQuads();
+    module.exports = class URDNA2015 {
+      constructor({
+        createMessageDigest = () => new MessageDigest("sha256"),
+        canonicalIdMap = /* @__PURE__ */ new Map(),
+        maxDeepIterations = Infinity
+      } = {}) {
+        this.name = "URDNA2015";
+        this.blankNodeInfo = /* @__PURE__ */ new Map();
+        this.canonicalIssuer = new IdentifierIssuer("_:c14n", canonicalIdMap);
+        this.createMessageDigest = createMessageDigest;
+        this.maxDeepIterations = maxDeepIterations;
+        this.quads = null;
+        this.deepIterations = null;
+      }
+      // 4.4) Normalization Algorithm
+      async main(dataset) {
+        this.deepIterations = /* @__PURE__ */ new Map();
+        this.quads = dataset;
+        for (const quad of dataset) {
+          this._addBlankNodeQuadInfo({ quad, component: quad.subject });
+          this._addBlankNodeQuadInfo({ quad, component: quad.object });
+          this._addBlankNodeQuadInfo({ quad, component: quad.graph });
+        }
+        const hashToBlankNodes = /* @__PURE__ */ new Map();
+        const nonNormalized = [...this.blankNodeInfo.keys()];
+        let i2 = 0;
+        for (const id of nonNormalized) {
+          if (++i2 % 100 === 0) {
+            await this._yield();
+          }
+          await this._hashAndTrackBlankNode({ id, hashToBlankNodes });
+        }
+        const hashes = [...hashToBlankNodes.keys()].sort();
+        const nonUnique = [];
+        for (const hash of hashes) {
+          const idList = hashToBlankNodes.get(hash);
+          if (idList.length > 1) {
+            nonUnique.push(idList);
+            continue;
+          }
+          const id = idList[0];
+          this.canonicalIssuer.getId(id);
+        }
+        for (const idList of nonUnique) {
+          const hashPathList = [];
+          for (const id of idList) {
+            if (this.canonicalIssuer.hasId(id)) {
+              continue;
+            }
+            const issuer = new IdentifierIssuer("_:b");
+            issuer.getId(id);
+            const result = await this.hashNDegreeQuads(id, issuer);
+            hashPathList.push(result);
+          }
+          hashPathList.sort(_stringHashCompare);
+          for (const result of hashPathList) {
+            const oldIds = result.issuer.getOldIds();
+            for (const id of oldIds) {
+              this.canonicalIssuer.getId(id);
+            }
+          }
+        }
+        const normalized = [];
+        for (const quad of this.quads) {
+          const nQuad = NQuads.serializeQuadComponents(
+            this._componentWithCanonicalId(quad.subject),
+            quad.predicate,
+            this._componentWithCanonicalId(quad.object),
+            this._componentWithCanonicalId(quad.graph)
+          );
+          normalized.push(nQuad);
+        }
+        normalized.sort();
+        return normalized.join("");
+      }
+      // 4.6) Hash First Degree Quads
+      async hashFirstDegreeQuads(id) {
+        const nquads = [];
+        const info = this.blankNodeInfo.get(id);
+        const quads = info.quads;
+        for (const quad of quads) {
+          const copy = {
+            subject: null,
+            predicate: quad.predicate,
+            object: null,
+            graph: null
+          };
+          copy.subject = this.modifyFirstDegreeComponent(
+            id,
+            quad.subject,
+            "subject"
+          );
+          copy.object = this.modifyFirstDegreeComponent(
+            id,
+            quad.object,
+            "object"
+          );
+          copy.graph = this.modifyFirstDegreeComponent(
+            id,
+            quad.graph,
+            "graph"
+          );
+          nquads.push(NQuads.serializeQuad(copy));
+        }
+        nquads.sort();
+        const md = this.createMessageDigest();
+        for (const nquad of nquads) {
+          md.update(nquad);
+        }
+        info.hash = await md.digest();
+        return info.hash;
+      }
+      // 4.7) Hash Related Blank Node
+      async hashRelatedBlankNode(related, quad, issuer, position) {
+        let id;
+        if (this.canonicalIssuer.hasId(related)) {
+          id = this.canonicalIssuer.getId(related);
+        } else if (issuer.hasId(related)) {
+          id = issuer.getId(related);
+        } else {
+          id = this.blankNodeInfo.get(related).hash;
+        }
+        const md = this.createMessageDigest();
+        md.update(position);
+        if (position !== "g") {
+          md.update(this.getRelatedPredicate(quad));
+        }
+        md.update(id);
+        return md.digest();
+      }
+      // 4.8) Hash N-Degree Quads
+      async hashNDegreeQuads(id, issuer) {
+        const deepIterations = this.deepIterations.get(id) || 0;
+        if (deepIterations > this.maxDeepIterations) {
+          throw new Error(
+            `Maximum deep iterations (${this.maxDeepIterations}) exceeded.`
+          );
+        }
+        this.deepIterations.set(id, deepIterations + 1);
+        const md = this.createMessageDigest();
+        const hashToRelated = await this.createHashToRelated(id, issuer);
+        const hashes = [...hashToRelated.keys()].sort();
+        for (const hash of hashes) {
+          md.update(hash);
+          let chosenPath = "";
+          let chosenIssuer;
+          const permuter = new Permuter(hashToRelated.get(hash));
+          let i2 = 0;
+          while (permuter.hasNext()) {
+            const permutation = permuter.next();
+            if (++i2 % 3 === 0) {
+              await this._yield();
+            }
+            let issuerCopy = issuer.clone();
+            let path = "";
+            const recursionList = [];
+            let nextPermutation = false;
+            for (const related of permutation) {
+              if (this.canonicalIssuer.hasId(related)) {
+                path += this.canonicalIssuer.getId(related);
+              } else {
+                if (!issuerCopy.hasId(related)) {
+                  recursionList.push(related);
+                }
+                path += issuerCopy.getId(related);
+              }
+              if (chosenPath.length !== 0 && path > chosenPath) {
+                nextPermutation = true;
+                break;
+              }
+            }
+            if (nextPermutation) {
+              continue;
+            }
+            for (const related of recursionList) {
+              const result = await this.hashNDegreeQuads(related, issuerCopy);
+              path += issuerCopy.getId(related);
+              path += `<${result.hash}>`;
+              issuerCopy = result.issuer;
+              if (chosenPath.length !== 0 && path > chosenPath) {
+                nextPermutation = true;
+                break;
+              }
+            }
+            if (nextPermutation) {
+              continue;
+            }
+            if (chosenPath.length === 0 || path < chosenPath) {
+              chosenPath = path;
+              chosenIssuer = issuerCopy;
+            }
+          }
+          md.update(chosenPath);
+          issuer = chosenIssuer;
+        }
+        return { hash: await md.digest(), issuer };
+      }
+      // helper for modifying component during Hash First Degree Quads
+      modifyFirstDegreeComponent(id, component) {
+        if (component.termType !== "BlankNode") {
+          return component;
+        }
+        return {
+          termType: "BlankNode",
+          value: component.value === id ? "_:a" : "_:z"
+        };
+      }
+      // helper for getting a related predicate
+      getRelatedPredicate(quad) {
+        return `<${quad.predicate.value}>`;
+      }
+      // helper for creating hash to related blank nodes map
+      async createHashToRelated(id, issuer) {
+        const hashToRelated = /* @__PURE__ */ new Map();
+        const quads = this.blankNodeInfo.get(id).quads;
+        let i2 = 0;
+        for (const quad of quads) {
+          if (++i2 % 100 === 0) {
+            await this._yield();
+          }
+          await Promise.all([
+            this._addRelatedBlankNodeHash({
+              quad,
+              component: quad.subject,
+              position: "s",
+              id,
+              issuer,
+              hashToRelated
+            }),
+            this._addRelatedBlankNodeHash({
+              quad,
+              component: quad.object,
+              position: "o",
+              id,
+              issuer,
+              hashToRelated
+            }),
+            this._addRelatedBlankNodeHash({
+              quad,
+              component: quad.graph,
+              position: "g",
+              id,
+              issuer,
+              hashToRelated
+            })
+          ]);
+        }
+        return hashToRelated;
+      }
+      async _hashAndTrackBlankNode({ id, hashToBlankNodes }) {
+        const hash = await this.hashFirstDegreeQuads(id);
+        const idList = hashToBlankNodes.get(hash);
+        if (!idList) {
+          hashToBlankNodes.set(hash, [id]);
+        } else {
+          idList.push(id);
+        }
+      }
+      _addBlankNodeQuadInfo({ quad, component }) {
+        if (component.termType !== "BlankNode") {
+          return;
+        }
+        const id = component.value;
+        const info = this.blankNodeInfo.get(id);
+        if (info) {
+          info.quads.add(quad);
+        } else {
+          this.blankNodeInfo.set(id, { quads: /* @__PURE__ */ new Set([quad]), hash: null });
+        }
+      }
+      async _addRelatedBlankNodeHash({ quad, component, position, id, issuer, hashToRelated }) {
+        if (!(component.termType === "BlankNode" && component.value !== id)) {
+          return;
+        }
+        const related = component.value;
+        const hash = await this.hashRelatedBlankNode(
+          related,
+          quad,
+          issuer,
+          position
+        );
+        const entries = hashToRelated.get(hash);
+        if (entries) {
+          entries.push(related);
+        } else {
+          hashToRelated.set(hash, [related]);
+        }
+      }
+      // canonical ids for 7.1
+      _componentWithCanonicalId(component) {
+        if (component.termType === "BlankNode" && !component.value.startsWith(this.canonicalIssuer.prefix)) {
+          return {
+            termType: "BlankNode",
+            value: this.canonicalIssuer.getId(component.value)
+          };
+        }
+        return component;
+      }
+      async _yield() {
+        return new Promise((resolve) => setImmediate(resolve));
+      }
+    };
+    function _stringHashCompare(a, b) {
+      return a.hash < b.hash ? -1 : a.hash > b.hash ? 1 : 0;
+    }
+  }
+});
+
+// node_modules/rdf-canonize/lib/URGNA2012.js
+var require_URGNA2012 = __commonJS({
+  "node_modules/rdf-canonize/lib/URGNA2012.js"(exports, module) {
+    "use strict";
+    var MessageDigest = require_MessageDigest_browser();
+    var URDNA2015 = require_URDNA2015();
+    module.exports = class URDNA2012 extends URDNA2015 {
+      constructor() {
+        super();
+        this.name = "URGNA2012";
+        this.createMessageDigest = () => new MessageDigest("sha1");
+      }
+      // helper for modifying component during Hash First Degree Quads
+      modifyFirstDegreeComponent(id, component, key) {
+        if (component.termType !== "BlankNode") {
+          return component;
+        }
+        if (key === "graph") {
+          return {
+            termType: "BlankNode",
+            value: "_:g"
+          };
+        }
+        return {
+          termType: "BlankNode",
+          value: component.value === id ? "_:a" : "_:z"
+        };
+      }
+      // helper for getting a related predicate
+      getRelatedPredicate(quad) {
+        return quad.predicate.value;
+      }
+      // helper for creating hash to related blank nodes map
+      async createHashToRelated(id, issuer) {
+        const hashToRelated = /* @__PURE__ */ new Map();
+        const quads = this.blankNodeInfo.get(id).quads;
+        let i2 = 0;
+        for (const quad of quads) {
+          let position;
+          let related;
+          if (quad.subject.termType === "BlankNode" && quad.subject.value !== id) {
+            related = quad.subject.value;
+            position = "p";
+          } else if (quad.object.termType === "BlankNode" && quad.object.value !== id) {
+            related = quad.object.value;
+            position = "r";
+          } else {
+            continue;
+          }
+          if (++i2 % 100 === 0) {
+            await this._yield();
+          }
+          const hash = await this.hashRelatedBlankNode(
+            related,
+            quad,
+            issuer,
+            position
+          );
+          const entries = hashToRelated.get(hash);
+          if (entries) {
+            entries.push(related);
+          } else {
+            hashToRelated.set(hash, [related]);
+          }
+        }
+        return hashToRelated;
+      }
+    };
+  }
+});
+
+// node_modules/rdf-canonize/lib/URDNA2015Sync.js
+var require_URDNA2015Sync = __commonJS({
+  "node_modules/rdf-canonize/lib/URDNA2015Sync.js"(exports, module) {
+    "use strict";
+    var IdentifierIssuer = require_IdentifierIssuer();
+    var MessageDigest = require_MessageDigest_browser();
+    var Permuter = require_Permuter();
+    var NQuads = require_NQuads();
+    module.exports = class URDNA2015Sync {
+      constructor({
+        createMessageDigest = () => new MessageDigest("sha256"),
+        canonicalIdMap = /* @__PURE__ */ new Map(),
+        maxDeepIterations = Infinity
+      } = {}) {
+        this.name = "URDNA2015";
+        this.blankNodeInfo = /* @__PURE__ */ new Map();
+        this.canonicalIssuer = new IdentifierIssuer("_:c14n", canonicalIdMap);
+        this.createMessageDigest = createMessageDigest;
+        this.maxDeepIterations = maxDeepIterations;
+        this.quads = null;
+        this.deepIterations = null;
+      }
+      // 4.4) Normalization Algorithm
+      main(dataset) {
+        this.deepIterations = /* @__PURE__ */ new Map();
+        this.quads = dataset;
+        for (const quad of dataset) {
+          this._addBlankNodeQuadInfo({ quad, component: quad.subject });
+          this._addBlankNodeQuadInfo({ quad, component: quad.object });
+          this._addBlankNodeQuadInfo({ quad, component: quad.graph });
+        }
+        const hashToBlankNodes = /* @__PURE__ */ new Map();
+        const nonNormalized = [...this.blankNodeInfo.keys()];
+        for (const id of nonNormalized) {
+          this._hashAndTrackBlankNode({ id, hashToBlankNodes });
+        }
+        const hashes = [...hashToBlankNodes.keys()].sort();
+        const nonUnique = [];
+        for (const hash of hashes) {
+          const idList = hashToBlankNodes.get(hash);
+          if (idList.length > 1) {
+            nonUnique.push(idList);
+            continue;
+          }
+          const id = idList[0];
+          this.canonicalIssuer.getId(id);
+        }
+        for (const idList of nonUnique) {
+          const hashPathList = [];
+          for (const id of idList) {
+            if (this.canonicalIssuer.hasId(id)) {
+              continue;
+            }
+            const issuer = new IdentifierIssuer("_:b");
+            issuer.getId(id);
+            const result = this.hashNDegreeQuads(id, issuer);
+            hashPathList.push(result);
+          }
+          hashPathList.sort(_stringHashCompare);
+          for (const result of hashPathList) {
+            const oldIds = result.issuer.getOldIds();
+            for (const id of oldIds) {
+              this.canonicalIssuer.getId(id);
+            }
+          }
+        }
+        const normalized = [];
+        for (const quad of this.quads) {
+          const nQuad = NQuads.serializeQuadComponents(
+            this._componentWithCanonicalId({ component: quad.subject }),
+            quad.predicate,
+            this._componentWithCanonicalId({ component: quad.object }),
+            this._componentWithCanonicalId({ component: quad.graph })
+          );
+          normalized.push(nQuad);
+        }
+        normalized.sort();
+        return normalized.join("");
+      }
+      // 4.6) Hash First Degree Quads
+      hashFirstDegreeQuads(id) {
+        const nquads = [];
+        const info = this.blankNodeInfo.get(id);
+        const quads = info.quads;
+        for (const quad of quads) {
+          const copy = {
+            subject: null,
+            predicate: quad.predicate,
+            object: null,
+            graph: null
+          };
+          copy.subject = this.modifyFirstDegreeComponent(
+            id,
+            quad.subject,
+            "subject"
+          );
+          copy.object = this.modifyFirstDegreeComponent(
+            id,
+            quad.object,
+            "object"
+          );
+          copy.graph = this.modifyFirstDegreeComponent(
+            id,
+            quad.graph,
+            "graph"
+          );
+          nquads.push(NQuads.serializeQuad(copy));
+        }
+        nquads.sort();
+        const md = this.createMessageDigest();
+        for (const nquad of nquads) {
+          md.update(nquad);
+        }
+        info.hash = md.digest();
+        return info.hash;
+      }
+      // 4.7) Hash Related Blank Node
+      hashRelatedBlankNode(related, quad, issuer, position) {
+        let id;
+        if (this.canonicalIssuer.hasId(related)) {
+          id = this.canonicalIssuer.getId(related);
+        } else if (issuer.hasId(related)) {
+          id = issuer.getId(related);
+        } else {
+          id = this.blankNodeInfo.get(related).hash;
+        }
+        const md = this.createMessageDigest();
+        md.update(position);
+        if (position !== "g") {
+          md.update(this.getRelatedPredicate(quad));
+        }
+        md.update(id);
+        return md.digest();
+      }
+      // 4.8) Hash N-Degree Quads
+      hashNDegreeQuads(id, issuer) {
+        const deepIterations = this.deepIterations.get(id) || 0;
+        if (deepIterations > this.maxDeepIterations) {
+          throw new Error(
+            `Maximum deep iterations (${this.maxDeepIterations}) exceeded.`
+          );
+        }
+        this.deepIterations.set(id, deepIterations + 1);
+        const md = this.createMessageDigest();
+        const hashToRelated = this.createHashToRelated(id, issuer);
+        const hashes = [...hashToRelated.keys()].sort();
+        for (const hash of hashes) {
+          md.update(hash);
+          let chosenPath = "";
+          let chosenIssuer;
+          const permuter = new Permuter(hashToRelated.get(hash));
+          while (permuter.hasNext()) {
+            const permutation = permuter.next();
+            let issuerCopy = issuer.clone();
+            let path = "";
+            const recursionList = [];
+            let nextPermutation = false;
+            for (const related of permutation) {
+              if (this.canonicalIssuer.hasId(related)) {
+                path += this.canonicalIssuer.getId(related);
+              } else {
+                if (!issuerCopy.hasId(related)) {
+                  recursionList.push(related);
+                }
+                path += issuerCopy.getId(related);
+              }
+              if (chosenPath.length !== 0 && path > chosenPath) {
+                nextPermutation = true;
+                break;
+              }
+            }
+            if (nextPermutation) {
+              continue;
+            }
+            for (const related of recursionList) {
+              const result = this.hashNDegreeQuads(related, issuerCopy);
+              path += issuerCopy.getId(related);
+              path += `<${result.hash}>`;
+              issuerCopy = result.issuer;
+              if (chosenPath.length !== 0 && path > chosenPath) {
+                nextPermutation = true;
+                break;
+              }
+            }
+            if (nextPermutation) {
+              continue;
+            }
+            if (chosenPath.length === 0 || path < chosenPath) {
+              chosenPath = path;
+              chosenIssuer = issuerCopy;
+            }
+          }
+          md.update(chosenPath);
+          issuer = chosenIssuer;
+        }
+        return { hash: md.digest(), issuer };
+      }
+      // helper for modifying component during Hash First Degree Quads
+      modifyFirstDegreeComponent(id, component) {
+        if (component.termType !== "BlankNode") {
+          return component;
+        }
+        return {
+          termType: "BlankNode",
+          value: component.value === id ? "_:a" : "_:z"
+        };
+      }
+      // helper for getting a related predicate
+      getRelatedPredicate(quad) {
+        return `<${quad.predicate.value}>`;
+      }
+      // helper for creating hash to related blank nodes map
+      createHashToRelated(id, issuer) {
+        const hashToRelated = /* @__PURE__ */ new Map();
+        const quads = this.blankNodeInfo.get(id).quads;
+        for (const quad of quads) {
+          this._addRelatedBlankNodeHash({
+            quad,
+            component: quad.subject,
+            position: "s",
+            id,
+            issuer,
+            hashToRelated
+          });
+          this._addRelatedBlankNodeHash({
+            quad,
+            component: quad.object,
+            position: "o",
+            id,
+            issuer,
+            hashToRelated
+          });
+          this._addRelatedBlankNodeHash({
+            quad,
+            component: quad.graph,
+            position: "g",
+            id,
+            issuer,
+            hashToRelated
+          });
+        }
+        return hashToRelated;
+      }
+      _hashAndTrackBlankNode({ id, hashToBlankNodes }) {
+        const hash = this.hashFirstDegreeQuads(id);
+        const idList = hashToBlankNodes.get(hash);
+        if (!idList) {
+          hashToBlankNodes.set(hash, [id]);
+        } else {
+          idList.push(id);
+        }
+      }
+      _addBlankNodeQuadInfo({ quad, component }) {
+        if (component.termType !== "BlankNode") {
+          return;
+        }
+        const id = component.value;
+        const info = this.blankNodeInfo.get(id);
+        if (info) {
+          info.quads.add(quad);
+        } else {
+          this.blankNodeInfo.set(id, { quads: /* @__PURE__ */ new Set([quad]), hash: null });
+        }
+      }
+      _addRelatedBlankNodeHash({ quad, component, position, id, issuer, hashToRelated }) {
+        if (!(component.termType === "BlankNode" && component.value !== id)) {
+          return;
+        }
+        const related = component.value;
+        const hash = this.hashRelatedBlankNode(related, quad, issuer, position);
+        const entries = hashToRelated.get(hash);
+        if (entries) {
+          entries.push(related);
+        } else {
+          hashToRelated.set(hash, [related]);
+        }
+      }
+      // canonical ids for 7.1
+      _componentWithCanonicalId({ component }) {
+        if (component.termType === "BlankNode" && !component.value.startsWith(this.canonicalIssuer.prefix)) {
+          return {
+            termType: "BlankNode",
+            value: this.canonicalIssuer.getId(component.value)
+          };
+        }
+        return component;
+      }
+    };
+    function _stringHashCompare(a, b) {
+      return a.hash < b.hash ? -1 : a.hash > b.hash ? 1 : 0;
+    }
+  }
+});
+
+// node_modules/rdf-canonize/lib/URGNA2012Sync.js
+var require_URGNA2012Sync = __commonJS({
+  "node_modules/rdf-canonize/lib/URGNA2012Sync.js"(exports, module) {
+    "use strict";
+    var MessageDigest = require_MessageDigest_browser();
+    var URDNA2015Sync = require_URDNA2015Sync();
+    module.exports = class URDNA2012Sync extends URDNA2015Sync {
+      constructor() {
+        super();
+        this.name = "URGNA2012";
+        this.createMessageDigest = () => new MessageDigest("sha1");
+      }
+      // helper for modifying component during Hash First Degree Quads
+      modifyFirstDegreeComponent(id, component, key) {
+        if (component.termType !== "BlankNode") {
+          return component;
+        }
+        if (key === "graph") {
+          return {
+            termType: "BlankNode",
+            value: "_:g"
+          };
+        }
+        return {
+          termType: "BlankNode",
+          value: component.value === id ? "_:a" : "_:z"
+        };
+      }
+      // helper for getting a related predicate
+      getRelatedPredicate(quad) {
+        return quad.predicate.value;
+      }
+      // helper for creating hash to related blank nodes map
+      createHashToRelated(id, issuer) {
+        const hashToRelated = /* @__PURE__ */ new Map();
+        const quads = this.blankNodeInfo.get(id).quads;
+        for (const quad of quads) {
+          let position;
+          let related;
+          if (quad.subject.termType === "BlankNode" && quad.subject.value !== id) {
+            related = quad.subject.value;
+            position = "p";
+          } else if (quad.object.termType === "BlankNode" && quad.object.value !== id) {
+            related = quad.object.value;
+            position = "r";
+          } else {
+            continue;
+          }
+          const hash = this.hashRelatedBlankNode(related, quad, issuer, position);
+          const entries = hashToRelated.get(hash);
+          if (entries) {
+            entries.push(related);
+          } else {
+            hashToRelated.set(hash, [related]);
+          }
+        }
+        return hashToRelated;
+      }
+    };
+  }
+});
+
+// (disabled):rdf-canonize-native
+var require_rdf_canonize_native = __commonJS({
+  "(disabled):rdf-canonize-native"() {
+  }
+});
+
+// node_modules/rdf-canonize/lib/index.js
+var require_lib115 = __commonJS({
+  "node_modules/rdf-canonize/lib/index.js"(exports) {
+    "use strict";
+    var URDNA2015 = require_URDNA2015();
+    var URGNA2012 = require_URGNA2012();
+    var URDNA2015Sync = require_URDNA2015Sync();
+    var URGNA2012Sync = require_URGNA2012Sync();
+    var rdfCanonizeNative;
+    try {
+      rdfCanonizeNative = require_rdf_canonize_native();
+    } catch (e) {
+    }
+    function _inputToDataset(input) {
+      if (!Array.isArray(input)) {
+        return exports.NQuads.legacyDatasetToQuads(input);
+      }
+      return input;
+    }
+    exports.NQuads = require_NQuads();
+    exports.IdentifierIssuer = require_IdentifierIssuer();
+    exports._rdfCanonizeNative = function(api) {
+      if (api) {
+        rdfCanonizeNative = api;
+      }
+      return rdfCanonizeNative;
+    };
+    exports.canonize = async function(input, options) {
+      const dataset = _inputToDataset(input, options);
+      if (options.useNative) {
+        if (!rdfCanonizeNative) {
+          throw new Error("rdf-canonize-native not available");
+        }
+        if (options.createMessageDigest) {
+          throw new Error(
+            '"createMessageDigest" cannot be used with "useNative".'
+          );
+        }
+        return new Promise((resolve, reject) => rdfCanonizeNative.canonize(dataset, options, (err, canonical) => err ? reject(err) : resolve(canonical)));
+      }
+      if (options.algorithm === "URDNA2015") {
+        return new URDNA2015(options).main(dataset);
+      }
+      if (options.algorithm === "URGNA2012") {
+        if (options.createMessageDigest) {
+          throw new Error(
+            '"createMessageDigest" cannot be used with "URGNA2012".'
+          );
+        }
+        return new URGNA2012(options).main(dataset);
+      }
+      if (!("algorithm" in options)) {
+        throw new Error("No RDF Dataset Canonicalization algorithm specified.");
+      }
+      throw new Error(
+        "Invalid RDF Dataset Canonicalization algorithm: " + options.algorithm
+      );
+    };
+    exports._canonizeSync = function(input, options) {
+      const dataset = _inputToDataset(input, options);
+      if (options.useNative) {
+        if (!rdfCanonizeNative) {
+          throw new Error("rdf-canonize-native not available");
+        }
+        if (options.createMessageDigest) {
+          throw new Error(
+            '"createMessageDigest" cannot be used with "useNative".'
+          );
+        }
+        return rdfCanonizeNative.canonizeSync(dataset, options);
+      }
+      if (options.algorithm === "URDNA2015") {
+        return new URDNA2015Sync(options).main(dataset);
+      }
+      if (options.algorithm === "URGNA2012") {
+        if (options.createMessageDigest) {
+          throw new Error(
+            '"createMessageDigest" cannot be used with "URGNA2012".'
+          );
+        }
+        return new URGNA2012Sync(options).main(dataset);
+      }
+      if (!("algorithm" in options)) {
+        throw new Error("No RDF Dataset Canonicalization algorithm specified.");
+      }
+      throw new Error(
+        "Invalid RDF Dataset Canonicalization algorithm: " + options.algorithm
+      );
+    };
+  }
+});
+
+// node_modules/rdf-canonize/index.js
+var require_rdf_canonize = __commonJS({
+  "node_modules/rdf-canonize/index.js"(exports, module) {
+    module.exports = require_lib115();
+  }
+});
+
+// node_modules/jsonld/lib/types.js
+var require_types = __commonJS({
+  "node_modules/jsonld/lib/types.js"(exports, module) {
+    "use strict";
+    var api = {};
+    module.exports = api;
+    api.isArray = Array.isArray;
+    api.isBoolean = (v) => typeof v === "boolean" || Object.prototype.toString.call(v) === "[object Boolean]";
+    api.isDouble = (v) => api.isNumber(v) && (String(v).indexOf(".") !== -1 || Math.abs(v) >= 1e21);
+    api.isEmptyObject = (v) => api.isObject(v) && Object.keys(v).length === 0;
+    api.isNumber = (v) => typeof v === "number" || Object.prototype.toString.call(v) === "[object Number]";
+    api.isNumeric = (v) => !isNaN(parseFloat(v)) && isFinite(v);
+    api.isObject = (v) => Object.prototype.toString.call(v) === "[object Object]";
+    api.isString = (v) => typeof v === "string" || Object.prototype.toString.call(v) === "[object String]";
+    api.isUndefined = (v) => typeof v === "undefined";
+  }
+});
+
+// node_modules/jsonld/lib/graphTypes.js
+var require_graphTypes = __commonJS({
+  "node_modules/jsonld/lib/graphTypes.js"(exports, module) {
+    "use strict";
+    var types = require_types();
+    var api = {};
+    module.exports = api;
+    api.isSubject = (v) => {
+      if (types.isObject(v) && !("@value" in v || "@set" in v || "@list" in v)) {
+        const keyCount = Object.keys(v).length;
+        return keyCount > 1 || !("@id" in v);
+      }
+      return false;
+    };
+    api.isSubjectReference = (v) => (
+      // Note: A value is a subject reference if all of these hold true:
+      // 1. It is an Object.
+      // 2. It has a single key: @id.
+      types.isObject(v) && Object.keys(v).length === 1 && "@id" in v
+    );
+    api.isValue = (v) => (
+      // Note: A value is a @value if all of these hold true:
+      // 1. It is an Object.
+      // 2. It has the @value property.
+      types.isObject(v) && "@value" in v
+    );
+    api.isList = (v) => (
+      // Note: A value is a @list if all of these hold true:
+      // 1. It is an Object.
+      // 2. It has the @list property.
+      types.isObject(v) && "@list" in v
+    );
+    api.isGraph = (v) => {
+      return types.isObject(v) && "@graph" in v && Object.keys(v).filter((key) => key !== "@id" && key !== "@index").length === 1;
+    };
+    api.isSimpleGraph = (v) => {
+      return api.isGraph(v) && !("@id" in v);
+    };
+    api.isBlankNode = (v) => {
+      if (types.isObject(v)) {
+        if ("@id" in v) {
+          const id = v["@id"];
+          return !types.isString(id) || id.indexOf("_:") === 0;
+        }
+        return Object.keys(v).length === 0 || !("@value" in v || "@set" in v || "@list" in v);
+      }
+      return false;
+    };
+  }
+});
+
+// node_modules/jsonld/lib/JsonLdError.js
+var require_JsonLdError = __commonJS({
+  "node_modules/jsonld/lib/JsonLdError.js"(exports, module) {
+    "use strict";
+    module.exports = class JsonLdError extends Error {
+      /**
+       * Creates a JSON-LD Error.
+       *
+       * @param msg the error message.
+       * @param type the error type.
+       * @param details the error details.
+       */
+      constructor(message = "An unspecified JSON-LD error occurred.", name = "jsonld.Error", details = {}) {
+        super(message);
+        this.name = name;
+        this.message = message;
+        this.details = details;
+      }
+    };
+  }
+});
+
+// node_modules/jsonld/lib/util.js
+var require_util4 = __commonJS({
+  "node_modules/jsonld/lib/util.js"(exports, module) {
+    "use strict";
+    var graphTypes = require_graphTypes();
+    var types = require_types();
+    var IdentifierIssuer = require_rdf_canonize().IdentifierIssuer;
+    var JsonLdError = require_JsonLdError();
+    var REGEX_BCP47 = /^[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*$/;
+    var REGEX_LINK_HEADERS = /(?:<[^>]*?>|"[^"]*?"|[^,])+/g;
+    var REGEX_LINK_HEADER = /\s*<([^>]*?)>\s*(?:;\s*(.*))?/;
+    var REGEX_LINK_HEADER_PARAMS = /(.*?)=(?:(?:"([^"]*?)")|([^"]*?))\s*(?:(?:;\s*)|$)/g;
+    var REGEX_KEYWORD = /^@[a-zA-Z]+$/;
+    var DEFAULTS = {
+      headers: {
+        accept: "application/ld+json, application/json"
+      }
+    };
+    var api = {};
+    module.exports = api;
+    api.IdentifierIssuer = IdentifierIssuer;
+    api.REGEX_BCP47 = REGEX_BCP47;
+    api.REGEX_KEYWORD = REGEX_KEYWORD;
+    api.clone = function(value) {
+      if (value && typeof value === "object") {
+        let rval;
+        if (types.isArray(value)) {
+          rval = [];
+          for (let i2 = 0; i2 < value.length; ++i2) {
+            rval[i2] = api.clone(value[i2]);
+          }
+        } else if (value instanceof Map) {
+          rval = /* @__PURE__ */ new Map();
+          for (const [k, v] of value) {
+            rval.set(k, api.clone(v));
+          }
+        } else if (value instanceof Set) {
+          rval = /* @__PURE__ */ new Set();
+          for (const v of value) {
+            rval.add(api.clone(v));
+          }
+        } else if (types.isObject(value)) {
+          rval = {};
+          for (const key in value) {
+            rval[key] = api.clone(value[key]);
+          }
+        } else {
+          rval = value.toString();
+        }
+        return rval;
+      }
+      return value;
+    };
+    api.asArray = function(value) {
+      return Array.isArray(value) ? value : [value];
+    };
+    api.buildHeaders = (headers = {}) => {
+      const hasAccept = Object.keys(headers).some(
+        (h) => h.toLowerCase() === "accept"
+      );
+      if (hasAccept) {
+        throw new RangeError(
+          'Accept header may not be specified; only "' + DEFAULTS.headers.accept + '" is supported.'
+        );
+      }
+      return Object.assign({ Accept: DEFAULTS.headers.accept }, headers);
+    };
+    api.parseLinkHeader = (header) => {
+      const rval = {};
+      const entries = header.match(REGEX_LINK_HEADERS);
+      for (let i2 = 0; i2 < entries.length; ++i2) {
+        let match = entries[i2].match(REGEX_LINK_HEADER);
+        if (!match) {
+          continue;
+        }
+        const result = { target: match[1] };
+        const params = match[2];
+        while (match = REGEX_LINK_HEADER_PARAMS.exec(params)) {
+          result[match[1]] = match[2] === void 0 ? match[3] : match[2];
+        }
+        const rel = result.rel || "";
+        if (Array.isArray(rval[rel])) {
+          rval[rel].push(result);
+        } else if (rval.hasOwnProperty(rel)) {
+          rval[rel] = [rval[rel], result];
+        } else {
+          rval[rel] = result;
+        }
+      }
+      return rval;
+    };
+    api.validateTypeValue = (v, isFrame) => {
+      if (types.isString(v)) {
+        return;
+      }
+      if (types.isArray(v) && v.every((vv) => types.isString(vv))) {
+        return;
+      }
+      if (isFrame && types.isObject(v)) {
+        switch (Object.keys(v).length) {
+          case 0:
+            return;
+          case 1:
+            if ("@default" in v && api.asArray(v["@default"]).every((vv) => types.isString(vv))) {
+              return;
+            }
+        }
+      }
+      throw new JsonLdError(
+        'Invalid JSON-LD syntax; "@type" value must a string, an array of strings, an empty object, or a default object.',
+        "jsonld.SyntaxError",
+        { code: "invalid type value", value: v }
+      );
+    };
+    api.hasProperty = (subject, property) => {
+      if (subject.hasOwnProperty(property)) {
+        const value = subject[property];
+        return !types.isArray(value) || value.length > 0;
+      }
+      return false;
+    };
+    api.hasValue = (subject, property, value) => {
+      if (api.hasProperty(subject, property)) {
+        let val = subject[property];
+        const isList = graphTypes.isList(val);
+        if (types.isArray(val) || isList) {
+          if (isList) {
+            val = val["@list"];
+          }
+          for (let i2 = 0; i2 < val.length; ++i2) {
+            if (api.compareValues(value, val[i2])) {
+              return true;
+            }
+          }
+        } else if (!types.isArray(value)) {
+          return api.compareValues(value, val);
+        }
+      }
+      return false;
+    };
+    api.addValue = (subject, property, value, options) => {
+      options = options || {};
+      if (!("propertyIsArray" in options)) {
+        options.propertyIsArray = false;
+      }
+      if (!("valueIsArray" in options)) {
+        options.valueIsArray = false;
+      }
+      if (!("allowDuplicate" in options)) {
+        options.allowDuplicate = true;
+      }
+      if (!("prependValue" in options)) {
+        options.prependValue = false;
+      }
+      if (options.valueIsArray) {
+        subject[property] = value;
+      } else if (types.isArray(value)) {
+        if (value.length === 0 && options.propertyIsArray && !subject.hasOwnProperty(property)) {
+          subject[property] = [];
+        }
+        if (options.prependValue) {
+          value = value.concat(subject[property]);
+          subject[property] = [];
+        }
+        for (let i2 = 0; i2 < value.length; ++i2) {
+          api.addValue(subject, property, value[i2], options);
+        }
+      } else if (subject.hasOwnProperty(property)) {
+        const hasValue = !options.allowDuplicate && api.hasValue(subject, property, value);
+        if (!types.isArray(subject[property]) && (!hasValue || options.propertyIsArray)) {
+          subject[property] = [subject[property]];
+        }
+        if (!hasValue) {
+          if (options.prependValue) {
+            subject[property].unshift(value);
+          } else {
+            subject[property].push(value);
+          }
+        }
+      } else {
+        subject[property] = options.propertyIsArray ? [value] : value;
+      }
+    };
+    api.getValues = (subject, property) => [].concat(subject[property] || []);
+    api.removeProperty = (subject, property) => {
+      delete subject[property];
+    };
+    api.removeValue = (subject, property, value, options) => {
+      options = options || {};
+      if (!("propertyIsArray" in options)) {
+        options.propertyIsArray = false;
+      }
+      const values = api.getValues(subject, property).filter(
+        (e) => !api.compareValues(e, value)
+      );
+      if (values.length === 0) {
+        api.removeProperty(subject, property);
+      } else if (values.length === 1 && !options.propertyIsArray) {
+        subject[property] = values[0];
+      } else {
+        subject[property] = values;
+      }
+    };
+    api.relabelBlankNodes = (input, options) => {
+      options = options || {};
+      const issuer = options.issuer || new IdentifierIssuer("_:b");
+      return _labelBlankNodes(issuer, input);
+    };
+    api.compareValues = (v1, v2) => {
+      if (v1 === v2) {
+        return true;
+      }
+      if (graphTypes.isValue(v1) && graphTypes.isValue(v2) && v1["@value"] === v2["@value"] && v1["@type"] === v2["@type"] && v1["@language"] === v2["@language"] && v1["@index"] === v2["@index"]) {
+        return true;
+      }
+      if (types.isObject(v1) && "@id" in v1 && types.isObject(v2) && "@id" in v2) {
+        return v1["@id"] === v2["@id"];
+      }
+      return false;
+    };
+    api.compareShortestLeast = (a, b) => {
+      if (a.length < b.length) {
+        return -1;
+      }
+      if (b.length < a.length) {
+        return 1;
+      }
+      if (a === b) {
+        return 0;
+      }
+      return a < b ? -1 : 1;
+    };
+    function _labelBlankNodes(issuer, element) {
+      if (types.isArray(element)) {
+        for (let i2 = 0; i2 < element.length; ++i2) {
+          element[i2] = _labelBlankNodes(issuer, element[i2]);
+        }
+      } else if (graphTypes.isList(element)) {
+        element["@list"] = _labelBlankNodes(issuer, element["@list"]);
+      } else if (types.isObject(element)) {
+        if (graphTypes.isBlankNode(element)) {
+          element["@id"] = issuer.getId(element["@id"]);
+        }
+        const keys = Object.keys(element).sort();
+        for (let ki = 0; ki < keys.length; ++ki) {
+          const key = keys[ki];
+          if (key !== "@id") {
+            element[key] = _labelBlankNodes(issuer, element[key]);
+          }
+        }
+      }
+      return element;
+    }
+  }
+});
+
+// node_modules/jsonld/lib/constants.js
+var require_constants = __commonJS({
+  "node_modules/jsonld/lib/constants.js"(exports, module) {
+    "use strict";
+    var RDF = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+    var XSD = "http://www.w3.org/2001/XMLSchema#";
+    module.exports = {
+      // TODO: Deprecated and will be removed later. Use LINK_HEADER_CONTEXT.
+      LINK_HEADER_REL: "http://www.w3.org/ns/json-ld#context",
+      LINK_HEADER_CONTEXT: "http://www.w3.org/ns/json-ld#context",
+      RDF,
+      RDF_LIST: RDF + "List",
+      RDF_FIRST: RDF + "first",
+      RDF_REST: RDF + "rest",
+      RDF_NIL: RDF + "nil",
+      RDF_TYPE: RDF + "type",
+      RDF_PLAIN_LITERAL: RDF + "PlainLiteral",
+      RDF_XML_LITERAL: RDF + "XMLLiteral",
+      RDF_JSON_LITERAL: RDF + "JSON",
+      RDF_OBJECT: RDF + "object",
+      RDF_LANGSTRING: RDF + "langString",
+      XSD,
+      XSD_BOOLEAN: XSD + "boolean",
+      XSD_DOUBLE: XSD + "double",
+      XSD_INTEGER: XSD + "integer",
+      XSD_STRING: XSD + "string"
+    };
+  }
+});
+
+// node_modules/jsonld/lib/RequestQueue.js
+var require_RequestQueue = __commonJS({
+  "node_modules/jsonld/lib/RequestQueue.js"(exports, module) {
+    "use strict";
+    module.exports = class RequestQueue {
+      /**
+       * Creates a simple queue for requesting documents.
+       */
+      constructor() {
+        this._requests = {};
+      }
+      wrapLoader(loader) {
+        const self2 = this;
+        self2._loader = loader;
+        return function() {
+          return self2.add.apply(self2, arguments);
+        };
+      }
+      async add(url) {
+        let promise = this._requests[url];
+        if (promise) {
+          return Promise.resolve(promise);
+        }
+        promise = this._requests[url] = this._loader(url);
+        try {
+          return await promise;
+        } finally {
+          delete this._requests[url];
+        }
+      }
+    };
+  }
+});
+
+// node_modules/jsonld/lib/url.js
+var require_url = __commonJS({
+  "node_modules/jsonld/lib/url.js"(exports, module) {
+    "use strict";
+    var types = require_types();
+    var api = {};
+    module.exports = api;
+    api.parsers = {
+      simple: {
+        // RFC 3986 basic parts
+        keys: [
+          "href",
+          "scheme",
+          "authority",
+          "path",
+          "query",
+          "fragment"
+        ],
+        /* eslint-disable-next-line max-len */
+        regex: /^(?:([^:\/?#]+):)?(?:\/\/([^\/?#]*))?([^?#]*)(?:\?([^#]*))?(?:#(.*))?/
+      },
+      full: {
+        keys: [
+          "href",
+          "protocol",
+          "scheme",
+          "authority",
+          "auth",
+          "user",
+          "password",
+          "hostname",
+          "port",
+          "path",
+          "directory",
+          "file",
+          "query",
+          "fragment"
+        ],
+        /* eslint-disable-next-line max-len */
+        regex: /^(([a-zA-Z][a-zA-Z0-9+-.]*):)?(?:\/\/((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?))?(?:(((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/
+      }
+    };
+    api.parse = (str, parser) => {
+      const parsed = {};
+      const o = api.parsers[parser || "full"];
+      const m = o.regex.exec(str);
+      let i2 = o.keys.length;
+      while (i2--) {
+        parsed[o.keys[i2]] = m[i2] === void 0 ? null : m[i2];
+      }
+      if (parsed.scheme === "https" && parsed.port === "443" || parsed.scheme === "http" && parsed.port === "80") {
+        parsed.href = parsed.href.replace(":" + parsed.port, "");
+        parsed.authority = parsed.authority.replace(":" + parsed.port, "");
+        parsed.port = null;
+      }
+      parsed.normalizedPath = api.removeDotSegments(parsed.path);
+      return parsed;
+    };
+    api.prependBase = (base, iri) => {
+      if (base === null) {
+        return iri;
+      }
+      if (api.isAbsolute(iri)) {
+        return iri;
+      }
+      if (!base || types.isString(base)) {
+        base = api.parse(base || "");
+      }
+      const rel = api.parse(iri);
+      const transform = {
+        protocol: base.protocol || ""
+      };
+      if (rel.authority !== null) {
+        transform.authority = rel.authority;
+        transform.path = rel.path;
+        transform.query = rel.query;
+      } else {
+        transform.authority = base.authority;
+        if (rel.path === "") {
+          transform.path = base.path;
+          if (rel.query !== null) {
+            transform.query = rel.query;
+          } else {
+            transform.query = base.query;
+          }
+        } else {
+          if (rel.path.indexOf("/") === 0) {
+            transform.path = rel.path;
+          } else {
+            let path = base.path;
+            path = path.substr(0, path.lastIndexOf("/") + 1);
+            if ((path.length > 0 || base.authority) && path.substr(-1) !== "/") {
+              path += "/";
+            }
+            path += rel.path;
+            transform.path = path;
+          }
+          transform.query = rel.query;
+        }
+      }
+      if (rel.path !== "") {
+        transform.path = api.removeDotSegments(transform.path);
+      }
+      let rval = transform.protocol;
+      if (transform.authority !== null) {
+        rval += "//" + transform.authority;
+      }
+      rval += transform.path;
+      if (transform.query !== null) {
+        rval += "?" + transform.query;
+      }
+      if (rel.fragment !== null) {
+        rval += "#" + rel.fragment;
+      }
+      if (rval === "") {
+        rval = "./";
+      }
+      return rval;
+    };
+    api.removeBase = (base, iri) => {
+      if (base === null) {
+        return iri;
+      }
+      if (!base || types.isString(base)) {
+        base = api.parse(base || "");
+      }
+      let root = "";
+      if (base.href !== "") {
+        root += (base.protocol || "") + "//" + (base.authority || "");
+      } else if (iri.indexOf("//")) {
+        root += "//";
+      }
+      if (iri.indexOf(root) !== 0) {
+        return iri;
+      }
+      const rel = api.parse(iri.substr(root.length));
+      const baseSegments = base.normalizedPath.split("/");
+      const iriSegments = rel.normalizedPath.split("/");
+      const last = rel.fragment || rel.query ? 0 : 1;
+      while (baseSegments.length > 0 && iriSegments.length > last) {
+        if (baseSegments[0] !== iriSegments[0]) {
+          break;
+        }
+        baseSegments.shift();
+        iriSegments.shift();
+      }
+      let rval = "";
+      if (baseSegments.length > 0) {
+        baseSegments.pop();
+        for (let i2 = 0; i2 < baseSegments.length; ++i2) {
+          rval += "../";
+        }
+      }
+      rval += iriSegments.join("/");
+      if (rel.query !== null) {
+        rval += "?" + rel.query;
+      }
+      if (rel.fragment !== null) {
+        rval += "#" + rel.fragment;
+      }
+      if (rval === "") {
+        rval = "./";
+      }
+      return rval;
+    };
+    api.removeDotSegments = (path) => {
+      if (path.length === 0) {
+        return "";
+      }
+      const input = path.split("/");
+      const output = [];
+      while (input.length > 0) {
+        const next = input.shift();
+        const done = input.length === 0;
+        if (next === ".") {
+          if (done) {
+            output.push("");
+          }
+          continue;
+        }
+        if (next === "..") {
+          output.pop();
+          if (done) {
+            output.push("");
+          }
+          continue;
+        }
+        output.push(next);
+      }
+      if (path[0] === "/" && output.length > 0 && output[0] !== "") {
+        output.unshift("");
+      }
+      if (output.length === 1 && output[0] === "") {
+        return "/";
+      }
+      return output.join("/");
+    };
+    var isAbsoluteRegex = /^([A-Za-z][A-Za-z0-9+-.]*|_):[^\s]*$/;
+    api.isAbsolute = (v) => types.isString(v) && isAbsoluteRegex.test(v);
+    api.isRelative = (v) => types.isString(v);
+  }
+});
+
+// node_modules/jsonld/lib/documentLoaders/xhr.js
+var require_xhr = __commonJS({
+  "node_modules/jsonld/lib/documentLoaders/xhr.js"(exports, module) {
+    "use strict";
+    var { parseLinkHeader, buildHeaders } = require_util4();
+    var { LINK_HEADER_CONTEXT } = require_constants();
+    var JsonLdError = require_JsonLdError();
+    var RequestQueue = require_RequestQueue();
+    var { prependBase } = require_url();
+    var REGEX_LINK_HEADER = /(^|(\r\n))link:/i;
+    module.exports = ({
+      secure,
+      headers = {},
+      xhr
+    } = { headers: {} }) => {
+      headers = buildHeaders(headers);
+      const queue = new RequestQueue();
+      return queue.wrapLoader(loader);
+      async function loader(url) {
+        if (url.indexOf("http:") !== 0 && url.indexOf("https:") !== 0) {
+          throw new JsonLdError(
+            'URL could not be dereferenced; only "http" and "https" URLs are supported.',
+            "jsonld.InvalidUrl",
+            { code: "loading document failed", url }
+          );
+        }
+        if (secure && url.indexOf("https") !== 0) {
+          throw new JsonLdError(
+            `URL could not be dereferenced; secure mode is enabled and the URL's scheme is not "https".`,
+            "jsonld.InvalidUrl",
+            { code: "loading document failed", url }
+          );
+        }
+        let req;
+        try {
+          req = await _get(xhr, url, headers);
+        } catch (e) {
+          throw new JsonLdError(
+            "URL could not be dereferenced, an error occurred.",
+            "jsonld.LoadDocumentError",
+            { code: "loading document failed", url, cause: e }
+          );
+        }
+        if (req.status >= 400) {
+          throw new JsonLdError(
+            "URL could not be dereferenced: " + req.statusText,
+            "jsonld.LoadDocumentError",
+            {
+              code: "loading document failed",
+              url,
+              httpStatusCode: req.status
+            }
+          );
+        }
+        let doc = { contextUrl: null, documentUrl: url, document: req.response };
+        let alternate = null;
+        const contentType = req.getResponseHeader("Content-Type");
+        let linkHeader;
+        if (REGEX_LINK_HEADER.test(req.getAllResponseHeaders())) {
+          linkHeader = req.getResponseHeader("Link");
+        }
+        if (linkHeader && contentType !== "application/ld+json") {
+          const linkHeaders = parseLinkHeader(linkHeader);
+          const linkedContext = linkHeaders[LINK_HEADER_CONTEXT];
+          if (Array.isArray(linkedContext)) {
+            throw new JsonLdError(
+              "URL could not be dereferenced, it has more than one associated HTTP Link Header.",
+              "jsonld.InvalidUrl",
+              { code: "multiple context link headers", url }
+            );
+          }
+          if (linkedContext) {
+            doc.contextUrl = linkedContext.target;
+          }
+          alternate = linkHeaders.alternate;
+          if (alternate && alternate.type == "application/ld+json" && !(contentType || "").match(/^application\/(\w*\+)?json$/)) {
+            doc = await loader(prependBase(url, alternate.target));
+          }
+        }
+        return doc;
+      }
+    };
+    function _get(xhr, url, headers) {
+      xhr = xhr || XMLHttpRequest;
+      const req = new xhr();
+      return new Promise((resolve, reject) => {
+        req.onload = () => resolve(req);
+        req.onerror = (err) => reject(err);
+        req.open("GET", url, true);
+        for (const k in headers) {
+          req.setRequestHeader(k, headers[k]);
+        }
+        req.send();
+      });
+    }
+  }
+});
+
+// node_modules/jsonld/lib/platform-browser.js
+var require_platform_browser = __commonJS({
+  "node_modules/jsonld/lib/platform-browser.js"(exports, module) {
+    "use strict";
+    var xhrLoader = require_xhr();
+    var api = {};
+    module.exports = api;
+    api.setupDocumentLoaders = function(jsonld2) {
+      if (typeof XMLHttpRequest !== "undefined") {
+        jsonld2.documentLoaders.xhr = xhrLoader;
+        jsonld2.useDocumentLoader("xhr");
+      }
+    };
+    api.setupGlobals = function(jsonld2) {
+      if (typeof globalThis.JsonLdProcessor === "undefined") {
+        Object.defineProperty(globalThis, "JsonLdProcessor", {
+          writable: true,
+          enumerable: false,
+          configurable: true,
+          value: jsonld2.JsonLdProcessor
+        });
+      }
+    };
+  }
+});
+
+// node_modules/yallist/iterator.js
+var require_iterator = __commonJS({
+  "node_modules/yallist/iterator.js"(exports, module) {
+    "use strict";
+    module.exports = function(Yallist) {
+      Yallist.prototype[Symbol.iterator] = function* () {
+        for (let walker = this.head; walker; walker = walker.next) {
+          yield walker.value;
+        }
+      };
+    };
+  }
+});
+
+// node_modules/yallist/yallist.js
+var require_yallist = __commonJS({
+  "node_modules/yallist/yallist.js"(exports, module) {
+    "use strict";
+    module.exports = Yallist;
+    Yallist.Node = Node;
+    Yallist.create = Yallist;
+    function Yallist(list) {
+      var self2 = this;
+      if (!(self2 instanceof Yallist)) {
+        self2 = new Yallist();
+      }
+      self2.tail = null;
+      self2.head = null;
+      self2.length = 0;
+      if (list && typeof list.forEach === "function") {
+        list.forEach(function(item) {
+          self2.push(item);
+        });
+      } else if (arguments.length > 0) {
+        for (var i2 = 0, l = arguments.length; i2 < l; i2++) {
+          self2.push(arguments[i2]);
+        }
+      }
+      return self2;
+    }
+    Yallist.prototype.removeNode = function(node) {
+      if (node.list !== this) {
+        throw new Error("removing node which does not belong to this list");
+      }
+      var next = node.next;
+      var prev = node.prev;
+      if (next) {
+        next.prev = prev;
+      }
+      if (prev) {
+        prev.next = next;
+      }
+      if (node === this.head) {
+        this.head = next;
+      }
+      if (node === this.tail) {
+        this.tail = prev;
+      }
+      node.list.length--;
+      node.next = null;
+      node.prev = null;
+      node.list = null;
+      return next;
+    };
+    Yallist.prototype.unshiftNode = function(node) {
+      if (node === this.head) {
+        return;
+      }
+      if (node.list) {
+        node.list.removeNode(node);
+      }
+      var head = this.head;
+      node.list = this;
+      node.next = head;
+      if (head) {
+        head.prev = node;
+      }
+      this.head = node;
+      if (!this.tail) {
+        this.tail = node;
+      }
+      this.length++;
+    };
+    Yallist.prototype.pushNode = function(node) {
+      if (node === this.tail) {
+        return;
+      }
+      if (node.list) {
+        node.list.removeNode(node);
+      }
+      var tail = this.tail;
+      node.list = this;
+      node.prev = tail;
+      if (tail) {
+        tail.next = node;
+      }
+      this.tail = node;
+      if (!this.head) {
+        this.head = node;
+      }
+      this.length++;
+    };
+    Yallist.prototype.push = function() {
+      for (var i2 = 0, l = arguments.length; i2 < l; i2++) {
+        push(this, arguments[i2]);
+      }
+      return this.length;
+    };
+    Yallist.prototype.unshift = function() {
+      for (var i2 = 0, l = arguments.length; i2 < l; i2++) {
+        unshift(this, arguments[i2]);
+      }
+      return this.length;
+    };
+    Yallist.prototype.pop = function() {
+      if (!this.tail) {
+        return void 0;
+      }
+      var res = this.tail.value;
+      this.tail = this.tail.prev;
+      if (this.tail) {
+        this.tail.next = null;
+      } else {
+        this.head = null;
+      }
+      this.length--;
+      return res;
+    };
+    Yallist.prototype.shift = function() {
+      if (!this.head) {
+        return void 0;
+      }
+      var res = this.head.value;
+      this.head = this.head.next;
+      if (this.head) {
+        this.head.prev = null;
+      } else {
+        this.tail = null;
+      }
+      this.length--;
+      return res;
+    };
+    Yallist.prototype.forEach = function(fn, thisp) {
+      thisp = thisp || this;
+      for (var walker = this.head, i2 = 0; walker !== null; i2++) {
+        fn.call(thisp, walker.value, i2, this);
+        walker = walker.next;
+      }
+    };
+    Yallist.prototype.forEachReverse = function(fn, thisp) {
+      thisp = thisp || this;
+      for (var walker = this.tail, i2 = this.length - 1; walker !== null; i2--) {
+        fn.call(thisp, walker.value, i2, this);
+        walker = walker.prev;
+      }
+    };
+    Yallist.prototype.get = function(n) {
+      for (var i2 = 0, walker = this.head; walker !== null && i2 < n; i2++) {
+        walker = walker.next;
+      }
+      if (i2 === n && walker !== null) {
+        return walker.value;
+      }
+    };
+    Yallist.prototype.getReverse = function(n) {
+      for (var i2 = 0, walker = this.tail; walker !== null && i2 < n; i2++) {
+        walker = walker.prev;
+      }
+      if (i2 === n && walker !== null) {
+        return walker.value;
+      }
+    };
+    Yallist.prototype.map = function(fn, thisp) {
+      thisp = thisp || this;
+      var res = new Yallist();
+      for (var walker = this.head; walker !== null; ) {
+        res.push(fn.call(thisp, walker.value, this));
+        walker = walker.next;
+      }
+      return res;
+    };
+    Yallist.prototype.mapReverse = function(fn, thisp) {
+      thisp = thisp || this;
+      var res = new Yallist();
+      for (var walker = this.tail; walker !== null; ) {
+        res.push(fn.call(thisp, walker.value, this));
+        walker = walker.prev;
+      }
+      return res;
+    };
+    Yallist.prototype.reduce = function(fn, initial) {
+      var acc;
+      var walker = this.head;
+      if (arguments.length > 1) {
+        acc = initial;
+      } else if (this.head) {
+        walker = this.head.next;
+        acc = this.head.value;
+      } else {
+        throw new TypeError("Reduce of empty list with no initial value");
+      }
+      for (var i2 = 0; walker !== null; i2++) {
+        acc = fn(acc, walker.value, i2);
+        walker = walker.next;
+      }
+      return acc;
+    };
+    Yallist.prototype.reduceReverse = function(fn, initial) {
+      var acc;
+      var walker = this.tail;
+      if (arguments.length > 1) {
+        acc = initial;
+      } else if (this.tail) {
+        walker = this.tail.prev;
+        acc = this.tail.value;
+      } else {
+        throw new TypeError("Reduce of empty list with no initial value");
+      }
+      for (var i2 = this.length - 1; walker !== null; i2--) {
+        acc = fn(acc, walker.value, i2);
+        walker = walker.prev;
+      }
+      return acc;
+    };
+    Yallist.prototype.toArray = function() {
+      var arr = new Array(this.length);
+      for (var i2 = 0, walker = this.head; walker !== null; i2++) {
+        arr[i2] = walker.value;
+        walker = walker.next;
+      }
+      return arr;
+    };
+    Yallist.prototype.toArrayReverse = function() {
+      var arr = new Array(this.length);
+      for (var i2 = 0, walker = this.tail; walker !== null; i2++) {
+        arr[i2] = walker.value;
+        walker = walker.prev;
+      }
+      return arr;
+    };
+    Yallist.prototype.slice = function(from, to) {
+      to = to || this.length;
+      if (to < 0) {
+        to += this.length;
+      }
+      from = from || 0;
+      if (from < 0) {
+        from += this.length;
+      }
+      var ret = new Yallist();
+      if (to < from || to < 0) {
+        return ret;
+      }
+      if (from < 0) {
+        from = 0;
+      }
+      if (to > this.length) {
+        to = this.length;
+      }
+      for (var i2 = 0, walker = this.head; walker !== null && i2 < from; i2++) {
+        walker = walker.next;
+      }
+      for (; walker !== null && i2 < to; i2++, walker = walker.next) {
+        ret.push(walker.value);
+      }
+      return ret;
+    };
+    Yallist.prototype.sliceReverse = function(from, to) {
+      to = to || this.length;
+      if (to < 0) {
+        to += this.length;
+      }
+      from = from || 0;
+      if (from < 0) {
+        from += this.length;
+      }
+      var ret = new Yallist();
+      if (to < from || to < 0) {
+        return ret;
+      }
+      if (from < 0) {
+        from = 0;
+      }
+      if (to > this.length) {
+        to = this.length;
+      }
+      for (var i2 = this.length, walker = this.tail; walker !== null && i2 > to; i2--) {
+        walker = walker.prev;
+      }
+      for (; walker !== null && i2 > from; i2--, walker = walker.prev) {
+        ret.push(walker.value);
+      }
+      return ret;
+    };
+    Yallist.prototype.splice = function(start, deleteCount, ...nodes) {
+      if (start > this.length) {
+        start = this.length - 1;
+      }
+      if (start < 0) {
+        start = this.length + start;
+      }
+      for (var i2 = 0, walker = this.head; walker !== null && i2 < start; i2++) {
+        walker = walker.next;
+      }
+      var ret = [];
+      for (var i2 = 0; walker && i2 < deleteCount; i2++) {
+        ret.push(walker.value);
+        walker = this.removeNode(walker);
+      }
+      if (walker === null) {
+        walker = this.tail;
+      }
+      if (walker !== this.head && walker !== this.tail) {
+        walker = walker.prev;
+      }
+      for (var i2 = 0; i2 < nodes.length; i2++) {
+        walker = insert(this, walker, nodes[i2]);
+      }
+      return ret;
+    };
+    Yallist.prototype.reverse = function() {
+      var head = this.head;
+      var tail = this.tail;
+      for (var walker = head; walker !== null; walker = walker.prev) {
+        var p = walker.prev;
+        walker.prev = walker.next;
+        walker.next = p;
+      }
+      this.head = tail;
+      this.tail = head;
+      return this;
+    };
+    function insert(self2, node, value) {
+      var inserted = node === self2.head ? new Node(value, null, node, self2) : new Node(value, node, node.next, self2);
+      if (inserted.next === null) {
+        self2.tail = inserted;
+      }
+      if (inserted.prev === null) {
+        self2.head = inserted;
+      }
+      self2.length++;
+      return inserted;
+    }
+    function push(self2, item) {
+      self2.tail = new Node(item, self2.tail, null, self2);
+      if (!self2.head) {
+        self2.head = self2.tail;
+      }
+      self2.length++;
+    }
+    function unshift(self2, item) {
+      self2.head = new Node(item, null, self2.head, self2);
+      if (!self2.tail) {
+        self2.tail = self2.head;
+      }
+      self2.length++;
+    }
+    function Node(value, prev, next, list) {
+      if (!(this instanceof Node)) {
+        return new Node(value, prev, next, list);
+      }
+      this.list = list;
+      this.value = value;
+      if (prev) {
+        prev.next = this;
+        this.prev = prev;
+      } else {
+        this.prev = null;
+      }
+      if (next) {
+        next.prev = this;
+        this.next = next;
+      } else {
+        this.next = null;
+      }
+    }
+    try {
+      require_iterator()(Yallist);
+    } catch (er) {
+    }
+  }
+});
+
+// node_modules/jsonld/node_modules/lru-cache/index.js
+var require_lru_cache = __commonJS({
+  "node_modules/jsonld/node_modules/lru-cache/index.js"(exports, module) {
+    "use strict";
+    var Yallist = require_yallist();
+    var MAX = Symbol("max");
+    var LENGTH = Symbol("length");
+    var LENGTH_CALCULATOR = Symbol("lengthCalculator");
+    var ALLOW_STALE = Symbol("allowStale");
+    var MAX_AGE = Symbol("maxAge");
+    var DISPOSE = Symbol("dispose");
+    var NO_DISPOSE_ON_SET = Symbol("noDisposeOnSet");
+    var LRU_LIST = Symbol("lruList");
+    var CACHE = Symbol("cache");
+    var UPDATE_AGE_ON_GET = Symbol("updateAgeOnGet");
+    var naiveLength = () => 1;
+    var LRUCache = class {
+      constructor(options) {
+        if (typeof options === "number")
+          options = { max: options };
+        if (!options)
+          options = {};
+        if (options.max && (typeof options.max !== "number" || options.max < 0))
+          throw new TypeError("max must be a non-negative number");
+        const max = this[MAX] = options.max || Infinity;
+        const lc = options.length || naiveLength;
+        this[LENGTH_CALCULATOR] = typeof lc !== "function" ? naiveLength : lc;
+        this[ALLOW_STALE] = options.stale || false;
+        if (options.maxAge && typeof options.maxAge !== "number")
+          throw new TypeError("maxAge must be a number");
+        this[MAX_AGE] = options.maxAge || 0;
+        this[DISPOSE] = options.dispose;
+        this[NO_DISPOSE_ON_SET] = options.noDisposeOnSet || false;
+        this[UPDATE_AGE_ON_GET] = options.updateAgeOnGet || false;
+        this.reset();
+      }
+      // resize the cache when the max changes.
+      set max(mL) {
+        if (typeof mL !== "number" || mL < 0)
+          throw new TypeError("max must be a non-negative number");
+        this[MAX] = mL || Infinity;
+        trim(this);
+      }
+      get max() {
+        return this[MAX];
+      }
+      set allowStale(allowStale) {
+        this[ALLOW_STALE] = !!allowStale;
+      }
+      get allowStale() {
+        return this[ALLOW_STALE];
+      }
+      set maxAge(mA) {
+        if (typeof mA !== "number")
+          throw new TypeError("maxAge must be a non-negative number");
+        this[MAX_AGE] = mA;
+        trim(this);
+      }
+      get maxAge() {
+        return this[MAX_AGE];
+      }
+      // resize the cache when the lengthCalculator changes.
+      set lengthCalculator(lC) {
+        if (typeof lC !== "function")
+          lC = naiveLength;
+        if (lC !== this[LENGTH_CALCULATOR]) {
+          this[LENGTH_CALCULATOR] = lC;
+          this[LENGTH] = 0;
+          this[LRU_LIST].forEach((hit) => {
+            hit.length = this[LENGTH_CALCULATOR](hit.value, hit.key);
+            this[LENGTH] += hit.length;
+          });
+        }
+        trim(this);
+      }
+      get lengthCalculator() {
+        return this[LENGTH_CALCULATOR];
+      }
+      get length() {
+        return this[LENGTH];
+      }
+      get itemCount() {
+        return this[LRU_LIST].length;
+      }
+      rforEach(fn, thisp) {
+        thisp = thisp || this;
+        for (let walker = this[LRU_LIST].tail; walker !== null; ) {
+          const prev = walker.prev;
+          forEachStep(this, fn, walker, thisp);
+          walker = prev;
+        }
+      }
+      forEach(fn, thisp) {
+        thisp = thisp || this;
+        for (let walker = this[LRU_LIST].head; walker !== null; ) {
+          const next = walker.next;
+          forEachStep(this, fn, walker, thisp);
+          walker = next;
+        }
+      }
+      keys() {
+        return this[LRU_LIST].toArray().map((k) => k.key);
+      }
+      values() {
+        return this[LRU_LIST].toArray().map((k) => k.value);
+      }
+      reset() {
+        if (this[DISPOSE] && this[LRU_LIST] && this[LRU_LIST].length) {
+          this[LRU_LIST].forEach((hit) => this[DISPOSE](hit.key, hit.value));
+        }
+        this[CACHE] = /* @__PURE__ */ new Map();
+        this[LRU_LIST] = new Yallist();
+        this[LENGTH] = 0;
+      }
+      dump() {
+        return this[LRU_LIST].map((hit) => isStale(this, hit) ? false : {
+          k: hit.key,
+          v: hit.value,
+          e: hit.now + (hit.maxAge || 0)
+        }).toArray().filter((h) => h);
+      }
+      dumpLru() {
+        return this[LRU_LIST];
+      }
+      set(key, value, maxAge) {
+        maxAge = maxAge || this[MAX_AGE];
+        if (maxAge && typeof maxAge !== "number")
+          throw new TypeError("maxAge must be a number");
+        const now = maxAge ? Date.now() : 0;
+        const len = this[LENGTH_CALCULATOR](value, key);
+        if (this[CACHE].has(key)) {
+          if (len > this[MAX]) {
+            del(this, this[CACHE].get(key));
+            return false;
+          }
+          const node = this[CACHE].get(key);
+          const item = node.value;
+          if (this[DISPOSE]) {
+            if (!this[NO_DISPOSE_ON_SET])
+              this[DISPOSE](key, item.value);
+          }
+          item.now = now;
+          item.maxAge = maxAge;
+          item.value = value;
+          this[LENGTH] += len - item.length;
+          item.length = len;
+          this.get(key);
+          trim(this);
+          return true;
+        }
+        const hit = new Entry(key, value, len, now, maxAge);
+        if (hit.length > this[MAX]) {
+          if (this[DISPOSE])
+            this[DISPOSE](key, value);
+          return false;
+        }
+        this[LENGTH] += hit.length;
+        this[LRU_LIST].unshift(hit);
+        this[CACHE].set(key, this[LRU_LIST].head);
+        trim(this);
+        return true;
+      }
+      has(key) {
+        if (!this[CACHE].has(key))
+          return false;
+        const hit = this[CACHE].get(key).value;
+        return !isStale(this, hit);
+      }
+      get(key) {
+        return get(this, key, true);
+      }
+      peek(key) {
+        return get(this, key, false);
+      }
+      pop() {
+        const node = this[LRU_LIST].tail;
+        if (!node)
+          return null;
+        del(this, node);
+        return node.value;
+      }
+      del(key) {
+        del(this, this[CACHE].get(key));
+      }
+      load(arr) {
+        this.reset();
+        const now = Date.now();
+        for (let l = arr.length - 1; l >= 0; l--) {
+          const hit = arr[l];
+          const expiresAt = hit.e || 0;
+          if (expiresAt === 0)
+            this.set(hit.k, hit.v);
+          else {
+            const maxAge = expiresAt - now;
+            if (maxAge > 0) {
+              this.set(hit.k, hit.v, maxAge);
+            }
+          }
+        }
+      }
+      prune() {
+        this[CACHE].forEach((value, key) => get(this, key, false));
+      }
+    };
+    var get = (self2, key, doUse) => {
+      const node = self2[CACHE].get(key);
+      if (node) {
+        const hit = node.value;
+        if (isStale(self2, hit)) {
+          del(self2, node);
+          if (!self2[ALLOW_STALE])
+            return void 0;
+        } else {
+          if (doUse) {
+            if (self2[UPDATE_AGE_ON_GET])
+              node.value.now = Date.now();
+            self2[LRU_LIST].unshiftNode(node);
+          }
+        }
+        return hit.value;
+      }
+    };
+    var isStale = (self2, hit) => {
+      if (!hit || !hit.maxAge && !self2[MAX_AGE])
+        return false;
+      const diff = Date.now() - hit.now;
+      return hit.maxAge ? diff > hit.maxAge : self2[MAX_AGE] && diff > self2[MAX_AGE];
+    };
+    var trim = (self2) => {
+      if (self2[LENGTH] > self2[MAX]) {
+        for (let walker = self2[LRU_LIST].tail; self2[LENGTH] > self2[MAX] && walker !== null; ) {
+          const prev = walker.prev;
+          del(self2, walker);
+          walker = prev;
+        }
+      }
+    };
+    var del = (self2, node) => {
+      if (node) {
+        const hit = node.value;
+        if (self2[DISPOSE])
+          self2[DISPOSE](hit.key, hit.value);
+        self2[LENGTH] -= hit.length;
+        self2[CACHE].delete(hit.key);
+        self2[LRU_LIST].removeNode(node);
+      }
+    };
+    var Entry = class {
+      constructor(key, value, length, now, maxAge) {
+        this.key = key;
+        this.value = value;
+        this.length = length;
+        this.now = now;
+        this.maxAge = maxAge || 0;
+      }
+    };
+    var forEachStep = (self2, fn, node, thisp) => {
+      let hit = node.value;
+      if (isStale(self2, hit)) {
+        del(self2, node);
+        if (!self2[ALLOW_STALE])
+          hit = void 0;
+      }
+      if (hit)
+        fn.call(thisp, hit.value, hit.key, self2);
+    };
+    module.exports = LRUCache;
+  }
+});
+
+// node_modules/jsonld/lib/ResolvedContext.js
+var require_ResolvedContext = __commonJS({
+  "node_modules/jsonld/lib/ResolvedContext.js"(exports, module) {
+    "use strict";
+    var LRU = require_lru_cache();
+    var MAX_ACTIVE_CONTEXTS = 10;
+    module.exports = class ResolvedContext {
+      /**
+       * Creates a ResolvedContext.
+       *
+       * @param document the context document.
+       */
+      constructor({ document: document2 }) {
+        this.document = document2;
+        this.cache = new LRU({ max: MAX_ACTIVE_CONTEXTS });
+      }
+      getProcessed(activeCtx) {
+        return this.cache.get(activeCtx);
+      }
+      setProcessed(activeCtx, processedCtx) {
+        this.cache.set(activeCtx, processedCtx);
+      }
+    };
+  }
+});
+
+// node_modules/jsonld/lib/ContextResolver.js
+var require_ContextResolver = __commonJS({
+  "node_modules/jsonld/lib/ContextResolver.js"(exports, module) {
+    "use strict";
+    var {
+      isArray: _isArray,
+      isObject: _isObject,
+      isString: _isString
+    } = require_types();
+    var {
+      asArray: _asArray
+    } = require_util4();
+    var { prependBase } = require_url();
+    var JsonLdError = require_JsonLdError();
+    var ResolvedContext = require_ResolvedContext();
+    var MAX_CONTEXT_URLS = 10;
+    module.exports = class ContextResolver {
+      /**
+       * Creates a ContextResolver.
+       *
+       * @param sharedCache a shared LRU cache with `get` and `set` APIs.
+       */
+      constructor({ sharedCache }) {
+        this.perOpCache = /* @__PURE__ */ new Map();
+        this.sharedCache = sharedCache;
+      }
+      async resolve({
+        activeCtx,
+        context,
+        documentLoader,
+        base,
+        cycles = /* @__PURE__ */ new Set()
+      }) {
+        if (context && _isObject(context) && context["@context"]) {
+          context = context["@context"];
+        }
+        context = _asArray(context);
+        const allResolved = [];
+        for (const ctx of context) {
+          if (_isString(ctx)) {
+            let resolved2 = this._get(ctx);
+            if (!resolved2) {
+              resolved2 = await this._resolveRemoteContext(
+                { activeCtx, url: ctx, documentLoader, base, cycles }
+              );
+            }
+            if (_isArray(resolved2)) {
+              allResolved.push(...resolved2);
+            } else {
+              allResolved.push(resolved2);
+            }
+            continue;
+          }
+          if (ctx === null) {
+            allResolved.push(new ResolvedContext({ document: null }));
+            continue;
+          }
+          if (!_isObject(ctx)) {
+            _throwInvalidLocalContext(context);
+          }
+          const key = JSON.stringify(ctx);
+          let resolved = this._get(key);
+          if (!resolved) {
+            resolved = new ResolvedContext({ document: ctx });
+            this._cacheResolvedContext({ key, resolved, tag: "static" });
+          }
+          allResolved.push(resolved);
+        }
+        return allResolved;
+      }
+      _get(key) {
+        let resolved = this.perOpCache.get(key);
+        if (!resolved) {
+          const tagMap = this.sharedCache.get(key);
+          if (tagMap) {
+            resolved = tagMap.get("static");
+            if (resolved) {
+              this.perOpCache.set(key, resolved);
+            }
+          }
+        }
+        return resolved;
+      }
+      _cacheResolvedContext({ key, resolved, tag }) {
+        this.perOpCache.set(key, resolved);
+        if (tag !== void 0) {
+          let tagMap = this.sharedCache.get(key);
+          if (!tagMap) {
+            tagMap = /* @__PURE__ */ new Map();
+            this.sharedCache.set(key, tagMap);
+          }
+          tagMap.set(tag, resolved);
+        }
+        return resolved;
+      }
+      async _resolveRemoteContext({ activeCtx, url, documentLoader, base, cycles }) {
+        url = prependBase(base, url);
+        const { context, remoteDoc } = await this._fetchContext(
+          { activeCtx, url, documentLoader, cycles }
+        );
+        base = remoteDoc.documentUrl || url;
+        _resolveContextUrls({ context, base });
+        const resolved = await this.resolve(
+          { activeCtx, context, documentLoader, base, cycles }
+        );
+        this._cacheResolvedContext({ key: url, resolved, tag: remoteDoc.tag });
+        return resolved;
+      }
+      async _fetchContext({ activeCtx, url, documentLoader, cycles }) {
+        if (cycles.size > MAX_CONTEXT_URLS) {
+          throw new JsonLdError(
+            "Maximum number of @context URLs exceeded.",
+            "jsonld.ContextUrlError",
+            {
+              code: activeCtx.processingMode === "json-ld-1.0" ? "loading remote context failed" : "context overflow",
+              max: MAX_CONTEXT_URLS
+            }
+          );
+        }
+        if (cycles.has(url)) {
+          throw new JsonLdError(
+            "Cyclical @context URLs detected.",
+            "jsonld.ContextUrlError",
+            {
+              code: activeCtx.processingMode === "json-ld-1.0" ? "recursive context inclusion" : "context overflow",
+              url
+            }
+          );
+        }
+        cycles.add(url);
+        let context;
+        let remoteDoc;
+        try {
+          remoteDoc = await documentLoader(url);
+          context = remoteDoc.document || null;
+          if (_isString(context)) {
+            context = JSON.parse(context);
+          }
+        } catch (e) {
+          throw new JsonLdError(
+            "Dereferencing a URL did not result in a valid JSON-LD object. Possible causes are an inaccessible URL perhaps due to a same-origin policy (ensure the server uses CORS if you are using client-side JavaScript), too many redirects, a non-JSON response, or more than one HTTP Link Header was provided for a remote context.",
+            "jsonld.InvalidUrl",
+            { code: "loading remote context failed", url, cause: e }
+          );
+        }
+        if (!_isObject(context)) {
+          throw new JsonLdError(
+            "Dereferencing a URL did not result in a JSON object. The response was valid JSON, but it was not a JSON object.",
+            "jsonld.InvalidUrl",
+            { code: "invalid remote context", url }
+          );
+        }
+        if (!("@context" in context)) {
+          context = { "@context": {} };
+        } else {
+          context = { "@context": context["@context"] };
+        }
+        if (remoteDoc.contextUrl) {
+          if (!_isArray(context["@context"])) {
+            context["@context"] = [context["@context"]];
+          }
+          context["@context"].push(remoteDoc.contextUrl);
+        }
+        return { context, remoteDoc };
+      }
+    };
+    function _throwInvalidLocalContext(ctx) {
+      throw new JsonLdError(
+        "Invalid JSON-LD syntax; @context must be an object.",
+        "jsonld.SyntaxError",
+        {
+          code: "invalid local context",
+          context: ctx
+        }
+      );
+    }
+    function _resolveContextUrls({ context, base }) {
+      if (!context) {
+        return;
+      }
+      const ctx = context["@context"];
+      if (_isString(ctx)) {
+        context["@context"] = prependBase(base, ctx);
+        return;
+      }
+      if (_isArray(ctx)) {
+        for (let i2 = 0; i2 < ctx.length; ++i2) {
+          const element = ctx[i2];
+          if (_isString(element)) {
+            ctx[i2] = prependBase(base, element);
+            continue;
+          }
+          if (_isObject(element)) {
+            _resolveContextUrls({ context: { "@context": element }, base });
+          }
+        }
+        return;
+      }
+      if (!_isObject(ctx)) {
+        return;
+      }
+      for (const term in ctx) {
+        _resolveContextUrls({ context: ctx[term], base });
+      }
+    }
+  }
+});
+
+// node_modules/jsonld/lib/NQuads.js
+var require_NQuads2 = __commonJS({
+  "node_modules/jsonld/lib/NQuads.js"(exports, module) {
+    "use strict";
+    module.exports = require_rdf_canonize().NQuads;
+  }
+});
+
+// node_modules/jsonld/lib/events.js
+var require_events2 = __commonJS({
+  "node_modules/jsonld/lib/events.js"(exports, module) {
+    "use strict";
+    var JsonLdError = require_JsonLdError();
+    var {
+      isArray: _isArray
+    } = require_types();
+    var {
+      asArray: _asArray
+    } = require_util4();
+    var api = {};
+    module.exports = api;
+    api.defaultEventHandler = null;
+    api.setupEventHandler = ({ options = {} }) => {
+      const eventHandler = [].concat(
+        options.safe ? api.safeEventHandler : [],
+        options.eventHandler ? _asArray(options.eventHandler) : [],
+        api.defaultEventHandler ? api.defaultEventHandler : []
+      );
+      return eventHandler.length === 0 ? null : eventHandler;
+    };
+    api.handleEvent = ({
+      event,
+      options
+    }) => {
+      _handle({ event, handlers: options.eventHandler });
+    };
+    function _handle({ event, handlers }) {
+      let doNext = true;
+      for (let i2 = 0; doNext && i2 < handlers.length; ++i2) {
+        doNext = false;
+        const handler = handlers[i2];
+        if (_isArray(handler)) {
+          doNext = _handle({ event, handlers: handler });
+        } else if (typeof handler === "function") {
+          handler({ event, next: () => {
+            doNext = true;
+          } });
+        } else if (typeof handler === "object") {
+          if (event.code in handler) {
+            handler[event.code]({ event, next: () => {
+              doNext = true;
+            } });
+          } else {
+            doNext = true;
+          }
+        } else {
+          throw new JsonLdError(
+            "Invalid event handler.",
+            "jsonld.InvalidEventHandler",
+            { event }
+          );
+        }
+      }
+      return doNext;
+    }
+    var _notSafeEventCodes = /* @__PURE__ */ new Set([
+      "empty object",
+      "free-floating scalar",
+      "invalid @language value",
+      "invalid property",
+      // NOTE: spec edge case
+      "null @id value",
+      "null @value value",
+      "object with only @id",
+      "object with only @language",
+      "object with only @list",
+      "object with only @value",
+      "relative @id reference",
+      "relative @type reference",
+      "relative @vocab reference",
+      "reserved @id value",
+      "reserved @reverse value",
+      "reserved term",
+      // toRDF
+      "blank node predicate",
+      "relative graph reference",
+      "relative object reference",
+      "relative predicate reference",
+      "relative subject reference",
+      // toRDF / fromRDF
+      "rdfDirection not set"
+    ]);
+    api.safeEventHandler = function safeEventHandler({ event, next }) {
+      if (event.level === "warning" && _notSafeEventCodes.has(event.code)) {
+        throw new JsonLdError(
+          "Safe mode validation error.",
+          "jsonld.ValidationError",
+          { event }
+        );
+      }
+      next();
+    };
+    api.logEventHandler = function logEventHandler({ event, next }) {
+      console.log(`EVENT: ${event.message}`, { event });
+      next();
+    };
+    api.logWarningEventHandler = function logWarningEventHandler({ event, next }) {
+      if (event.level === "warning") {
+        console.warn(`WARNING: ${event.message}`, { event });
+      }
+      next();
+    };
+    api.unhandledEventHandler = function unhandledEventHandler({ event }) {
+      throw new JsonLdError(
+        "No handler for event.",
+        "jsonld.UnhandledEvent",
+        { event }
+      );
+    };
+    api.setDefaultEventHandler = function({ eventHandler } = {}) {
+      api.defaultEventHandler = eventHandler ? _asArray(eventHandler) : null;
+    };
+  }
+});
+
+// node_modules/jsonld/lib/context.js
+var require_context = __commonJS({
+  "node_modules/jsonld/lib/context.js"(exports, module) {
+    "use strict";
+    var util = require_util4();
+    var JsonLdError = require_JsonLdError();
+    var {
+      isArray: _isArray,
+      isObject: _isObject,
+      isString: _isString,
+      isUndefined: _isUndefined
+    } = require_types();
+    var {
+      isAbsolute: _isAbsoluteIri,
+      isRelative: _isRelativeIri,
+      prependBase
+    } = require_url();
+    var {
+      handleEvent: _handleEvent
+    } = require_events2();
+    var {
+      REGEX_BCP47,
+      REGEX_KEYWORD,
+      asArray: _asArray,
+      compareShortestLeast: _compareShortestLeast
+    } = require_util4();
+    var INITIAL_CONTEXT_CACHE = /* @__PURE__ */ new Map();
+    var INITIAL_CONTEXT_CACHE_MAX_SIZE = 1e4;
+    var api = {};
+    module.exports = api;
+    api.process = async ({
+      activeCtx,
+      localCtx,
+      options,
+      propagate = true,
+      overrideProtected = false,
+      cycles = /* @__PURE__ */ new Set()
+    }) => {
+      if (_isObject(localCtx) && "@context" in localCtx && _isArray(localCtx["@context"])) {
+        localCtx = localCtx["@context"];
+      }
+      const ctxs = _asArray(localCtx);
+      if (ctxs.length === 0) {
+        return activeCtx;
+      }
+      const events = [];
+      const eventCaptureHandler = [
+        ({ event, next }) => {
+          events.push(event);
+          next();
+        }
+      ];
+      if (options.eventHandler) {
+        eventCaptureHandler.push(options.eventHandler);
+      }
+      const originalOptions = options;
+      options = { ...options, eventHandler: eventCaptureHandler };
+      const resolved = await options.contextResolver.resolve({
+        activeCtx,
+        context: localCtx,
+        documentLoader: options.documentLoader,
+        base: options.base
+      });
+      if (_isObject(resolved[0].document) && typeof resolved[0].document["@propagate"] === "boolean") {
+        propagate = resolved[0].document["@propagate"];
+      }
+      let rval = activeCtx;
+      if (!propagate && !rval.previousContext) {
+        rval = rval.clone();
+        rval.previousContext = activeCtx;
+      }
+      for (const resolvedContext of resolved) {
+        let { document: ctx } = resolvedContext;
+        activeCtx = rval;
+        if (ctx === null) {
+          if (!overrideProtected && Object.keys(activeCtx.protected).length !== 0) {
+            throw new JsonLdError(
+              "Tried to nullify a context with protected terms outside of a term definition.",
+              "jsonld.SyntaxError",
+              { code: "invalid context nullification" }
+            );
+          }
+          rval = activeCtx = api.getInitialContext(options).clone();
+          continue;
+        }
+        const processed = resolvedContext.getProcessed(activeCtx);
+        if (processed) {
+          if (originalOptions.eventHandler) {
+            for (const event of processed.events) {
+              _handleEvent({ event, options: originalOptions });
+            }
+          }
+          rval = activeCtx = processed.context;
+          continue;
+        }
+        if (_isObject(ctx) && "@context" in ctx) {
+          ctx = ctx["@context"];
+        }
+        if (!_isObject(ctx)) {
+          throw new JsonLdError(
+            "Invalid JSON-LD syntax; @context must be an object.",
+            "jsonld.SyntaxError",
+            { code: "invalid local context", context: ctx }
+          );
+        }
+        rval = rval.clone();
+        const defined = /* @__PURE__ */ new Map();
+        if ("@version" in ctx) {
+          if (ctx["@version"] !== 1.1) {
+            throw new JsonLdError(
+              "Unsupported JSON-LD version: " + ctx["@version"],
+              "jsonld.UnsupportedVersion",
+              { code: "invalid @version value", context: ctx }
+            );
+          }
+          if (activeCtx.processingMode && activeCtx.processingMode === "json-ld-1.0") {
+            throw new JsonLdError(
+              "@version: " + ctx["@version"] + " not compatible with " + activeCtx.processingMode,
+              "jsonld.ProcessingModeConflict",
+              { code: "processing mode conflict", context: ctx }
+            );
+          }
+          rval.processingMode = "json-ld-1.1";
+          rval["@version"] = ctx["@version"];
+          defined.set("@version", true);
+        }
+        rval.processingMode = rval.processingMode || activeCtx.processingMode;
+        if ("@base" in ctx) {
+          let base = ctx["@base"];
+          if (base === null || _isAbsoluteIri(base)) {
+          } else if (_isRelativeIri(base)) {
+            base = prependBase(rval["@base"], base);
+          } else {
+            throw new JsonLdError(
+              'Invalid JSON-LD syntax; the value of "@base" in a @context must be an absolute IRI, a relative IRI, or null.',
+              "jsonld.SyntaxError",
+              { code: "invalid base IRI", context: ctx }
+            );
+          }
+          rval["@base"] = base;
+          defined.set("@base", true);
+        }
+        if ("@vocab" in ctx) {
+          const value = ctx["@vocab"];
+          if (value === null) {
+            delete rval["@vocab"];
+          } else if (!_isString(value)) {
+            throw new JsonLdError(
+              'Invalid JSON-LD syntax; the value of "@vocab" in a @context must be a string or null.',
+              "jsonld.SyntaxError",
+              { code: "invalid vocab mapping", context: ctx }
+            );
+          } else if (!_isAbsoluteIri(value) && api.processingMode(rval, 1)) {
+            throw new JsonLdError(
+              'Invalid JSON-LD syntax; the value of "@vocab" in a @context must be an absolute IRI.',
+              "jsonld.SyntaxError",
+              { code: "invalid vocab mapping", context: ctx }
+            );
+          } else {
+            const vocab = _expandIri(
+              rval,
+              value,
+              { vocab: true, base: true },
+              void 0,
+              void 0,
+              options
+            );
+            if (!_isAbsoluteIri(vocab)) {
+              if (options.eventHandler) {
+                _handleEvent({
+                  event: {
+                    type: ["JsonLdEvent"],
+                    code: "relative @vocab reference",
+                    level: "warning",
+                    message: "Relative @vocab reference found.",
+                    details: {
+                      vocab
+                    }
+                  },
+                  options
+                });
+              }
+            }
+            rval["@vocab"] = vocab;
+          }
+          defined.set("@vocab", true);
+        }
+        if ("@language" in ctx) {
+          const value = ctx["@language"];
+          if (value === null) {
+            delete rval["@language"];
+          } else if (!_isString(value)) {
+            throw new JsonLdError(
+              'Invalid JSON-LD syntax; the value of "@language" in a @context must be a string or null.',
+              "jsonld.SyntaxError",
+              { code: "invalid default language", context: ctx }
+            );
+          } else {
+            if (!value.match(REGEX_BCP47)) {
+              if (options.eventHandler) {
+                _handleEvent({
+                  event: {
+                    type: ["JsonLdEvent"],
+                    code: "invalid @language value",
+                    level: "warning",
+                    message: "@language value must be valid BCP47.",
+                    details: {
+                      language: value
+                    }
+                  },
+                  options
+                });
+              }
+            }
+            rval["@language"] = value.toLowerCase();
+          }
+          defined.set("@language", true);
+        }
+        if ("@direction" in ctx) {
+          const value = ctx["@direction"];
+          if (activeCtx.processingMode === "json-ld-1.0") {
+            throw new JsonLdError(
+              "Invalid JSON-LD syntax; @direction not compatible with " + activeCtx.processingMode,
+              "jsonld.SyntaxError",
+              { code: "invalid context member", context: ctx }
+            );
+          }
+          if (value === null) {
+            delete rval["@direction"];
+          } else if (value !== "ltr" && value !== "rtl") {
+            throw new JsonLdError(
+              'Invalid JSON-LD syntax; the value of "@direction" in a @context must be null, "ltr", or "rtl".',
+              "jsonld.SyntaxError",
+              { code: "invalid base direction", context: ctx }
+            );
+          } else {
+            rval["@direction"] = value;
+          }
+          defined.set("@direction", true);
+        }
+        if ("@propagate" in ctx) {
+          const value = ctx["@propagate"];
+          if (activeCtx.processingMode === "json-ld-1.0") {
+            throw new JsonLdError(
+              "Invalid JSON-LD syntax; @propagate not compatible with " + activeCtx.processingMode,
+              "jsonld.SyntaxError",
+              { code: "invalid context entry", context: ctx }
+            );
+          }
+          if (typeof value !== "boolean") {
+            throw new JsonLdError(
+              "Invalid JSON-LD syntax; @propagate value must be a boolean.",
+              "jsonld.SyntaxError",
+              { code: "invalid @propagate value", context: localCtx }
+            );
+          }
+          defined.set("@propagate", true);
+        }
+        if ("@import" in ctx) {
+          const value = ctx["@import"];
+          if (activeCtx.processingMode === "json-ld-1.0") {
+            throw new JsonLdError(
+              "Invalid JSON-LD syntax; @import not compatible with " + activeCtx.processingMode,
+              "jsonld.SyntaxError",
+              { code: "invalid context entry", context: ctx }
+            );
+          }
+          if (!_isString(value)) {
+            throw new JsonLdError(
+              "Invalid JSON-LD syntax; @import must be a string.",
+              "jsonld.SyntaxError",
+              { code: "invalid @import value", context: localCtx }
+            );
+          }
+          const resolvedImport = await options.contextResolver.resolve({
+            activeCtx,
+            context: value,
+            documentLoader: options.documentLoader,
+            base: options.base
+          });
+          if (resolvedImport.length !== 1) {
+            throw new JsonLdError(
+              "Invalid JSON-LD syntax; @import must reference a single context.",
+              "jsonld.SyntaxError",
+              { code: "invalid remote context", context: localCtx }
+            );
+          }
+          const processedImport = resolvedImport[0].getProcessed(activeCtx);
+          if (processedImport) {
+            ctx = processedImport;
+          } else {
+            const importCtx = resolvedImport[0].document;
+            if ("@import" in importCtx) {
+              throw new JsonLdError(
+                "Invalid JSON-LD syntax: imported context must not include @import.",
+                "jsonld.SyntaxError",
+                { code: "invalid context entry", context: localCtx }
+              );
+            }
+            for (const key in importCtx) {
+              if (!ctx.hasOwnProperty(key)) {
+                ctx[key] = importCtx[key];
+              }
+            }
+            resolvedImport[0].setProcessed(activeCtx, ctx);
+          }
+          defined.set("@import", true);
+        }
+        defined.set("@protected", ctx["@protected"] || false);
+        for (const key in ctx) {
+          api.createTermDefinition({
+            activeCtx: rval,
+            localCtx: ctx,
+            term: key,
+            defined,
+            options,
+            overrideProtected
+          });
+          if (_isObject(ctx[key]) && "@context" in ctx[key]) {
+            const keyCtx = ctx[key]["@context"];
+            let process2 = true;
+            if (_isString(keyCtx)) {
+              const url = prependBase(options.base, keyCtx);
+              if (cycles.has(url)) {
+                process2 = false;
+              } else {
+                cycles.add(url);
+              }
+            }
+            if (process2) {
+              try {
+                await api.process({
+                  activeCtx: rval.clone(),
+                  localCtx: ctx[key]["@context"],
+                  overrideProtected: true,
+                  options,
+                  cycles
+                });
+              } catch (e) {
+                throw new JsonLdError(
+                  "Invalid JSON-LD syntax; invalid scoped context.",
+                  "jsonld.SyntaxError",
+                  {
+                    code: "invalid scoped context",
+                    context: ctx[key]["@context"],
+                    term: key
+                  }
+                );
+              }
+            }
+          }
+        }
+        resolvedContext.setProcessed(activeCtx, {
+          context: rval,
+          events
+        });
+      }
+      return rval;
+    };
+    api.createTermDefinition = ({
+      activeCtx,
+      localCtx,
+      term,
+      defined,
+      options,
+      overrideProtected = false
+    }) => {
+      if (defined.has(term)) {
+        if (defined.get(term)) {
+          return;
+        }
+        throw new JsonLdError(
+          "Cyclical context definition detected.",
+          "jsonld.CyclicalContext",
+          { code: "cyclic IRI mapping", context: localCtx, term }
+        );
+      }
+      defined.set(term, false);
+      let value;
+      if (localCtx.hasOwnProperty(term)) {
+        value = localCtx[term];
+      }
+      if (term === "@type" && _isObject(value) && (value["@container"] || "@set") === "@set" && api.processingMode(activeCtx, 1.1)) {
+        const validKeys2 = ["@container", "@id", "@protected"];
+        const keys = Object.keys(value);
+        if (keys.length === 0 || keys.some((k) => !validKeys2.includes(k))) {
+          throw new JsonLdError(
+            "Invalid JSON-LD syntax; keywords cannot be overridden.",
+            "jsonld.SyntaxError",
+            { code: "keyword redefinition", context: localCtx, term }
+          );
+        }
+      } else if (api.isKeyword(term)) {
+        throw new JsonLdError(
+          "Invalid JSON-LD syntax; keywords cannot be overridden.",
+          "jsonld.SyntaxError",
+          { code: "keyword redefinition", context: localCtx, term }
+        );
+      } else if (term.match(REGEX_KEYWORD)) {
+        if (options.eventHandler) {
+          _handleEvent({
+            event: {
+              type: ["JsonLdEvent"],
+              code: "reserved term",
+              level: "warning",
+              message: 'Terms beginning with "@" are reserved for future use and dropped.',
+              details: {
+                term
+              }
+            },
+            options
+          });
+        }
+        return;
+      } else if (term === "") {
+        throw new JsonLdError(
+          "Invalid JSON-LD syntax; a term cannot be an empty string.",
+          "jsonld.SyntaxError",
+          { code: "invalid term definition", context: localCtx }
+        );
+      }
+      const previousMapping = activeCtx.mappings.get(term);
+      if (activeCtx.mappings.has(term)) {
+        activeCtx.mappings.delete(term);
+      }
+      let simpleTerm = false;
+      if (_isString(value) || value === null) {
+        simpleTerm = true;
+        value = { "@id": value };
+      }
+      if (!_isObject(value)) {
+        throw new JsonLdError(
+          "Invalid JSON-LD syntax; @context term values must be strings or objects.",
+          "jsonld.SyntaxError",
+          { code: "invalid term definition", context: localCtx }
+        );
+      }
+      const mapping = {};
+      activeCtx.mappings.set(term, mapping);
+      mapping.reverse = false;
+      const validKeys = ["@container", "@id", "@language", "@reverse", "@type"];
+      if (api.processingMode(activeCtx, 1.1)) {
+        validKeys.push(
+          "@context",
+          "@direction",
+          "@index",
+          "@nest",
+          "@prefix",
+          "@protected"
+        );
+      }
+      for (const kw in value) {
+        if (!validKeys.includes(kw)) {
+          throw new JsonLdError(
+            "Invalid JSON-LD syntax; a term definition must not contain " + kw,
+            "jsonld.SyntaxError",
+            { code: "invalid term definition", context: localCtx }
+          );
+        }
+      }
+      const colon = term.indexOf(":");
+      mapping._termHasColon = colon > 0;
+      if ("@reverse" in value) {
+        if ("@id" in value) {
+          throw new JsonLdError(
+            "Invalid JSON-LD syntax; a @reverse term definition must not contain @id.",
+            "jsonld.SyntaxError",
+            { code: "invalid reverse property", context: localCtx }
+          );
+        }
+        if ("@nest" in value) {
+          throw new JsonLdError(
+            "Invalid JSON-LD syntax; a @reverse term definition must not contain @nest.",
+            "jsonld.SyntaxError",
+            { code: "invalid reverse property", context: localCtx }
+          );
+        }
+        const reverse = value["@reverse"];
+        if (!_isString(reverse)) {
+          throw new JsonLdError(
+            "Invalid JSON-LD syntax; a @context @reverse value must be a string.",
+            "jsonld.SyntaxError",
+            { code: "invalid IRI mapping", context: localCtx }
+          );
+        }
+        if (reverse.match(REGEX_KEYWORD)) {
+          if (options.eventHandler) {
+            _handleEvent({
+              event: {
+                type: ["JsonLdEvent"],
+                code: "reserved @reverse value",
+                level: "warning",
+                message: '@reverse values beginning with "@" are reserved for future use and dropped.',
+                details: {
+                  reverse
+                }
+              },
+              options
+            });
+          }
+          if (previousMapping) {
+            activeCtx.mappings.set(term, previousMapping);
+          } else {
+            activeCtx.mappings.delete(term);
+          }
+          return;
+        }
+        const id2 = _expandIri(
+          activeCtx,
+          reverse,
+          { vocab: true, base: false },
+          localCtx,
+          defined,
+          options
+        );
+        if (!_isAbsoluteIri(id2)) {
+          throw new JsonLdError(
+            "Invalid JSON-LD syntax; a @context @reverse value must be an absolute IRI or a blank node identifier.",
+            "jsonld.SyntaxError",
+            { code: "invalid IRI mapping", context: localCtx }
+          );
+        }
+        mapping["@id"] = id2;
+        mapping.reverse = true;
+      } else if ("@id" in value) {
+        let id2 = value["@id"];
+        if (id2 && !_isString(id2)) {
+          throw new JsonLdError(
+            "Invalid JSON-LD syntax; a @context @id value must be an array of strings or a string.",
+            "jsonld.SyntaxError",
+            { code: "invalid IRI mapping", context: localCtx }
+          );
+        }
+        if (id2 === null) {
+          mapping["@id"] = null;
+        } else if (!api.isKeyword(id2) && id2.match(REGEX_KEYWORD)) {
+          if (options.eventHandler) {
+            _handleEvent({
+              event: {
+                type: ["JsonLdEvent"],
+                code: "reserved @id value",
+                level: "warning",
+                message: '@id values beginning with "@" are reserved for future use and dropped.',
+                details: {
+                  id: id2
+                }
+              },
+              options
+            });
+          }
+          if (previousMapping) {
+            activeCtx.mappings.set(term, previousMapping);
+          } else {
+            activeCtx.mappings.delete(term);
+          }
+          return;
+        } else if (id2 !== term) {
+          id2 = _expandIri(
+            activeCtx,
+            id2,
+            { vocab: true, base: false },
+            localCtx,
+            defined,
+            options
+          );
+          if (!_isAbsoluteIri(id2) && !api.isKeyword(id2)) {
+            throw new JsonLdError(
+              "Invalid JSON-LD syntax; a @context @id value must be an absolute IRI, a blank node identifier, or a keyword.",
+              "jsonld.SyntaxError",
+              { code: "invalid IRI mapping", context: localCtx }
+            );
+          }
+          if (term.match(/(?::[^:])|\//)) {
+            const termDefined = new Map(defined).set(term, true);
+            const termIri = _expandIri(
+              activeCtx,
+              term,
+              { vocab: true, base: false },
+              localCtx,
+              termDefined,
+              options
+            );
+            if (termIri !== id2) {
+              throw new JsonLdError(
+                "Invalid JSON-LD syntax; term in form of IRI must expand to definition.",
+                "jsonld.SyntaxError",
+                { code: "invalid IRI mapping", context: localCtx }
+              );
+            }
+          }
+          mapping["@id"] = id2;
+          mapping._prefix = simpleTerm && !mapping._termHasColon && id2.match(/[:\/\?#\[\]@]$/) !== null;
+        }
+      }
+      if (!("@id" in mapping)) {
+        if (mapping._termHasColon) {
+          const prefix = term.substr(0, colon);
+          if (localCtx.hasOwnProperty(prefix)) {
+            api.createTermDefinition({
+              activeCtx,
+              localCtx,
+              term: prefix,
+              defined,
+              options
+            });
+          }
+          if (activeCtx.mappings.has(prefix)) {
+            const suffix = term.substr(colon + 1);
+            mapping["@id"] = activeCtx.mappings.get(prefix)["@id"] + suffix;
+          } else {
+            mapping["@id"] = term;
+          }
+        } else if (term === "@type") {
+          mapping["@id"] = term;
+        } else {
+          if (!("@vocab" in activeCtx)) {
+            throw new JsonLdError(
+              "Invalid JSON-LD syntax; @context terms must define an @id.",
+              "jsonld.SyntaxError",
+              { code: "invalid IRI mapping", context: localCtx, term }
+            );
+          }
+          mapping["@id"] = activeCtx["@vocab"] + term;
+        }
+      }
+      if (value["@protected"] === true || defined.get("@protected") === true && value["@protected"] !== false) {
+        activeCtx.protected[term] = true;
+        mapping.protected = true;
+      }
+      defined.set(term, true);
+      if ("@type" in value) {
+        let type = value["@type"];
+        if (!_isString(type)) {
+          throw new JsonLdError(
+            "Invalid JSON-LD syntax; an @context @type value must be a string.",
+            "jsonld.SyntaxError",
+            { code: "invalid type mapping", context: localCtx }
+          );
+        }
+        if (type === "@json" || type === "@none") {
+          if (api.processingMode(activeCtx, 1)) {
+            throw new JsonLdError(
+              `Invalid JSON-LD syntax; an @context @type value must not be "${type}" in JSON-LD 1.0 mode.`,
+              "jsonld.SyntaxError",
+              { code: "invalid type mapping", context: localCtx }
+            );
+          }
+        } else if (type !== "@id" && type !== "@vocab") {
+          type = _expandIri(
+            activeCtx,
+            type,
+            { vocab: true, base: false },
+            localCtx,
+            defined,
+            options
+          );
+          if (!_isAbsoluteIri(type)) {
+            throw new JsonLdError(
+              "Invalid JSON-LD syntax; an @context @type value must be an absolute IRI.",
+              "jsonld.SyntaxError",
+              { code: "invalid type mapping", context: localCtx }
+            );
+          }
+          if (type.indexOf("_:") === 0) {
+            throw new JsonLdError(
+              "Invalid JSON-LD syntax; an @context @type value must be an IRI, not a blank node identifier.",
+              "jsonld.SyntaxError",
+              { code: "invalid type mapping", context: localCtx }
+            );
+          }
+        }
+        mapping["@type"] = type;
+      }
+      if ("@container" in value) {
+        const container = _isString(value["@container"]) ? [value["@container"]] : value["@container"] || [];
+        const validContainers = ["@list", "@set", "@index", "@language"];
+        let isValid = true;
+        const hasSet = container.includes("@set");
+        if (api.processingMode(activeCtx, 1.1)) {
+          validContainers.push("@graph", "@id", "@type");
+          if (container.includes("@list")) {
+            if (container.length !== 1) {
+              throw new JsonLdError(
+                "Invalid JSON-LD syntax; @context @container with @list must have no other values",
+                "jsonld.SyntaxError",
+                { code: "invalid container mapping", context: localCtx }
+              );
+            }
+          } else if (container.includes("@graph")) {
+            if (container.some((key) => key !== "@graph" && key !== "@id" && key !== "@index" && key !== "@set")) {
+              throw new JsonLdError(
+                "Invalid JSON-LD syntax; @context @container with @graph must have no other values other than @id, @index, and @set",
+                "jsonld.SyntaxError",
+                { code: "invalid container mapping", context: localCtx }
+              );
+            }
+          } else {
+            isValid &= container.length <= (hasSet ? 2 : 1);
+          }
+          if (container.includes("@type")) {
+            mapping["@type"] = mapping["@type"] || "@id";
+            if (!["@id", "@vocab"].includes(mapping["@type"])) {
+              throw new JsonLdError(
+                "Invalid JSON-LD syntax; container: @type requires @type to be @id or @vocab.",
+                "jsonld.SyntaxError",
+                { code: "invalid type mapping", context: localCtx }
+              );
+            }
+          }
+        } else {
+          isValid &= !_isArray(value["@container"]);
+          isValid &= container.length <= 1;
+        }
+        isValid &= container.every((c) => validContainers.includes(c));
+        isValid &= !(hasSet && container.includes("@list"));
+        if (!isValid) {
+          throw new JsonLdError(
+            "Invalid JSON-LD syntax; @context @container value must be one of the following: " + validContainers.join(", "),
+            "jsonld.SyntaxError",
+            { code: "invalid container mapping", context: localCtx }
+          );
+        }
+        if (mapping.reverse && !container.every((c) => ["@index", "@set"].includes(c))) {
+          throw new JsonLdError(
+            "Invalid JSON-LD syntax; @context @container value for a @reverse type definition must be @index or @set.",
+            "jsonld.SyntaxError",
+            { code: "invalid reverse property", context: localCtx }
+          );
+        }
+        mapping["@container"] = container;
+      }
+      if ("@index" in value) {
+        if (!("@container" in value) || !mapping["@container"].includes("@index")) {
+          throw new JsonLdError(
+            `Invalid JSON-LD syntax; @index without @index in @container: "${value["@index"]}" on term "${term}".`,
+            "jsonld.SyntaxError",
+            { code: "invalid term definition", context: localCtx }
+          );
+        }
+        if (!_isString(value["@index"]) || value["@index"].indexOf("@") === 0) {
+          throw new JsonLdError(
+            `Invalid JSON-LD syntax; @index must expand to an IRI: "${value["@index"]}" on term "${term}".`,
+            "jsonld.SyntaxError",
+            { code: "invalid term definition", context: localCtx }
+          );
+        }
+        mapping["@index"] = value["@index"];
+      }
+      if ("@context" in value) {
+        mapping["@context"] = value["@context"];
+      }
+      if ("@language" in value && !("@type" in value)) {
+        let language = value["@language"];
+        if (language !== null && !_isString(language)) {
+          throw new JsonLdError(
+            "Invalid JSON-LD syntax; @context @language value must be a string or null.",
+            "jsonld.SyntaxError",
+            { code: "invalid language mapping", context: localCtx }
+          );
+        }
+        if (language !== null) {
+          language = language.toLowerCase();
+        }
+        mapping["@language"] = language;
+      }
+      if ("@prefix" in value) {
+        if (term.match(/:|\//)) {
+          throw new JsonLdError(
+            "Invalid JSON-LD syntax; @context @prefix used on a compact IRI term",
+            "jsonld.SyntaxError",
+            { code: "invalid term definition", context: localCtx }
+          );
+        }
+        if (api.isKeyword(mapping["@id"])) {
+          throw new JsonLdError(
+            "Invalid JSON-LD syntax; keywords may not be used as prefixes",
+            "jsonld.SyntaxError",
+            { code: "invalid term definition", context: localCtx }
+          );
+        }
+        if (typeof value["@prefix"] === "boolean") {
+          mapping._prefix = value["@prefix"] === true;
+        } else {
+          throw new JsonLdError(
+            "Invalid JSON-LD syntax; @context value for @prefix must be boolean",
+            "jsonld.SyntaxError",
+            { code: "invalid @prefix value", context: localCtx }
+          );
+        }
+      }
+      if ("@direction" in value) {
+        const direction = value["@direction"];
+        if (direction !== null && direction !== "ltr" && direction !== "rtl") {
+          throw new JsonLdError(
+            'Invalid JSON-LD syntax; @direction value must be null, "ltr", or "rtl".',
+            "jsonld.SyntaxError",
+            { code: "invalid base direction", context: localCtx }
+          );
+        }
+        mapping["@direction"] = direction;
+      }
+      if ("@nest" in value) {
+        const nest = value["@nest"];
+        if (!_isString(nest) || nest !== "@nest" && nest.indexOf("@") === 0) {
+          throw new JsonLdError(
+            "Invalid JSON-LD syntax; @context @nest value must be a string which is not a keyword other than @nest.",
+            "jsonld.SyntaxError",
+            { code: "invalid @nest value", context: localCtx }
+          );
+        }
+        mapping["@nest"] = nest;
+      }
+      const id = mapping["@id"];
+      if (id === "@context" || id === "@preserve") {
+        throw new JsonLdError(
+          "Invalid JSON-LD syntax; @context and @preserve cannot be aliased.",
+          "jsonld.SyntaxError",
+          { code: "invalid keyword alias", context: localCtx }
+        );
+      }
+      if (previousMapping && previousMapping.protected && !overrideProtected) {
+        activeCtx.protected[term] = true;
+        mapping.protected = true;
+        if (!_deepCompare(previousMapping, mapping)) {
+          throw new JsonLdError(
+            "Invalid JSON-LD syntax; tried to redefine a protected term.",
+            "jsonld.SyntaxError",
+            { code: "protected term redefinition", context: localCtx, term }
+          );
+        }
+      }
+    };
+    api.expandIri = (activeCtx, value, relativeTo, options) => {
+      return _expandIri(
+        activeCtx,
+        value,
+        relativeTo,
+        void 0,
+        void 0,
+        options
+      );
+    };
+    function _expandIri(activeCtx, value, relativeTo, localCtx, defined, options) {
+      if (value === null || !_isString(value) || api.isKeyword(value)) {
+        return value;
+      }
+      if (value.match(REGEX_KEYWORD)) {
+        return null;
+      }
+      if (localCtx && localCtx.hasOwnProperty(value) && defined.get(value) !== true) {
+        api.createTermDefinition({
+          activeCtx,
+          localCtx,
+          term: value,
+          defined,
+          options
+        });
+      }
+      relativeTo = relativeTo || {};
+      if (relativeTo.vocab) {
+        const mapping = activeCtx.mappings.get(value);
+        if (mapping === null) {
+          return null;
+        }
+        if (_isObject(mapping) && "@id" in mapping) {
+          return mapping["@id"];
+        }
+      }
+      const colon = value.indexOf(":");
+      if (colon > 0) {
+        const prefix = value.substr(0, colon);
+        const suffix = value.substr(colon + 1);
+        if (prefix === "_" || suffix.indexOf("//") === 0) {
+          return value;
+        }
+        if (localCtx && localCtx.hasOwnProperty(prefix)) {
+          api.createTermDefinition({
+            activeCtx,
+            localCtx,
+            term: prefix,
+            defined,
+            options
+          });
+        }
+        const mapping = activeCtx.mappings.get(prefix);
+        if (mapping && mapping._prefix) {
+          return mapping["@id"] + suffix;
+        }
+        if (_isAbsoluteIri(value)) {
+          return value;
+        }
+      }
+      if (relativeTo.vocab && "@vocab" in activeCtx) {
+        const prependedResult = activeCtx["@vocab"] + value;
+        value = prependedResult;
+      } else if (relativeTo.base) {
+        let prependedResult;
+        let base;
+        if ("@base" in activeCtx) {
+          if (activeCtx["@base"]) {
+            base = prependBase(options.base, activeCtx["@base"]);
+            prependedResult = prependBase(base, value);
+          } else {
+            base = activeCtx["@base"];
+            prependedResult = value;
+          }
+        } else {
+          base = options.base;
+          prependedResult = prependBase(options.base, value);
+        }
+        value = prependedResult;
+      }
+      return value;
+    }
+    api.getInitialContext = (options) => {
+      const key = JSON.stringify({ processingMode: options.processingMode });
+      const cached = INITIAL_CONTEXT_CACHE.get(key);
+      if (cached) {
+        return cached;
+      }
+      const initialContext = {
+        processingMode: options.processingMode,
+        mappings: /* @__PURE__ */ new Map(),
+        inverse: null,
+        getInverse: _createInverseContext,
+        clone: _cloneActiveContext,
+        revertToPreviousContext: _revertToPreviousContext,
+        protected: {}
+      };
+      if (INITIAL_CONTEXT_CACHE.size === INITIAL_CONTEXT_CACHE_MAX_SIZE) {
+        INITIAL_CONTEXT_CACHE.clear();
+      }
+      INITIAL_CONTEXT_CACHE.set(key, initialContext);
+      return initialContext;
+      function _createInverseContext() {
+        const activeCtx = this;
+        if (activeCtx.inverse) {
+          return activeCtx.inverse;
+        }
+        const inverse = activeCtx.inverse = {};
+        const fastCurieMap = activeCtx.fastCurieMap = {};
+        const irisToTerms = {};
+        const defaultLanguage = (activeCtx["@language"] || "@none").toLowerCase();
+        const defaultDirection = activeCtx["@direction"];
+        const mappings = activeCtx.mappings;
+        const terms = [...mappings.keys()].sort(_compareShortestLeast);
+        for (const term of terms) {
+          const mapping = mappings.get(term);
+          if (mapping === null) {
+            continue;
+          }
+          let container = mapping["@container"] || "@none";
+          container = [].concat(container).sort().join("");
+          if (mapping["@id"] === null) {
+            continue;
+          }
+          const ids = _asArray(mapping["@id"]);
+          for (const iri of ids) {
+            let entry = inverse[iri];
+            const isKeyword = api.isKeyword(iri);
+            if (!entry) {
+              inverse[iri] = entry = {};
+              if (!isKeyword && !mapping._termHasColon) {
+                irisToTerms[iri] = [term];
+                const fastCurieEntry = { iri, terms: irisToTerms[iri] };
+                if (iri[0] in fastCurieMap) {
+                  fastCurieMap[iri[0]].push(fastCurieEntry);
+                } else {
+                  fastCurieMap[iri[0]] = [fastCurieEntry];
+                }
+              }
+            } else if (!isKeyword && !mapping._termHasColon) {
+              irisToTerms[iri].push(term);
+            }
+            if (!entry[container]) {
+              entry[container] = {
+                "@language": {},
+                "@type": {},
+                "@any": {}
+              };
+            }
+            entry = entry[container];
+            _addPreferredTerm(term, entry["@any"], "@none");
+            if (mapping.reverse) {
+              _addPreferredTerm(term, entry["@type"], "@reverse");
+            } else if (mapping["@type"] === "@none") {
+              _addPreferredTerm(term, entry["@any"], "@none");
+              _addPreferredTerm(term, entry["@language"], "@none");
+              _addPreferredTerm(term, entry["@type"], "@none");
+            } else if ("@type" in mapping) {
+              _addPreferredTerm(term, entry["@type"], mapping["@type"]);
+            } else if ("@language" in mapping && "@direction" in mapping) {
+              const language = mapping["@language"];
+              const direction = mapping["@direction"];
+              if (language && direction) {
+                _addPreferredTerm(
+                  term,
+                  entry["@language"],
+                  `${language}_${direction}`.toLowerCase()
+                );
+              } else if (language) {
+                _addPreferredTerm(term, entry["@language"], language.toLowerCase());
+              } else if (direction) {
+                _addPreferredTerm(term, entry["@language"], `_${direction}`);
+              } else {
+                _addPreferredTerm(term, entry["@language"], "@null");
+              }
+            } else if ("@language" in mapping) {
+              _addPreferredTerm(
+                term,
+                entry["@language"],
+                (mapping["@language"] || "@null").toLowerCase()
+              );
+            } else if ("@direction" in mapping) {
+              if (mapping["@direction"]) {
+                _addPreferredTerm(
+                  term,
+                  entry["@language"],
+                  `_${mapping["@direction"]}`
+                );
+              } else {
+                _addPreferredTerm(term, entry["@language"], "@none");
+              }
+            } else if (defaultDirection) {
+              _addPreferredTerm(term, entry["@language"], `_${defaultDirection}`);
+              _addPreferredTerm(term, entry["@language"], "@none");
+              _addPreferredTerm(term, entry["@type"], "@none");
+            } else {
+              _addPreferredTerm(term, entry["@language"], defaultLanguage);
+              _addPreferredTerm(term, entry["@language"], "@none");
+              _addPreferredTerm(term, entry["@type"], "@none");
+            }
+          }
+        }
+        for (const key2 in fastCurieMap) {
+          _buildIriMap(fastCurieMap, key2, 1);
+        }
+        return inverse;
+      }
+      function _buildIriMap(iriMap, key2, idx) {
+        const entries = iriMap[key2];
+        const next = iriMap[key2] = {};
+        let iri;
+        let letter;
+        for (const entry of entries) {
+          iri = entry.iri;
+          if (idx >= iri.length) {
+            letter = "";
+          } else {
+            letter = iri[idx];
+          }
+          if (letter in next) {
+            next[letter].push(entry);
+          } else {
+            next[letter] = [entry];
+          }
+        }
+        for (const key3 in next) {
+          if (key3 === "") {
+            continue;
+          }
+          _buildIriMap(next, key3, idx + 1);
+        }
+      }
+      function _addPreferredTerm(term, entry, typeOrLanguageValue) {
+        if (!entry.hasOwnProperty(typeOrLanguageValue)) {
+          entry[typeOrLanguageValue] = term;
+        }
+      }
+      function _cloneActiveContext() {
+        const child = {};
+        child.mappings = util.clone(this.mappings);
+        child.clone = this.clone;
+        child.inverse = null;
+        child.getInverse = this.getInverse;
+        child.protected = util.clone(this.protected);
+        if (this.previousContext) {
+          child.previousContext = this.previousContext.clone();
+        }
+        child.revertToPreviousContext = this.revertToPreviousContext;
+        if ("@base" in this) {
+          child["@base"] = this["@base"];
+        }
+        if ("@language" in this) {
+          child["@language"] = this["@language"];
+        }
+        if ("@vocab" in this) {
+          child["@vocab"] = this["@vocab"];
+        }
+        return child;
+      }
+      function _revertToPreviousContext() {
+        if (!this.previousContext) {
+          return this;
+        }
+        return this.previousContext.clone();
+      }
+    };
+    api.getContextValue = (ctx, key, type) => {
+      if (key === null) {
+        if (type === "@context") {
+          return void 0;
+        }
+        return null;
+      }
+      if (ctx.mappings.has(key)) {
+        const entry = ctx.mappings.get(key);
+        if (_isUndefined(type)) {
+          return entry;
+        }
+        if (entry.hasOwnProperty(type)) {
+          return entry[type];
+        }
+      }
+      if (type === "@language" && type in ctx) {
+        return ctx[type];
+      }
+      if (type === "@direction" && type in ctx) {
+        return ctx[type];
+      }
+      if (type === "@context") {
+        return void 0;
+      }
+      return null;
+    };
+    api.processingMode = (activeCtx, version) => {
+      if (version.toString() >= "1.1") {
+        return !activeCtx.processingMode || activeCtx.processingMode >= "json-ld-" + version.toString();
+      } else {
+        return activeCtx.processingMode === "json-ld-1.0";
+      }
+    };
+    api.isKeyword = (v) => {
+      if (!_isString(v) || v[0] !== "@") {
+        return false;
+      }
+      switch (v) {
+        case "@base":
+        case "@container":
+        case "@context":
+        case "@default":
+        case "@direction":
+        case "@embed":
+        case "@explicit":
+        case "@graph":
+        case "@id":
+        case "@included":
+        case "@index":
+        case "@json":
+        case "@language":
+        case "@list":
+        case "@nest":
+        case "@none":
+        case "@omitDefault":
+        case "@prefix":
+        case "@preserve":
+        case "@protected":
+        case "@requireAll":
+        case "@reverse":
+        case "@set":
+        case "@type":
+        case "@value":
+        case "@version":
+        case "@vocab":
+          return true;
+      }
+      return false;
+    };
+    function _deepCompare(x1, x2) {
+      if (!(x1 && typeof x1 === "object") || !(x2 && typeof x2 === "object")) {
+        return x1 === x2;
+      }
+      const x1Array = Array.isArray(x1);
+      if (x1Array !== Array.isArray(x2)) {
+        return false;
+      }
+      if (x1Array) {
+        if (x1.length !== x2.length) {
+          return false;
+        }
+        for (let i2 = 0; i2 < x1.length; ++i2) {
+          if (!_deepCompare(x1[i2], x2[i2])) {
+            return false;
+          }
+        }
+        return true;
+      }
+      const k1s = Object.keys(x1);
+      const k2s = Object.keys(x2);
+      if (k1s.length !== k2s.length) {
+        return false;
+      }
+      for (const k1 in x1) {
+        let v1 = x1[k1];
+        let v2 = x2[k1];
+        if (k1 === "@container") {
+          if (Array.isArray(v1) && Array.isArray(v2)) {
+            v1 = v1.slice().sort();
+            v2 = v2.slice().sort();
+          }
+        }
+        if (!_deepCompare(v1, v2)) {
+          return false;
+        }
+      }
+      return true;
+    }
+  }
+});
+
+// node_modules/jsonld/lib/expand.js
+var require_expand = __commonJS({
+  "node_modules/jsonld/lib/expand.js"(exports, module) {
+    "use strict";
+    var JsonLdError = require_JsonLdError();
+    var {
+      isArray: _isArray,
+      isObject: _isObject,
+      isEmptyObject: _isEmptyObject,
+      isString: _isString,
+      isUndefined: _isUndefined
+    } = require_types();
+    var {
+      isList: _isList,
+      isValue: _isValue,
+      isGraph: _isGraph,
+      isSubject: _isSubject
+    } = require_graphTypes();
+    var {
+      expandIri: _expandIri,
+      getContextValue: _getContextValue,
+      isKeyword: _isKeyword,
+      process: _processContext,
+      processingMode: _processingMode
+    } = require_context();
+    var {
+      isAbsolute: _isAbsoluteIri
+    } = require_url();
+    var {
+      REGEX_BCP47,
+      REGEX_KEYWORD,
+      addValue: _addValue,
+      asArray: _asArray,
+      getValues: _getValues,
+      validateTypeValue: _validateTypeValue
+    } = require_util4();
+    var {
+      handleEvent: _handleEvent
+    } = require_events2();
+    var api = {};
+    module.exports = api;
+    api.expand = async ({
+      activeCtx,
+      activeProperty = null,
+      element,
+      options = {},
+      insideList = false,
+      insideIndex = false,
+      typeScopedContext = null
+    }) => {
+      if (element === null || element === void 0) {
+        return null;
+      }
+      if (activeProperty === "@default") {
+        options = Object.assign({}, options, { isFrame: false });
+      }
+      if (!_isArray(element) && !_isObject(element)) {
+        if (!insideList && (activeProperty === null || _expandIri(
+          activeCtx,
+          activeProperty,
+          { vocab: true },
+          options
+        ) === "@graph")) {
+          if (options.eventHandler) {
+            _handleEvent({
+              event: {
+                type: ["JsonLdEvent"],
+                code: "free-floating scalar",
+                level: "warning",
+                message: "Dropping free-floating scalar not in a list.",
+                details: {
+                  value: element
+                  //activeProperty
+                  //insideList
+                }
+              },
+              options
+            });
+          }
+          return null;
+        }
+        return _expandValue({ activeCtx, activeProperty, value: element, options });
+      }
+      if (_isArray(element)) {
+        let rval2 = [];
+        const container = _getContextValue(
+          activeCtx,
+          activeProperty,
+          "@container"
+        ) || [];
+        insideList = insideList || container.includes("@list");
+        for (let i2 = 0; i2 < element.length; ++i2) {
+          let e = await api.expand({
+            activeCtx,
+            activeProperty,
+            element: element[i2],
+            options,
+            insideIndex,
+            typeScopedContext
+          });
+          if (insideList && _isArray(e)) {
+            e = { "@list": e };
+          }
+          if (e === null) {
+            continue;
+          }
+          if (_isArray(e)) {
+            rval2 = rval2.concat(e);
+          } else {
+            rval2.push(e);
+          }
+        }
+        return rval2;
+      }
+      const expandedActiveProperty = _expandIri(
+        activeCtx,
+        activeProperty,
+        { vocab: true },
+        options
+      );
+      const propertyScopedCtx = _getContextValue(activeCtx, activeProperty, "@context");
+      typeScopedContext = typeScopedContext || (activeCtx.previousContext ? activeCtx : null);
+      let keys = Object.keys(element).sort();
+      let mustRevert = !insideIndex;
+      if (mustRevert && typeScopedContext && keys.length <= 2 && !keys.includes("@context")) {
+        for (const key of keys) {
+          const expandedProperty = _expandIri(
+            typeScopedContext,
+            key,
+            { vocab: true },
+            options
+          );
+          if (expandedProperty === "@value") {
+            mustRevert = false;
+            activeCtx = typeScopedContext;
+            break;
+          }
+          if (expandedProperty === "@id" && keys.length === 1) {
+            mustRevert = false;
+            break;
+          }
+        }
+      }
+      if (mustRevert) {
+        activeCtx = activeCtx.revertToPreviousContext();
+      }
+      if (!_isUndefined(propertyScopedCtx)) {
+        activeCtx = await _processContext({
+          activeCtx,
+          localCtx: propertyScopedCtx,
+          propagate: true,
+          overrideProtected: true,
+          options
+        });
+      }
+      if ("@context" in element) {
+        activeCtx = await _processContext(
+          { activeCtx, localCtx: element["@context"], options }
+        );
+      }
+      typeScopedContext = activeCtx;
+      let typeKey = null;
+      for (const key of keys) {
+        const expandedProperty = _expandIri(activeCtx, key, { vocab: true }, options);
+        if (expandedProperty === "@type") {
+          typeKey = typeKey || key;
+          const value = element[key];
+          const types = Array.isArray(value) ? value.length > 1 ? value.slice().sort() : value : [value];
+          for (const type of types) {
+            const ctx = _getContextValue(typeScopedContext, type, "@context");
+            if (!_isUndefined(ctx)) {
+              activeCtx = await _processContext({
+                activeCtx,
+                localCtx: ctx,
+                options,
+                propagate: false
+              });
+            }
+          }
+        }
+      }
+      let rval = {};
+      await _expandObject({
+        activeCtx,
+        activeProperty,
+        expandedActiveProperty,
+        element,
+        expandedParent: rval,
+        options,
+        insideList,
+        typeKey,
+        typeScopedContext
+      });
+      keys = Object.keys(rval);
+      let count = keys.length;
+      if ("@value" in rval) {
+        if ("@type" in rval && ("@language" in rval || "@direction" in rval)) {
+          throw new JsonLdError(
+            'Invalid JSON-LD syntax; an element containing "@value" may not contain both "@type" and either "@language" or "@direction".',
+            "jsonld.SyntaxError",
+            { code: "invalid value object", element: rval }
+          );
+        }
+        let validCount = count - 1;
+        if ("@type" in rval) {
+          validCount -= 1;
+        }
+        if ("@index" in rval) {
+          validCount -= 1;
+        }
+        if ("@language" in rval) {
+          validCount -= 1;
+        }
+        if ("@direction" in rval) {
+          validCount -= 1;
+        }
+        if (validCount !== 0) {
+          throw new JsonLdError(
+            'Invalid JSON-LD syntax; an element containing "@value" may only have an "@index" property and either "@type" or either or both "@language" or "@direction".',
+            "jsonld.SyntaxError",
+            { code: "invalid value object", element: rval }
+          );
+        }
+        const values = rval["@value"] === null ? [] : _asArray(rval["@value"]);
+        const types = _getValues(rval, "@type");
+        if (_processingMode(activeCtx, 1.1) && types.includes("@json") && types.length === 1) {
+        } else if (values.length === 0) {
+          if (options.eventHandler) {
+            _handleEvent({
+              event: {
+                type: ["JsonLdEvent"],
+                code: "null @value value",
+                level: "warning",
+                message: "Dropping null @value value.",
+                details: {
+                  value: rval
+                }
+              },
+              options
+            });
+          }
+          rval = null;
+        } else if (!values.every((v) => _isString(v) || _isEmptyObject(v)) && "@language" in rval) {
+          throw new JsonLdError(
+            "Invalid JSON-LD syntax; only strings may be language-tagged.",
+            "jsonld.SyntaxError",
+            { code: "invalid language-tagged value", element: rval }
+          );
+        } else if (!types.every((t) => _isAbsoluteIri(t) && !(_isString(t) && t.indexOf("_:") === 0) || _isEmptyObject(t))) {
+          throw new JsonLdError(
+            'Invalid JSON-LD syntax; an element containing "@value" and "@type" must have an absolute IRI for the value of "@type".',
+            "jsonld.SyntaxError",
+            { code: "invalid typed value", element: rval }
+          );
+        }
+      } else if ("@type" in rval && !_isArray(rval["@type"])) {
+        rval["@type"] = [rval["@type"]];
+      } else if ("@set" in rval || "@list" in rval) {
+        if (count > 1 && !(count === 2 && "@index" in rval)) {
+          throw new JsonLdError(
+            'Invalid JSON-LD syntax; if an element has the property "@set" or "@list", then it can have at most one other property that is "@index".',
+            "jsonld.SyntaxError",
+            { code: "invalid set or list object", element: rval }
+          );
+        }
+        if ("@set" in rval) {
+          rval = rval["@set"];
+          keys = Object.keys(rval);
+          count = keys.length;
+        }
+      } else if (count === 1 && "@language" in rval) {
+        if (options.eventHandler) {
+          _handleEvent({
+            event: {
+              type: ["JsonLdEvent"],
+              code: "object with only @language",
+              level: "warning",
+              message: "Dropping object with only @language.",
+              details: {
+                value: rval
+              }
+            },
+            options
+          });
+        }
+        rval = null;
+      }
+      if (_isObject(rval) && !options.keepFreeFloatingNodes && !insideList && (activeProperty === null || expandedActiveProperty === "@graph" || (_getContextValue(activeCtx, activeProperty, "@container") || []).includes("@graph"))) {
+        rval = _dropUnsafeObject({ value: rval, count, options });
+      }
+      return rval;
+    };
+    function _dropUnsafeObject({
+      value,
+      count,
+      options
+    }) {
+      if (count === 0 || "@value" in value || "@list" in value || count === 1 && "@id" in value) {
+        if (options.eventHandler) {
+          let code;
+          let message;
+          if (count === 0) {
+            code = "empty object";
+            message = "Dropping empty object.";
+          } else if ("@value" in value) {
+            code = "object with only @value";
+            message = "Dropping object with only @value.";
+          } else if ("@list" in value) {
+            code = "object with only @list";
+            message = "Dropping object with only @list.";
+          } else if (count === 1 && "@id" in value) {
+            code = "object with only @id";
+            message = "Dropping object with only @id.";
+          }
+          _handleEvent({
+            event: {
+              type: ["JsonLdEvent"],
+              code,
+              level: "warning",
+              message,
+              details: {
+                value
+              }
+            },
+            options
+          });
+        }
+        return null;
+      }
+      return value;
+    }
+    async function _expandObject({
+      activeCtx,
+      activeProperty,
+      expandedActiveProperty,
+      element,
+      expandedParent,
+      options = {},
+      insideList,
+      typeKey,
+      typeScopedContext
+    }) {
+      const keys = Object.keys(element).sort();
+      const nests = [];
+      let unexpandedValue;
+      const isJsonType = element[typeKey] && _expandIri(
+        activeCtx,
+        _isArray(element[typeKey]) ? element[typeKey][0] : element[typeKey],
+        { vocab: true },
+        {
+          ...options,
+          typeExpansion: true
+        }
+      ) === "@json";
+      for (const key of keys) {
+        let value = element[key];
+        let expandedValue;
+        if (key === "@context") {
+          continue;
+        }
+        const expandedProperty = _expandIri(activeCtx, key, { vocab: true }, options);
+        if (expandedProperty === null || !(_isAbsoluteIri(expandedProperty) || _isKeyword(expandedProperty))) {
+          if (options.eventHandler) {
+            _handleEvent({
+              event: {
+                type: ["JsonLdEvent"],
+                code: "invalid property",
+                level: "warning",
+                message: "Dropping property that did not expand into an absolute IRI or keyword.",
+                details: {
+                  property: key,
+                  expandedProperty
+                }
+              },
+              options
+            });
+          }
+          continue;
+        }
+        if (_isKeyword(expandedProperty)) {
+          if (expandedActiveProperty === "@reverse") {
+            throw new JsonLdError(
+              "Invalid JSON-LD syntax; a keyword cannot be used as a @reverse property.",
+              "jsonld.SyntaxError",
+              { code: "invalid reverse property map", value }
+            );
+          }
+          if (expandedProperty in expandedParent && expandedProperty !== "@included" && expandedProperty !== "@type") {
+            throw new JsonLdError(
+              "Invalid JSON-LD syntax; colliding keywords detected.",
+              "jsonld.SyntaxError",
+              { code: "colliding keywords", keyword: expandedProperty }
+            );
+          }
+        }
+        if (expandedProperty === "@id") {
+          if (!_isString(value)) {
+            if (!options.isFrame) {
+              throw new JsonLdError(
+                'Invalid JSON-LD syntax; "@id" value must a string.',
+                "jsonld.SyntaxError",
+                { code: "invalid @id value", value }
+              );
+            }
+            if (_isObject(value)) {
+              if (!_isEmptyObject(value)) {
+                throw new JsonLdError(
+                  'Invalid JSON-LD syntax; "@id" value an empty object or array of strings, if framing',
+                  "jsonld.SyntaxError",
+                  { code: "invalid @id value", value }
+                );
+              }
+            } else if (_isArray(value)) {
+              if (!value.every((v) => _isString(v))) {
+                throw new JsonLdError(
+                  'Invalid JSON-LD syntax; "@id" value an empty object or array of strings, if framing',
+                  "jsonld.SyntaxError",
+                  { code: "invalid @id value", value }
+                );
+              }
+            } else {
+              throw new JsonLdError(
+                'Invalid JSON-LD syntax; "@id" value an empty object or array of strings, if framing',
+                "jsonld.SyntaxError",
+                { code: "invalid @id value", value }
+              );
+            }
+          }
+          _addValue(
+            expandedParent,
+            "@id",
+            _asArray(value).map((v) => {
+              if (_isString(v)) {
+                const ve = _expandIri(activeCtx, v, { base: true }, options);
+                if (options.eventHandler) {
+                  if (ve === null) {
+                    if (v === null) {
+                      _handleEvent({
+                        event: {
+                          type: ["JsonLdEvent"],
+                          code: "null @id value",
+                          level: "warning",
+                          message: "Null @id found.",
+                          details: {
+                            id: v
+                          }
+                        },
+                        options
+                      });
+                    } else {
+                      _handleEvent({
+                        event: {
+                          type: ["JsonLdEvent"],
+                          code: "reserved @id value",
+                          level: "warning",
+                          message: "Reserved @id found.",
+                          details: {
+                            id: v
+                          }
+                        },
+                        options
+                      });
+                    }
+                  } else if (!_isAbsoluteIri(ve)) {
+                    _handleEvent({
+                      event: {
+                        type: ["JsonLdEvent"],
+                        code: "relative @id reference",
+                        level: "warning",
+                        message: "Relative @id reference found.",
+                        details: {
+                          id: v,
+                          expandedId: ve
+                        }
+                      },
+                      options
+                    });
+                  }
+                }
+                return ve;
+              }
+              return v;
+            }),
+            { propertyIsArray: options.isFrame }
+          );
+          continue;
+        }
+        if (expandedProperty === "@type") {
+          if (_isObject(value)) {
+            value = Object.fromEntries(Object.entries(value).map(([k, v]) => [
+              _expandIri(typeScopedContext, k, { vocab: true }),
+              _asArray(v).map(
+                (vv) => _expandIri(
+                  typeScopedContext,
+                  vv,
+                  { base: true, vocab: true },
+                  { ...options, typeExpansion: true }
+                )
+              )
+            ]));
+          }
+          _validateTypeValue(value, options.isFrame);
+          _addValue(
+            expandedParent,
+            "@type",
+            _asArray(value).map((v) => {
+              if (_isString(v)) {
+                const ve = _expandIri(
+                  typeScopedContext,
+                  v,
+                  { base: true, vocab: true },
+                  { ...options, typeExpansion: true }
+                );
+                if (ve !== "@json" && !_isAbsoluteIri(ve)) {
+                  if (options.eventHandler) {
+                    _handleEvent({
+                      event: {
+                        type: ["JsonLdEvent"],
+                        code: "relative @type reference",
+                        level: "warning",
+                        message: "Relative @type reference found.",
+                        details: {
+                          type: v
+                        }
+                      },
+                      options
+                    });
+                  }
+                }
+                return ve;
+              }
+              return v;
+            }),
+            { propertyIsArray: !!options.isFrame }
+          );
+          continue;
+        }
+        if (expandedProperty === "@included" && _processingMode(activeCtx, 1.1)) {
+          const includedResult = _asArray(await api.expand({
+            activeCtx,
+            activeProperty,
+            element: value,
+            options
+          }));
+          if (!includedResult.every((v) => _isSubject(v))) {
+            throw new JsonLdError(
+              "Invalid JSON-LD syntax; values of @included must expand to node objects.",
+              "jsonld.SyntaxError",
+              { code: "invalid @included value", value }
+            );
+          }
+          _addValue(
+            expandedParent,
+            "@included",
+            includedResult,
+            { propertyIsArray: true }
+          );
+          continue;
+        }
+        if (expandedProperty === "@graph" && !(_isObject(value) || _isArray(value))) {
+          throw new JsonLdError(
+            'Invalid JSON-LD syntax; "@graph" value must not be an object or an array.',
+            "jsonld.SyntaxError",
+            { code: "invalid @graph value", value }
+          );
+        }
+        if (expandedProperty === "@value") {
+          unexpandedValue = value;
+          if (isJsonType && _processingMode(activeCtx, 1.1)) {
+            expandedParent["@value"] = value;
+          } else {
+            _addValue(
+              expandedParent,
+              "@value",
+              value,
+              { propertyIsArray: options.isFrame }
+            );
+          }
+          continue;
+        }
+        if (expandedProperty === "@language") {
+          if (value === null) {
+            continue;
+          }
+          if (!_isString(value) && !options.isFrame) {
+            throw new JsonLdError(
+              'Invalid JSON-LD syntax; "@language" value must be a string.',
+              "jsonld.SyntaxError",
+              { code: "invalid language-tagged string", value }
+            );
+          }
+          value = _asArray(value).map((v) => _isString(v) ? v.toLowerCase() : v);
+          for (const language of value) {
+            if (_isString(language) && !language.match(REGEX_BCP47)) {
+              if (options.eventHandler) {
+                _handleEvent({
+                  event: {
+                    type: ["JsonLdEvent"],
+                    code: "invalid @language value",
+                    level: "warning",
+                    message: "@language value must be valid BCP47.",
+                    details: {
+                      language
+                    }
+                  },
+                  options
+                });
+              }
+            }
+          }
+          _addValue(
+            expandedParent,
+            "@language",
+            value,
+            { propertyIsArray: options.isFrame }
+          );
+          continue;
+        }
+        if (expandedProperty === "@direction") {
+          if (!_isString(value) && !options.isFrame) {
+            throw new JsonLdError(
+              'Invalid JSON-LD syntax; "@direction" value must be a string.',
+              "jsonld.SyntaxError",
+              { code: "invalid base direction", value }
+            );
+          }
+          value = _asArray(value);
+          for (const dir of value) {
+            if (_isString(dir) && dir !== "ltr" && dir !== "rtl") {
+              throw new JsonLdError(
+                'Invalid JSON-LD syntax; "@direction" must be "ltr" or "rtl".',
+                "jsonld.SyntaxError",
+                { code: "invalid base direction", value }
+              );
+            }
+          }
+          _addValue(
+            expandedParent,
+            "@direction",
+            value,
+            { propertyIsArray: options.isFrame }
+          );
+          continue;
+        }
+        if (expandedProperty === "@index") {
+          if (!_isString(value)) {
+            throw new JsonLdError(
+              'Invalid JSON-LD syntax; "@index" value must be a string.',
+              "jsonld.SyntaxError",
+              { code: "invalid @index value", value }
+            );
+          }
+          _addValue(expandedParent, "@index", value);
+          continue;
+        }
+        if (expandedProperty === "@reverse") {
+          if (!_isObject(value)) {
+            throw new JsonLdError(
+              'Invalid JSON-LD syntax; "@reverse" value must be an object.',
+              "jsonld.SyntaxError",
+              { code: "invalid @reverse value", value }
+            );
+          }
+          expandedValue = await api.expand({
+            activeCtx,
+            activeProperty: "@reverse",
+            element: value,
+            options
+          });
+          if ("@reverse" in expandedValue) {
+            for (const property in expandedValue["@reverse"]) {
+              _addValue(
+                expandedParent,
+                property,
+                expandedValue["@reverse"][property],
+                { propertyIsArray: true }
+              );
+            }
+          }
+          let reverseMap = expandedParent["@reverse"] || null;
+          for (const property in expandedValue) {
+            if (property === "@reverse") {
+              continue;
+            }
+            if (reverseMap === null) {
+              reverseMap = expandedParent["@reverse"] = {};
+            }
+            _addValue(reverseMap, property, [], { propertyIsArray: true });
+            const items = expandedValue[property];
+            for (let ii = 0; ii < items.length; ++ii) {
+              const item = items[ii];
+              if (_isValue(item) || _isList(item)) {
+                throw new JsonLdError(
+                  'Invalid JSON-LD syntax; "@reverse" value must not be a @value or an @list.',
+                  "jsonld.SyntaxError",
+                  { code: "invalid reverse property value", value: expandedValue }
+                );
+              }
+              _addValue(reverseMap, property, item, { propertyIsArray: true });
+            }
+          }
+          continue;
+        }
+        if (expandedProperty === "@nest") {
+          nests.push(key);
+          continue;
+        }
+        let termCtx = activeCtx;
+        const ctx = _getContextValue(activeCtx, key, "@context");
+        if (!_isUndefined(ctx)) {
+          termCtx = await _processContext({
+            activeCtx,
+            localCtx: ctx,
+            propagate: true,
+            overrideProtected: true,
+            options
+          });
+        }
+        const container = _getContextValue(activeCtx, key, "@container") || [];
+        if (container.includes("@language") && _isObject(value)) {
+          const direction = _getContextValue(termCtx, key, "@direction");
+          expandedValue = _expandLanguageMap(termCtx, value, direction, options);
+        } else if (container.includes("@index") && _isObject(value)) {
+          const asGraph = container.includes("@graph");
+          const indexKey = _getContextValue(termCtx, key, "@index") || "@index";
+          const propertyIndex = indexKey !== "@index" && _expandIri(activeCtx, indexKey, { vocab: true }, options);
+          expandedValue = await _expandIndexMap({
+            activeCtx: termCtx,
+            options,
+            activeProperty: key,
+            value,
+            asGraph,
+            indexKey,
+            propertyIndex
+          });
+        } else if (container.includes("@id") && _isObject(value)) {
+          const asGraph = container.includes("@graph");
+          expandedValue = await _expandIndexMap({
+            activeCtx: termCtx,
+            options,
+            activeProperty: key,
+            value,
+            asGraph,
+            indexKey: "@id"
+          });
+        } else if (container.includes("@type") && _isObject(value)) {
+          expandedValue = await _expandIndexMap({
+            // since container is `@type`, revert type scoped context when expanding
+            activeCtx: termCtx.revertToPreviousContext(),
+            options,
+            activeProperty: key,
+            value,
+            asGraph: false,
+            indexKey: "@type"
+          });
+        } else {
+          const isList = expandedProperty === "@list";
+          if (isList || expandedProperty === "@set") {
+            let nextActiveProperty = activeProperty;
+            if (isList && expandedActiveProperty === "@graph") {
+              nextActiveProperty = null;
+            }
+            expandedValue = await api.expand({
+              activeCtx: termCtx,
+              activeProperty: nextActiveProperty,
+              element: value,
+              options,
+              insideList: isList
+            });
+          } else if (_getContextValue(activeCtx, key, "@type") === "@json") {
+            expandedValue = {
+              "@type": "@json",
+              "@value": value
+            };
+          } else {
+            expandedValue = await api.expand({
+              activeCtx: termCtx,
+              activeProperty: key,
+              element: value,
+              options,
+              insideList: false
+            });
+          }
+        }
+        if (expandedValue === null && expandedProperty !== "@value") {
+          continue;
+        }
+        if (expandedProperty !== "@list" && !_isList(expandedValue) && container.includes("@list")) {
+          expandedValue = { "@list": _asArray(expandedValue) };
+        }
+        if (container.includes("@graph") && !container.some((key2) => key2 === "@id" || key2 === "@index")) {
+          expandedValue = _asArray(expandedValue);
+          if (!options.isFrame) {
+            expandedValue = expandedValue.filter((v) => {
+              const count = Object.keys(v).length;
+              return _dropUnsafeObject({ value: v, count, options }) !== null;
+            });
+          }
+          if (expandedValue.length === 0) {
+            continue;
+          }
+          expandedValue = expandedValue.map((v) => ({ "@graph": _asArray(v) }));
+        }
+        if (termCtx.mappings.has(key) && termCtx.mappings.get(key).reverse) {
+          const reverseMap = expandedParent["@reverse"] = expandedParent["@reverse"] || {};
+          expandedValue = _asArray(expandedValue);
+          for (let ii = 0; ii < expandedValue.length; ++ii) {
+            const item = expandedValue[ii];
+            if (_isValue(item) || _isList(item)) {
+              throw new JsonLdError(
+                'Invalid JSON-LD syntax; "@reverse" value must not be a @value or an @list.',
+                "jsonld.SyntaxError",
+                { code: "invalid reverse property value", value: expandedValue }
+              );
+            }
+            _addValue(reverseMap, expandedProperty, item, { propertyIsArray: true });
+          }
+          continue;
+        }
+        _addValue(expandedParent, expandedProperty, expandedValue, {
+          propertyIsArray: true
+        });
+      }
+      if ("@value" in expandedParent) {
+        if (expandedParent["@type"] === "@json" && _processingMode(activeCtx, 1.1)) {
+        } else if ((_isObject(unexpandedValue) || _isArray(unexpandedValue)) && !options.isFrame) {
+          throw new JsonLdError(
+            'Invalid JSON-LD syntax; "@value" value must not be an object or an array.',
+            "jsonld.SyntaxError",
+            { code: "invalid value object value", value: unexpandedValue }
+          );
+        }
+      }
+      for (const key of nests) {
+        const nestedValues = _isArray(element[key]) ? element[key] : [element[key]];
+        for (const nv of nestedValues) {
+          if (!_isObject(nv) || Object.keys(nv).some((k) => _expandIri(activeCtx, k, { vocab: true }, options) === "@value")) {
+            throw new JsonLdError(
+              "Invalid JSON-LD syntax; nested value must be a node object.",
+              "jsonld.SyntaxError",
+              { code: "invalid @nest value", value: nv }
+            );
+          }
+          await _expandObject({
+            activeCtx,
+            activeProperty,
+            expandedActiveProperty,
+            element: nv,
+            expandedParent,
+            options,
+            insideList,
+            typeScopedContext,
+            typeKey
+          });
+        }
+      }
+    }
+    function _expandValue({ activeCtx, activeProperty, value, options }) {
+      if (value === null || value === void 0) {
+        return null;
+      }
+      const expandedProperty = _expandIri(
+        activeCtx,
+        activeProperty,
+        { vocab: true },
+        options
+      );
+      if (expandedProperty === "@id") {
+        return _expandIri(activeCtx, value, { base: true }, options);
+      } else if (expandedProperty === "@type") {
+        return _expandIri(
+          activeCtx,
+          value,
+          { vocab: true, base: true },
+          { ...options, typeExpansion: true }
+        );
+      }
+      const type = _getContextValue(activeCtx, activeProperty, "@type");
+      if ((type === "@id" || expandedProperty === "@graph") && _isString(value)) {
+        const expandedValue = _expandIri(activeCtx, value, { base: true }, options);
+        if (expandedValue === null && value.match(REGEX_KEYWORD)) {
+          if (options.eventHandler) {
+            _handleEvent({
+              event: {
+                type: ["JsonLdEvent"],
+                code: "reserved @id value",
+                level: "warning",
+                message: "Reserved @id found.",
+                details: {
+                  id: activeProperty
+                }
+              },
+              options
+            });
+          }
+        }
+        return { "@id": expandedValue };
+      }
+      if (type === "@vocab" && _isString(value)) {
+        return {
+          "@id": _expandIri(activeCtx, value, { vocab: true, base: true }, options)
+        };
+      }
+      if (_isKeyword(expandedProperty)) {
+        return value;
+      }
+      const rval = {};
+      if (type && !["@id", "@vocab", "@none"].includes(type)) {
+        rval["@type"] = type;
+      } else if (_isString(value)) {
+        const language = _getContextValue(activeCtx, activeProperty, "@language");
+        if (language !== null) {
+          rval["@language"] = language;
+        }
+        const direction = _getContextValue(activeCtx, activeProperty, "@direction");
+        if (direction !== null) {
+          rval["@direction"] = direction;
+        }
+      }
+      if (!["boolean", "number", "string"].includes(typeof value)) {
+        value = value.toString();
+      }
+      rval["@value"] = value;
+      return rval;
+    }
+    function _expandLanguageMap(activeCtx, languageMap, direction, options) {
+      const rval = [];
+      const keys = Object.keys(languageMap).sort();
+      for (const key of keys) {
+        const expandedKey = _expandIri(activeCtx, key, { vocab: true }, options);
+        let val = languageMap[key];
+        if (!_isArray(val)) {
+          val = [val];
+        }
+        for (const item of val) {
+          if (item === null) {
+            continue;
+          }
+          if (!_isString(item)) {
+            throw new JsonLdError(
+              "Invalid JSON-LD syntax; language map values must be strings.",
+              "jsonld.SyntaxError",
+              { code: "invalid language map value", languageMap }
+            );
+          }
+          const val2 = { "@value": item };
+          if (expandedKey !== "@none") {
+            if (!key.match(REGEX_BCP47)) {
+              if (options.eventHandler) {
+                _handleEvent({
+                  event: {
+                    type: ["JsonLdEvent"],
+                    code: "invalid @language value",
+                    level: "warning",
+                    message: "@language value must be valid BCP47.",
+                    details: {
+                      language: key
+                    }
+                  },
+                  options
+                });
+              }
+            }
+            val2["@language"] = key.toLowerCase();
+          }
+          if (direction) {
+            val2["@direction"] = direction;
+          }
+          rval.push(val2);
+        }
+      }
+      return rval;
+    }
+    async function _expandIndexMap({
+      activeCtx,
+      options,
+      activeProperty,
+      value,
+      asGraph,
+      indexKey,
+      propertyIndex
+    }) {
+      const rval = [];
+      const keys = Object.keys(value).sort();
+      const isTypeIndex = indexKey === "@type";
+      for (let key of keys) {
+        if (isTypeIndex) {
+          const ctx = _getContextValue(activeCtx, key, "@context");
+          if (!_isUndefined(ctx)) {
+            activeCtx = await _processContext({
+              activeCtx,
+              localCtx: ctx,
+              propagate: false,
+              options
+            });
+          }
+        }
+        let val = value[key];
+        if (!_isArray(val)) {
+          val = [val];
+        }
+        val = await api.expand({
+          activeCtx,
+          activeProperty,
+          element: val,
+          options,
+          insideList: false,
+          insideIndex: true
+        });
+        let expandedKey;
+        if (propertyIndex) {
+          if (key === "@none") {
+            expandedKey = "@none";
+          } else {
+            expandedKey = _expandValue(
+              { activeCtx, activeProperty: indexKey, value: key, options }
+            );
+          }
+        } else {
+          expandedKey = _expandIri(activeCtx, key, { vocab: true }, options);
+        }
+        if (indexKey === "@id") {
+          key = _expandIri(activeCtx, key, { base: true }, options);
+        } else if (isTypeIndex) {
+          key = expandedKey;
+        }
+        for (let item of val) {
+          if (asGraph && !_isGraph(item)) {
+            item = { "@graph": [item] };
+          }
+          if (indexKey === "@type") {
+            if (expandedKey === "@none") {
+            } else if (item["@type"]) {
+              item["@type"] = [key].concat(item["@type"]);
+            } else {
+              item["@type"] = [key];
+            }
+          } else if (_isValue(item) && !["@language", "@type", "@index"].includes(indexKey)) {
+            throw new JsonLdError(
+              `Invalid JSON-LD syntax; Attempt to add illegal key to value object: "${indexKey}".`,
+              "jsonld.SyntaxError",
+              { code: "invalid value object", value: item }
+            );
+          } else if (propertyIndex) {
+            if (expandedKey !== "@none") {
+              _addValue(item, propertyIndex, expandedKey, {
+                propertyIsArray: true,
+                prependValue: true
+              });
+            }
+          } else if (expandedKey !== "@none" && !(indexKey in item)) {
+            item[indexKey] = key;
+          }
+          rval.push(item);
+        }
+      }
+      return rval;
+    }
+  }
+});
+
+// node_modules/jsonld/lib/nodeMap.js
+var require_nodeMap = __commonJS({
+  "node_modules/jsonld/lib/nodeMap.js"(exports, module) {
+    "use strict";
+    var { isKeyword } = require_context();
+    var graphTypes = require_graphTypes();
+    var types = require_types();
+    var util = require_util4();
+    var JsonLdError = require_JsonLdError();
+    var api = {};
+    module.exports = api;
+    api.createMergedNodeMap = (input, options) => {
+      options = options || {};
+      const issuer = options.issuer || new util.IdentifierIssuer("_:b");
+      const graphs = { "@default": {} };
+      api.createNodeMap(input, graphs, "@default", issuer);
+      return api.mergeNodeMaps(graphs);
+    };
+    api.createNodeMap = (input, graphs, graph, issuer, name, list) => {
+      if (types.isArray(input)) {
+        for (const node of input) {
+          api.createNodeMap(node, graphs, graph, issuer, void 0, list);
+        }
+        return;
+      }
+      if (!types.isObject(input)) {
+        if (list) {
+          list.push(input);
+        }
+        return;
+      }
+      if (graphTypes.isValue(input)) {
+        if ("@type" in input) {
+          let type = input["@type"];
+          if (type.indexOf("_:") === 0) {
+            input["@type"] = type = issuer.getId(type);
+          }
+        }
+        if (list) {
+          list.push(input);
+        }
+        return;
+      } else if (list && graphTypes.isList(input)) {
+        const _list = [];
+        api.createNodeMap(input["@list"], graphs, graph, issuer, name, _list);
+        list.push({ "@list": _list });
+        return;
+      }
+      if ("@type" in input) {
+        const types2 = input["@type"];
+        for (const type of types2) {
+          if (type.indexOf("_:") === 0) {
+            issuer.getId(type);
+          }
+        }
+      }
+      if (types.isUndefined(name)) {
+        name = graphTypes.isBlankNode(input) ? issuer.getId(input["@id"]) : input["@id"];
+      }
+      if (list) {
+        list.push({ "@id": name });
+      }
+      const subjects = graphs[graph];
+      const subject = subjects[name] = subjects[name] || {};
+      subject["@id"] = name;
+      const properties = Object.keys(input).sort();
+      for (let property of properties) {
+        if (property === "@id") {
+          continue;
+        }
+        if (property === "@reverse") {
+          const referencedNode = { "@id": name };
+          const reverseMap = input["@reverse"];
+          for (const reverseProperty in reverseMap) {
+            const items = reverseMap[reverseProperty];
+            for (const item of items) {
+              let itemName = item["@id"];
+              if (graphTypes.isBlankNode(item)) {
+                itemName = issuer.getId(itemName);
+              }
+              api.createNodeMap(item, graphs, graph, issuer, itemName);
+              util.addValue(
+                subjects[itemName],
+                reverseProperty,
+                referencedNode,
+                { propertyIsArray: true, allowDuplicate: false }
+              );
+            }
+          }
+          continue;
+        }
+        if (property === "@graph") {
+          if (!(name in graphs)) {
+            graphs[name] = {};
+          }
+          api.createNodeMap(input[property], graphs, name, issuer);
+          continue;
+        }
+        if (property === "@included") {
+          api.createNodeMap(input[property], graphs, graph, issuer);
+          continue;
+        }
+        if (property !== "@type" && isKeyword(property)) {
+          if (property === "@index" && property in subject && (input[property] !== subject[property] || input[property]["@id"] !== subject[property]["@id"])) {
+            throw new JsonLdError(
+              "Invalid JSON-LD syntax; conflicting @index property detected.",
+              "jsonld.SyntaxError",
+              { code: "conflicting indexes", subject }
+            );
+          }
+          subject[property] = input[property];
+          continue;
+        }
+        const objects = input[property];
+        if (property.indexOf("_:") === 0) {
+          property = issuer.getId(property);
+        }
+        if (objects.length === 0) {
+          util.addValue(subject, property, [], { propertyIsArray: true });
+          continue;
+        }
+        for (let o of objects) {
+          if (property === "@type") {
+            o = o.indexOf("_:") === 0 ? issuer.getId(o) : o;
+          }
+          if (graphTypes.isSubject(o) || graphTypes.isSubjectReference(o)) {
+            if ("@id" in o && !o["@id"]) {
+              continue;
+            }
+            const id = graphTypes.isBlankNode(o) ? issuer.getId(o["@id"]) : o["@id"];
+            util.addValue(
+              subject,
+              property,
+              { "@id": id },
+              { propertyIsArray: true, allowDuplicate: false }
+            );
+            api.createNodeMap(o, graphs, graph, issuer, id);
+          } else if (graphTypes.isValue(o)) {
+            util.addValue(
+              subject,
+              property,
+              o,
+              { propertyIsArray: true, allowDuplicate: false }
+            );
+          } else if (graphTypes.isList(o)) {
+            const _list = [];
+            api.createNodeMap(o["@list"], graphs, graph, issuer, name, _list);
+            o = { "@list": _list };
+            util.addValue(
+              subject,
+              property,
+              o,
+              { propertyIsArray: true, allowDuplicate: false }
+            );
+          } else {
+            api.createNodeMap(o, graphs, graph, issuer, name);
+            util.addValue(
+              subject,
+              property,
+              o,
+              { propertyIsArray: true, allowDuplicate: false }
+            );
+          }
+        }
+      }
+    };
+    api.mergeNodeMapGraphs = (graphs) => {
+      const merged = {};
+      for (const name of Object.keys(graphs).sort()) {
+        for (const id of Object.keys(graphs[name]).sort()) {
+          const node = graphs[name][id];
+          if (!(id in merged)) {
+            merged[id] = { "@id": id };
+          }
+          const mergedNode = merged[id];
+          for (const property of Object.keys(node).sort()) {
+            if (isKeyword(property) && property !== "@type") {
+              mergedNode[property] = util.clone(node[property]);
+            } else {
+              for (const value of node[property]) {
+                util.addValue(
+                  mergedNode,
+                  property,
+                  util.clone(value),
+                  { propertyIsArray: true, allowDuplicate: false }
+                );
+              }
+            }
+          }
+        }
+      }
+      return merged;
+    };
+    api.mergeNodeMaps = (graphs) => {
+      const defaultGraph = graphs["@default"];
+      const graphNames = Object.keys(graphs).sort();
+      for (const graphName of graphNames) {
+        if (graphName === "@default") {
+          continue;
+        }
+        const nodeMap = graphs[graphName];
+        let subject = defaultGraph[graphName];
+        if (!subject) {
+          defaultGraph[graphName] = subject = {
+            "@id": graphName,
+            "@graph": []
+          };
+        } else if (!("@graph" in subject)) {
+          subject["@graph"] = [];
+        }
+        const graph = subject["@graph"];
+        for (const id of Object.keys(nodeMap).sort()) {
+          const node = nodeMap[id];
+          if (!graphTypes.isSubjectReference(node)) {
+            graph.push(node);
+          }
+        }
+      }
+      return defaultGraph;
+    };
+  }
+});
+
+// node_modules/jsonld/lib/flatten.js
+var require_flatten = __commonJS({
+  "node_modules/jsonld/lib/flatten.js"(exports, module) {
+    "use strict";
+    var {
+      isSubjectReference: _isSubjectReference
+    } = require_graphTypes();
+    var {
+      createMergedNodeMap: _createMergedNodeMap
+    } = require_nodeMap();
+    var api = {};
+    module.exports = api;
+    api.flatten = (input) => {
+      const defaultGraph = _createMergedNodeMap(input);
+      const flattened = [];
+      const keys = Object.keys(defaultGraph).sort();
+      for (let ki = 0; ki < keys.length; ++ki) {
+        const node = defaultGraph[keys[ki]];
+        if (!_isSubjectReference(node)) {
+          flattened.push(node);
+        }
+      }
+      return flattened;
+    };
+  }
+});
+
+// node_modules/jsonld/lib/fromRdf.js
+var require_fromRdf = __commonJS({
+  "node_modules/jsonld/lib/fromRdf.js"(exports, module) {
+    "use strict";
+    var JsonLdError = require_JsonLdError();
+    var graphTypes = require_graphTypes();
+    var types = require_types();
+    var {
+      REGEX_BCP47,
+      addValue: _addValue
+    } = require_util4();
+    var {
+      handleEvent: _handleEvent
+    } = require_events2();
+    var {
+      // RDF,
+      RDF_LIST,
+      RDF_FIRST,
+      RDF_REST,
+      RDF_NIL,
+      RDF_TYPE,
+      // RDF_PLAIN_LITERAL,
+      // RDF_XML_LITERAL,
+      RDF_JSON_LITERAL,
+      // RDF_OBJECT,
+      // RDF_LANGSTRING,
+      // XSD,
+      XSD_BOOLEAN,
+      XSD_DOUBLE,
+      XSD_INTEGER,
+      XSD_STRING
+    } = require_constants();
+    var api = {};
+    module.exports = api;
+    api.fromRDF = async (dataset, options) => {
+      const {
+        useRdfType = false,
+        useNativeTypes = false,
+        rdfDirection = null
+      } = options;
+      const defaultGraph = {};
+      const graphMap = { "@default": defaultGraph };
+      const referencedOnce = {};
+      if (rdfDirection) {
+        if (rdfDirection === "compound-literal") {
+          throw new JsonLdError(
+            "Unsupported rdfDirection value.",
+            "jsonld.InvalidRdfDirection",
+            { value: rdfDirection }
+          );
+        } else if (rdfDirection !== "i18n-datatype") {
+          throw new JsonLdError(
+            "Unknown rdfDirection value.",
+            "jsonld.InvalidRdfDirection",
+            { value: rdfDirection }
+          );
+        }
+      }
+      for (const quad of dataset) {
+        const name = quad.graph.termType === "DefaultGraph" ? "@default" : quad.graph.value;
+        if (!(name in graphMap)) {
+          graphMap[name] = {};
+        }
+        if (name !== "@default" && !(name in defaultGraph)) {
+          defaultGraph[name] = { "@id": name };
+        }
+        const nodeMap = graphMap[name];
+        const s = quad.subject.value;
+        const p = quad.predicate.value;
+        const o = quad.object;
+        if (!(s in nodeMap)) {
+          nodeMap[s] = { "@id": s };
+        }
+        const node = nodeMap[s];
+        const objectIsNode = o.termType.endsWith("Node");
+        if (objectIsNode && !(o.value in nodeMap)) {
+          nodeMap[o.value] = { "@id": o.value };
+        }
+        if (p === RDF_TYPE && !useRdfType && objectIsNode) {
+          _addValue(node, "@type", o.value, { propertyIsArray: true });
+          continue;
+        }
+        const value = _RDFToObject(o, useNativeTypes, rdfDirection, options);
+        _addValue(node, p, value, { propertyIsArray: true });
+        if (objectIsNode) {
+          if (o.value === RDF_NIL) {
+            const object = nodeMap[o.value];
+            if (!("usages" in object)) {
+              object.usages = [];
+            }
+            object.usages.push({
+              node,
+              property: p,
+              value
+            });
+          } else if (o.value in referencedOnce) {
+            referencedOnce[o.value] = false;
+          } else {
+            referencedOnce[o.value] = {
+              node,
+              property: p,
+              value
+            };
+          }
+        }
+      }
+      for (const name in graphMap) {
+        const graphObject = graphMap[name];
+        if (!(RDF_NIL in graphObject)) {
+          continue;
+        }
+        const nil = graphObject[RDF_NIL];
+        if (!nil.usages) {
+          continue;
+        }
+        for (let usage of nil.usages) {
+          let node = usage.node;
+          let property = usage.property;
+          let head = usage.value;
+          const list = [];
+          const listNodes = [];
+          let nodeKeyCount = Object.keys(node).length;
+          while (property === RDF_REST && types.isObject(referencedOnce[node["@id"]]) && types.isArray(node[RDF_FIRST]) && node[RDF_FIRST].length === 1 && types.isArray(node[RDF_REST]) && node[RDF_REST].length === 1 && (nodeKeyCount === 3 || nodeKeyCount === 4 && types.isArray(node["@type"]) && node["@type"].length === 1 && node["@type"][0] === RDF_LIST)) {
+            list.push(node[RDF_FIRST][0]);
+            listNodes.push(node["@id"]);
+            usage = referencedOnce[node["@id"]];
+            node = usage.node;
+            property = usage.property;
+            head = usage.value;
+            nodeKeyCount = Object.keys(node).length;
+            if (!graphTypes.isBlankNode(node)) {
+              break;
+            }
+          }
+          delete head["@id"];
+          head["@list"] = list.reverse();
+          for (const listNode of listNodes) {
+            delete graphObject[listNode];
+          }
+        }
+        delete nil.usages;
+      }
+      const result = [];
+      const subjects = Object.keys(defaultGraph).sort();
+      for (const subject of subjects) {
+        const node = defaultGraph[subject];
+        if (subject in graphMap) {
+          const graph = node["@graph"] = [];
+          const graphObject = graphMap[subject];
+          const graphSubjects = Object.keys(graphObject).sort();
+          for (const graphSubject of graphSubjects) {
+            const node2 = graphObject[graphSubject];
+            if (!graphTypes.isSubjectReference(node2)) {
+              graph.push(node2);
+            }
+          }
+        }
+        if (!graphTypes.isSubjectReference(node)) {
+          result.push(node);
+        }
+      }
+      return result;
+    };
+    function _RDFToObject(o, useNativeTypes, rdfDirection, options) {
+      if (o.termType.endsWith("Node")) {
+        return { "@id": o.value };
+      }
+      const rval = { "@value": o.value };
+      if (o.language) {
+        if (!o.language.match(REGEX_BCP47)) {
+          if (options.eventHandler) {
+            _handleEvent({
+              event: {
+                type: ["JsonLdEvent"],
+                code: "invalid @language value",
+                level: "warning",
+                message: "@language value must be valid BCP47.",
+                details: {
+                  language: o.language
+                }
+              },
+              options
+            });
+          }
+        }
+        rval["@language"] = o.language;
+      } else {
+        let type = o.datatype.value;
+        if (!type) {
+          type = XSD_STRING;
+        }
+        if (type === RDF_JSON_LITERAL) {
+          type = "@json";
+          try {
+            rval["@value"] = JSON.parse(rval["@value"]);
+          } catch (e) {
+            throw new JsonLdError(
+              "JSON literal could not be parsed.",
+              "jsonld.InvalidJsonLiteral",
+              { code: "invalid JSON literal", value: rval["@value"], cause: e }
+            );
+          }
+        }
+        if (useNativeTypes) {
+          if (type === XSD_BOOLEAN) {
+            if (rval["@value"] === "true") {
+              rval["@value"] = true;
+            } else if (rval["@value"] === "false") {
+              rval["@value"] = false;
+            }
+          } else if (types.isNumeric(rval["@value"])) {
+            if (type === XSD_INTEGER) {
+              const i2 = parseInt(rval["@value"], 10);
+              if (i2.toFixed(0) === rval["@value"]) {
+                rval["@value"] = i2;
+              }
+            } else if (type === XSD_DOUBLE) {
+              rval["@value"] = parseFloat(rval["@value"]);
+            }
+          }
+          if (![XSD_BOOLEAN, XSD_INTEGER, XSD_DOUBLE, XSD_STRING].includes(type)) {
+            rval["@type"] = type;
+          }
+        } else if (rdfDirection === "i18n-datatype" && type.startsWith("https://www.w3.org/ns/i18n#")) {
+          const [, language, direction] = type.split(/[#_]/);
+          if (language.length > 0) {
+            rval["@language"] = language;
+            if (!language.match(REGEX_BCP47)) {
+              if (options.eventHandler) {
+                _handleEvent({
+                  event: {
+                    type: ["JsonLdEvent"],
+                    code: "invalid @language value",
+                    level: "warning",
+                    message: "@language value must be valid BCP47.",
+                    details: {
+                      language
+                    }
+                  },
+                  options
+                });
+              }
+            }
+          }
+          rval["@direction"] = direction;
+        } else if (type !== XSD_STRING) {
+          rval["@type"] = type;
+        }
+      }
+      return rval;
+    }
+  }
+});
+
+// node_modules/jsonld/node_modules/canonicalize/lib/canonicalize.js
+var require_canonicalize3 = __commonJS({
+  "node_modules/jsonld/node_modules/canonicalize/lib/canonicalize.js"(exports, module) {
+    "use strict";
+    module.exports = function serialize(object) {
+      if (object === null || typeof object !== "object" || object.toJSON != null) {
+        return JSON.stringify(object);
+      }
+      if (Array.isArray(object)) {
+        return "[" + object.reduce((t, cv, ci) => {
+          const comma = ci === 0 ? "" : ",";
+          const value = cv === void 0 || typeof cv === "symbol" ? null : cv;
+          return t + comma + serialize(value);
+        }, "") + "]";
+      }
+      return "{" + Object.keys(object).sort().reduce((t, cv, ci) => {
+        if (object[cv] === void 0 || typeof object[cv] === "symbol") {
+          return t;
+        }
+        const comma = t.length === 0 ? "" : ",";
+        return t + comma + serialize(cv) + ":" + serialize(object[cv]);
+      }, "") + "}";
+    };
+  }
+});
+
+// node_modules/jsonld/lib/toRdf.js
+var require_toRdf = __commonJS({
+  "node_modules/jsonld/lib/toRdf.js"(exports, module) {
+    "use strict";
+    var { createNodeMap } = require_nodeMap();
+    var { isKeyword } = require_context();
+    var graphTypes = require_graphTypes();
+    var jsonCanonicalize = require_canonicalize3();
+    var JsonLdError = require_JsonLdError();
+    var types = require_types();
+    var util = require_util4();
+    var {
+      handleEvent: _handleEvent
+    } = require_events2();
+    var {
+      // RDF,
+      // RDF_LIST,
+      RDF_FIRST,
+      RDF_REST,
+      RDF_NIL,
+      RDF_TYPE,
+      // RDF_PLAIN_LITERAL,
+      // RDF_XML_LITERAL,
+      RDF_JSON_LITERAL,
+      // RDF_OBJECT,
+      RDF_LANGSTRING,
+      // XSD,
+      XSD_BOOLEAN,
+      XSD_DOUBLE,
+      XSD_INTEGER,
+      XSD_STRING
+    } = require_constants();
+    var {
+      isAbsolute: _isAbsoluteIri
+    } = require_url();
+    var api = {};
+    module.exports = api;
+    api.toRDF = (input, options) => {
+      const issuer = new util.IdentifierIssuer("_:b");
+      const nodeMap = { "@default": {} };
+      createNodeMap(input, nodeMap, "@default", issuer);
+      const dataset = [];
+      const graphNames = Object.keys(nodeMap).sort();
+      for (const graphName of graphNames) {
+        let graphTerm;
+        if (graphName === "@default") {
+          graphTerm = { termType: "DefaultGraph", value: "" };
+        } else if (_isAbsoluteIri(graphName)) {
+          if (graphName.startsWith("_:")) {
+            graphTerm = { termType: "BlankNode" };
+          } else {
+            graphTerm = { termType: "NamedNode" };
+          }
+          graphTerm.value = graphName;
+        } else {
+          if (options.eventHandler) {
+            _handleEvent({
+              event: {
+                type: ["JsonLdEvent"],
+                code: "relative graph reference",
+                level: "warning",
+                message: "Relative graph reference found.",
+                details: {
+                  graph: graphName
+                }
+              },
+              options
+            });
+          }
+          continue;
+        }
+        _graphToRDF(dataset, nodeMap[graphName], graphTerm, issuer, options);
+      }
+      return dataset;
+    };
+    function _graphToRDF(dataset, graph, graphTerm, issuer, options) {
+      const ids = Object.keys(graph).sort();
+      for (const id of ids) {
+        const node = graph[id];
+        const properties = Object.keys(node).sort();
+        for (let property of properties) {
+          const items = node[property];
+          if (property === "@type") {
+            property = RDF_TYPE;
+          } else if (isKeyword(property)) {
+            continue;
+          }
+          for (const item of items) {
+            const subject = {
+              termType: id.startsWith("_:") ? "BlankNode" : "NamedNode",
+              value: id
+            };
+            if (!_isAbsoluteIri(id)) {
+              if (options.eventHandler) {
+                _handleEvent({
+                  event: {
+                    type: ["JsonLdEvent"],
+                    code: "relative subject reference",
+                    level: "warning",
+                    message: "Relative subject reference found.",
+                    details: {
+                      subject: id
+                    }
+                  },
+                  options
+                });
+              }
+              continue;
+            }
+            const predicate = {
+              termType: property.startsWith("_:") ? "BlankNode" : "NamedNode",
+              value: property
+            };
+            if (!_isAbsoluteIri(property)) {
+              if (options.eventHandler) {
+                _handleEvent({
+                  event: {
+                    type: ["JsonLdEvent"],
+                    code: "relative predicate reference",
+                    level: "warning",
+                    message: "Relative predicate reference found.",
+                    details: {
+                      predicate: property
+                    }
+                  },
+                  options
+                });
+              }
+              continue;
+            }
+            if (predicate.termType === "BlankNode" && !options.produceGeneralizedRdf) {
+              if (options.eventHandler) {
+                _handleEvent({
+                  event: {
+                    type: ["JsonLdEvent"],
+                    code: "blank node predicate",
+                    level: "warning",
+                    message: "Dropping blank node predicate.",
+                    details: {
+                      // FIXME: add better issuer API to get reverse mapping
+                      property: issuer.getOldIds().find((key) => issuer.getId(key) === property)
+                    }
+                  },
+                  options
+                });
+              }
+              continue;
+            }
+            const object = _objectToRDF(
+              item,
+              issuer,
+              dataset,
+              graphTerm,
+              options.rdfDirection,
+              options
+            );
+            if (object) {
+              dataset.push({
+                subject,
+                predicate,
+                object,
+                graph: graphTerm
+              });
+            }
+          }
+        }
+      }
+    }
+    function _listToRDF(list, issuer, dataset, graphTerm, rdfDirection, options) {
+      const first = { termType: "NamedNode", value: RDF_FIRST };
+      const rest = { termType: "NamedNode", value: RDF_REST };
+      const nil = { termType: "NamedNode", value: RDF_NIL };
+      const last = list.pop();
+      const result = last ? { termType: "BlankNode", value: issuer.getId() } : nil;
+      let subject = result;
+      for (const item of list) {
+        const object = _objectToRDF(
+          item,
+          issuer,
+          dataset,
+          graphTerm,
+          rdfDirection,
+          options
+        );
+        const next = { termType: "BlankNode", value: issuer.getId() };
+        dataset.push({
+          subject,
+          predicate: first,
+          object,
+          graph: graphTerm
+        });
+        dataset.push({
+          subject,
+          predicate: rest,
+          object: next,
+          graph: graphTerm
+        });
+        subject = next;
+      }
+      if (last) {
+        const object = _objectToRDF(
+          last,
+          issuer,
+          dataset,
+          graphTerm,
+          rdfDirection,
+          options
+        );
+        dataset.push({
+          subject,
+          predicate: first,
+          object,
+          graph: graphTerm
+        });
+        dataset.push({
+          subject,
+          predicate: rest,
+          object: nil,
+          graph: graphTerm
+        });
+      }
+      return result;
+    }
+    function _objectToRDF(item, issuer, dataset, graphTerm, rdfDirection, options) {
+      const object = {};
+      if (graphTypes.isValue(item)) {
+        object.termType = "Literal";
+        object.value = void 0;
+        object.datatype = {
+          termType: "NamedNode"
+        };
+        let value = item["@value"];
+        const datatype = item["@type"] || null;
+        if (datatype === "@json") {
+          object.value = jsonCanonicalize(value);
+          object.datatype.value = RDF_JSON_LITERAL;
+        } else if (types.isBoolean(value)) {
+          object.value = value.toString();
+          object.datatype.value = datatype || XSD_BOOLEAN;
+        } else if (types.isDouble(value) || datatype === XSD_DOUBLE) {
+          if (!types.isDouble(value)) {
+            value = parseFloat(value);
+          }
+          object.value = value.toExponential(15).replace(/(\d)0*e\+?/, "$1E");
+          object.datatype.value = datatype || XSD_DOUBLE;
+        } else if (types.isNumber(value)) {
+          object.value = value.toFixed(0);
+          object.datatype.value = datatype || XSD_INTEGER;
+        } else if ("@direction" in item && rdfDirection === "i18n-datatype") {
+          const language = (item["@language"] || "").toLowerCase();
+          const direction = item["@direction"];
+          const datatype2 = `https://www.w3.org/ns/i18n#${language}_${direction}`;
+          object.datatype.value = datatype2;
+          object.value = value;
+        } else if ("@direction" in item && rdfDirection === "compound-literal") {
+          throw new JsonLdError(
+            "Unsupported rdfDirection value.",
+            "jsonld.InvalidRdfDirection",
+            { value: rdfDirection }
+          );
+        } else if ("@direction" in item && rdfDirection) {
+          throw new JsonLdError(
+            "Unknown rdfDirection value.",
+            "jsonld.InvalidRdfDirection",
+            { value: rdfDirection }
+          );
+        } else if ("@language" in item) {
+          if ("@direction" in item && !rdfDirection) {
+            if (options.eventHandler) {
+              _handleEvent({
+                event: {
+                  type: ["JsonLdEvent"],
+                  code: "rdfDirection not set",
+                  level: "warning",
+                  message: "rdfDirection not set for @direction.",
+                  details: {
+                    object: object.value
+                  }
+                },
+                options
+              });
+            }
+          }
+          object.value = value;
+          object.datatype.value = datatype || RDF_LANGSTRING;
+          object.language = item["@language"];
+        } else {
+          if ("@direction" in item && !rdfDirection) {
+            if (options.eventHandler) {
+              _handleEvent({
+                event: {
+                  type: ["JsonLdEvent"],
+                  code: "rdfDirection not set",
+                  level: "warning",
+                  message: "rdfDirection not set for @direction.",
+                  details: {
+                    object: object.value
+                  }
+                },
+                options
+              });
+            }
+          }
+          object.value = value;
+          object.datatype.value = datatype || XSD_STRING;
+        }
+      } else if (graphTypes.isList(item)) {
+        const _list = _listToRDF(
+          item["@list"],
+          issuer,
+          dataset,
+          graphTerm,
+          rdfDirection,
+          options
+        );
+        object.termType = _list.termType;
+        object.value = _list.value;
+      } else {
+        const id = types.isObject(item) ? item["@id"] : item;
+        object.termType = id.startsWith("_:") ? "BlankNode" : "NamedNode";
+        object.value = id;
+      }
+      if (object.termType === "NamedNode" && !_isAbsoluteIri(object.value)) {
+        if (options.eventHandler) {
+          _handleEvent({
+            event: {
+              type: ["JsonLdEvent"],
+              code: "relative object reference",
+              level: "warning",
+              message: "Relative object reference found.",
+              details: {
+                object: object.value
+              }
+            },
+            options
+          });
+        }
+        return null;
+      }
+      return object;
+    }
+  }
+});
+
+// node_modules/jsonld/lib/frame.js
+var require_frame = __commonJS({
+  "node_modules/jsonld/lib/frame.js"(exports, module) {
+    "use strict";
+    var { isKeyword } = require_context();
+    var graphTypes = require_graphTypes();
+    var types = require_types();
+    var util = require_util4();
+    var url = require_url();
+    var JsonLdError = require_JsonLdError();
+    var {
+      createNodeMap: _createNodeMap,
+      mergeNodeMapGraphs: _mergeNodeMapGraphs
+    } = require_nodeMap();
+    var api = {};
+    module.exports = api;
+    api.frameMergedOrDefault = (input, frame, options) => {
+      const state = {
+        options,
+        embedded: false,
+        graph: "@default",
+        graphMap: { "@default": {} },
+        subjectStack: [],
+        link: {},
+        bnodeMap: {}
+      };
+      const issuer = new util.IdentifierIssuer("_:b");
+      _createNodeMap(input, state.graphMap, "@default", issuer);
+      if (options.merged) {
+        state.graphMap["@merged"] = _mergeNodeMapGraphs(state.graphMap);
+        state.graph = "@merged";
+      }
+      state.subjects = state.graphMap[state.graph];
+      const framed = [];
+      api.frame(state, Object.keys(state.subjects).sort(), frame, framed);
+      if (options.pruneBlankNodeIdentifiers) {
+        options.bnodesToClear = Object.keys(state.bnodeMap).filter((id) => state.bnodeMap[id].length === 1);
+      }
+      options.link = {};
+      return _cleanupPreserve(framed, options);
+    };
+    api.frame = (state, subjects, frame, parent, property = null) => {
+      _validateFrame(frame);
+      frame = frame[0];
+      const options = state.options;
+      const flags = {
+        embed: _getFrameFlag(frame, options, "embed"),
+        explicit: _getFrameFlag(frame, options, "explicit"),
+        requireAll: _getFrameFlag(frame, options, "requireAll")
+      };
+      if (!state.link.hasOwnProperty(state.graph)) {
+        state.link[state.graph] = {};
+      }
+      const link = state.link[state.graph];
+      const matches = _filterSubjects(state, subjects, frame, flags);
+      const ids = Object.keys(matches).sort();
+      for (const id of ids) {
+        const subject = matches[id];
+        if (property === null) {
+          state.uniqueEmbeds = { [state.graph]: {} };
+        } else {
+          state.uniqueEmbeds[state.graph] = state.uniqueEmbeds[state.graph] || {};
+        }
+        if (flags.embed === "@link" && id in link) {
+          _addFrameOutput(parent, property, link[id]);
+          continue;
+        }
+        const output = { "@id": id };
+        if (id.indexOf("_:") === 0) {
+          util.addValue(state.bnodeMap, id, output, { propertyIsArray: true });
+        }
+        link[id] = output;
+        if ((flags.embed === "@first" || flags.embed === "@last") && state.is11) {
+          throw new JsonLdError(
+            "Invalid JSON-LD syntax; invalid value of @embed.",
+            "jsonld.SyntaxError",
+            { code: "invalid @embed value", frame }
+          );
+        }
+        if (!state.embedded && state.uniqueEmbeds[state.graph].hasOwnProperty(id)) {
+          continue;
+        }
+        if (state.embedded && (flags.embed === "@never" || _createsCircularReference(subject, state.graph, state.subjectStack))) {
+          _addFrameOutput(parent, property, output);
+          continue;
+        }
+        if (state.embedded && (flags.embed == "@first" || flags.embed == "@once") && state.uniqueEmbeds[state.graph].hasOwnProperty(id)) {
+          _addFrameOutput(parent, property, output);
+          continue;
+        }
+        if (flags.embed === "@last") {
+          if (id in state.uniqueEmbeds[state.graph]) {
+            _removeEmbed(state, id);
+          }
+        }
+        state.uniqueEmbeds[state.graph][id] = { parent, property };
+        state.subjectStack.push({ subject, graph: state.graph });
+        if (id in state.graphMap) {
+          let recurse = false;
+          let subframe = null;
+          if (!("@graph" in frame)) {
+            recurse = state.graph !== "@merged";
+            subframe = {};
+          } else {
+            subframe = frame["@graph"][0];
+            recurse = !(id === "@merged" || id === "@default");
+            if (!types.isObject(subframe)) {
+              subframe = {};
+            }
+          }
+          if (recurse) {
+            api.frame(
+              { ...state, graph: id, embedded: false },
+              Object.keys(state.graphMap[id]).sort(),
+              [subframe],
+              output,
+              "@graph"
+            );
+          }
+        }
+        if ("@included" in frame) {
+          api.frame(
+            { ...state, embedded: false },
+            subjects,
+            frame["@included"],
+            output,
+            "@included"
+          );
+        }
+        for (const prop of Object.keys(subject).sort()) {
+          if (isKeyword(prop)) {
+            output[prop] = util.clone(subject[prop]);
+            if (prop === "@type") {
+              for (const type of subject["@type"]) {
+                if (type.indexOf("_:") === 0) {
+                  util.addValue(
+                    state.bnodeMap,
+                    type,
+                    output,
+                    { propertyIsArray: true }
+                  );
+                }
+              }
+            }
+            continue;
+          }
+          if (flags.explicit && !(prop in frame)) {
+            continue;
+          }
+          for (const o of subject[prop]) {
+            const subframe = prop in frame ? frame[prop] : _createImplicitFrame(flags);
+            if (graphTypes.isList(o)) {
+              const subframe2 = frame[prop] && frame[prop][0] && frame[prop][0]["@list"] ? frame[prop][0]["@list"] : _createImplicitFrame(flags);
+              const list = { "@list": [] };
+              _addFrameOutput(output, prop, list);
+              const src = o["@list"];
+              for (const oo of src) {
+                if (graphTypes.isSubjectReference(oo)) {
+                  api.frame(
+                    { ...state, embedded: true },
+                    [oo["@id"]],
+                    subframe2,
+                    list,
+                    "@list"
+                  );
+                } else {
+                  _addFrameOutput(list, "@list", util.clone(oo));
+                }
+              }
+            } else if (graphTypes.isSubjectReference(o)) {
+              api.frame(
+                { ...state, embedded: true },
+                [o["@id"]],
+                subframe,
+                output,
+                prop
+              );
+            } else if (_valueMatch(subframe[0], o)) {
+              _addFrameOutput(output, prop, util.clone(o));
+            }
+          }
+        }
+        for (const prop of Object.keys(frame).sort()) {
+          if (prop === "@type") {
+            if (!types.isObject(frame[prop][0]) || !("@default" in frame[prop][0])) {
+              continue;
+            }
+          } else if (isKeyword(prop)) {
+            continue;
+          }
+          const next = frame[prop][0] || {};
+          const omitDefaultOn = _getFrameFlag(next, options, "omitDefault");
+          if (!omitDefaultOn && !(prop in output)) {
+            let preserve = "@null";
+            if ("@default" in next) {
+              preserve = util.clone(next["@default"]);
+            }
+            if (!types.isArray(preserve)) {
+              preserve = [preserve];
+            }
+            output[prop] = [{ "@preserve": preserve }];
+          }
+        }
+        for (const reverseProp of Object.keys(frame["@reverse"] || {}).sort()) {
+          const subframe = frame["@reverse"][reverseProp];
+          for (const subject2 of Object.keys(state.subjects)) {
+            const nodeValues = util.getValues(state.subjects[subject2], reverseProp);
+            if (nodeValues.some((v) => v["@id"] === id)) {
+              output["@reverse"] = output["@reverse"] || {};
+              util.addValue(
+                output["@reverse"],
+                reverseProp,
+                [],
+                { propertyIsArray: true }
+              );
+              api.frame(
+                { ...state, embedded: true },
+                [subject2],
+                subframe,
+                output["@reverse"][reverseProp],
+                property
+              );
+            }
+          }
+        }
+        _addFrameOutput(parent, property, output);
+        state.subjectStack.pop();
+      }
+    };
+    api.cleanupNull = (input, options) => {
+      if (types.isArray(input)) {
+        const noNulls = input.map((v) => api.cleanupNull(v, options));
+        return noNulls.filter((v) => v);
+      }
+      if (input === "@null") {
+        return null;
+      }
+      if (types.isObject(input)) {
+        if ("@id" in input) {
+          const id = input["@id"];
+          if (options.link.hasOwnProperty(id)) {
+            const idx = options.link[id].indexOf(input);
+            if (idx !== -1) {
+              return options.link[id][idx];
+            }
+            options.link[id].push(input);
+          } else {
+            options.link[id] = [input];
+          }
+        }
+        for (const key in input) {
+          input[key] = api.cleanupNull(input[key], options);
+        }
+      }
+      return input;
+    };
+    function _createImplicitFrame(flags) {
+      const frame = {};
+      for (const key in flags) {
+        if (flags[key] !== void 0) {
+          frame["@" + key] = [flags[key]];
+        }
+      }
+      return [frame];
+    }
+    function _createsCircularReference(subjectToEmbed, graph, subjectStack) {
+      for (let i2 = subjectStack.length - 1; i2 >= 0; --i2) {
+        const subject = subjectStack[i2];
+        if (subject.graph === graph && subject.subject["@id"] === subjectToEmbed["@id"]) {
+          return true;
+        }
+      }
+      return false;
+    }
+    function _getFrameFlag(frame, options, name) {
+      const flag = "@" + name;
+      let rval = flag in frame ? frame[flag][0] : options[name];
+      if (name === "embed") {
+        if (rval === true) {
+          rval = "@once";
+        } else if (rval === false) {
+          rval = "@never";
+        } else if (rval !== "@always" && rval !== "@never" && rval !== "@link" && rval !== "@first" && rval !== "@last" && rval !== "@once") {
+          throw new JsonLdError(
+            "Invalid JSON-LD syntax; invalid value of @embed.",
+            "jsonld.SyntaxError",
+            { code: "invalid @embed value", frame }
+          );
+        }
+      }
+      return rval;
+    }
+    function _validateFrame(frame) {
+      if (!types.isArray(frame) || frame.length !== 1 || !types.isObject(frame[0])) {
+        throw new JsonLdError(
+          "Invalid JSON-LD syntax; a JSON-LD frame must be a single object.",
+          "jsonld.SyntaxError",
+          { frame }
+        );
+      }
+      if ("@id" in frame[0]) {
+        for (const id of util.asArray(frame[0]["@id"])) {
+          if (!(types.isObject(id) || url.isAbsolute(id)) || types.isString(id) && id.indexOf("_:") === 0) {
+            throw new JsonLdError(
+              "Invalid JSON-LD syntax; invalid @id in frame.",
+              "jsonld.SyntaxError",
+              { code: "invalid frame", frame }
+            );
+          }
+        }
+      }
+      if ("@type" in frame[0]) {
+        for (const type of util.asArray(frame[0]["@type"])) {
+          if (!(types.isObject(type) || url.isAbsolute(type) || type === "@json") || types.isString(type) && type.indexOf("_:") === 0) {
+            throw new JsonLdError(
+              "Invalid JSON-LD syntax; invalid @type in frame.",
+              "jsonld.SyntaxError",
+              { code: "invalid frame", frame }
+            );
+          }
+        }
+      }
+    }
+    function _filterSubjects(state, subjects, frame, flags) {
+      const rval = {};
+      for (const id of subjects) {
+        const subject = state.graphMap[state.graph][id];
+        if (_filterSubject(state, subject, frame, flags)) {
+          rval[id] = subject;
+        }
+      }
+      return rval;
+    }
+    function _filterSubject(state, subject, frame, flags) {
+      let wildcard = true;
+      let matchesSome = false;
+      for (const key in frame) {
+        let matchThis = false;
+        const nodeValues = util.getValues(subject, key);
+        const isEmpty = util.getValues(frame, key).length === 0;
+        if (key === "@id") {
+          if (types.isEmptyObject(frame["@id"][0] || {})) {
+            matchThis = true;
+          } else if (frame["@id"].length >= 0) {
+            matchThis = frame["@id"].includes(nodeValues[0]);
+          }
+          if (!flags.requireAll) {
+            return matchThis;
+          }
+        } else if (key === "@type") {
+          wildcard = false;
+          if (isEmpty) {
+            if (nodeValues.length > 0) {
+              return false;
+            }
+            matchThis = true;
+          } else if (frame["@type"].length === 1 && types.isEmptyObject(frame["@type"][0])) {
+            matchThis = nodeValues.length > 0;
+          } else {
+            for (const type of frame["@type"]) {
+              if (types.isObject(type) && "@default" in type) {
+                matchThis = true;
+              } else {
+                matchThis = matchThis || nodeValues.some((tt) => tt === type);
+              }
+            }
+          }
+          if (!flags.requireAll) {
+            return matchThis;
+          }
+        } else if (isKeyword(key)) {
+          continue;
+        } else {
+          const thisFrame = util.getValues(frame, key)[0];
+          let hasDefault = false;
+          if (thisFrame) {
+            _validateFrame([thisFrame]);
+            hasDefault = "@default" in thisFrame;
+          }
+          wildcard = false;
+          if (nodeValues.length === 0 && hasDefault) {
+            continue;
+          }
+          if (nodeValues.length > 0 && isEmpty) {
+            return false;
+          }
+          if (thisFrame === void 0) {
+            if (nodeValues.length > 0) {
+              return false;
+            }
+            matchThis = true;
+          } else {
+            if (graphTypes.isList(thisFrame)) {
+              const listValue = thisFrame["@list"][0];
+              if (graphTypes.isList(nodeValues[0])) {
+                const nodeListValues = nodeValues[0]["@list"];
+                if (graphTypes.isValue(listValue)) {
+                  matchThis = nodeListValues.some((lv) => _valueMatch(listValue, lv));
+                } else if (graphTypes.isSubject(listValue) || graphTypes.isSubjectReference(listValue)) {
+                  matchThis = nodeListValues.some((lv) => _nodeMatch(
+                    state,
+                    listValue,
+                    lv,
+                    flags
+                  ));
+                }
+              }
+            } else if (graphTypes.isValue(thisFrame)) {
+              matchThis = nodeValues.some((nv) => _valueMatch(thisFrame, nv));
+            } else if (graphTypes.isSubjectReference(thisFrame)) {
+              matchThis = nodeValues.some((nv) => _nodeMatch(state, thisFrame, nv, flags));
+            } else if (types.isObject(thisFrame)) {
+              matchThis = nodeValues.length > 0;
+            } else {
+              matchThis = false;
+            }
+          }
+        }
+        if (!matchThis && flags.requireAll) {
+          return false;
+        }
+        matchesSome = matchesSome || matchThis;
+      }
+      return wildcard || matchesSome;
+    }
+    function _removeEmbed(state, id) {
+      const embeds = state.uniqueEmbeds[state.graph];
+      const embed = embeds[id];
+      const parent = embed.parent;
+      const property = embed.property;
+      const subject = { "@id": id };
+      if (types.isArray(parent)) {
+        for (let i2 = 0; i2 < parent.length; ++i2) {
+          if (util.compareValues(parent[i2], subject)) {
+            parent[i2] = subject;
+            break;
+          }
+        }
+      } else {
+        const useArray = types.isArray(parent[property]);
+        util.removeValue(parent, property, subject, { propertyIsArray: useArray });
+        util.addValue(parent, property, subject, { propertyIsArray: useArray });
+      }
+      const removeDependents = (id2) => {
+        const ids = Object.keys(embeds);
+        for (const next of ids) {
+          if (next in embeds && types.isObject(embeds[next].parent) && embeds[next].parent["@id"] === id2) {
+            delete embeds[next];
+            removeDependents(next);
+          }
+        }
+      };
+      removeDependents(id);
+    }
+    function _cleanupPreserve(input, options) {
+      if (types.isArray(input)) {
+        return input.map((value) => _cleanupPreserve(value, options));
+      }
+      if (types.isObject(input)) {
+        if ("@preserve" in input) {
+          return input["@preserve"][0];
+        }
+        if (graphTypes.isValue(input)) {
+          return input;
+        }
+        if (graphTypes.isList(input)) {
+          input["@list"] = _cleanupPreserve(input["@list"], options);
+          return input;
+        }
+        if ("@id" in input) {
+          const id = input["@id"];
+          if (options.link.hasOwnProperty(id)) {
+            const idx = options.link[id].indexOf(input);
+            if (idx !== -1) {
+              return options.link[id][idx];
+            }
+            options.link[id].push(input);
+          } else {
+            options.link[id] = [input];
+          }
+        }
+        for (const prop in input) {
+          if (prop === "@id" && options.bnodesToClear.includes(input[prop])) {
+            delete input["@id"];
+            continue;
+          }
+          input[prop] = _cleanupPreserve(input[prop], options);
+        }
+      }
+      return input;
+    }
+    function _addFrameOutput(parent, property, output) {
+      if (types.isObject(parent)) {
+        util.addValue(parent, property, output, { propertyIsArray: true });
+      } else {
+        parent.push(output);
+      }
+    }
+    function _nodeMatch(state, pattern, value, flags) {
+      if (!("@id" in value)) {
+        return false;
+      }
+      const nodeObject = state.subjects[value["@id"]];
+      return nodeObject && _filterSubject(state, nodeObject, pattern, flags);
+    }
+    function _valueMatch(pattern, value) {
+      const v1 = value["@value"];
+      const t1 = value["@type"];
+      const l1 = value["@language"];
+      const v2 = pattern["@value"] ? types.isArray(pattern["@value"]) ? pattern["@value"] : [pattern["@value"]] : [];
+      const t2 = pattern["@type"] ? types.isArray(pattern["@type"]) ? pattern["@type"] : [pattern["@type"]] : [];
+      const l2 = pattern["@language"] ? types.isArray(pattern["@language"]) ? pattern["@language"] : [pattern["@language"]] : [];
+      if (v2.length === 0 && t2.length === 0 && l2.length === 0) {
+        return true;
+      }
+      if (!(v2.includes(v1) || types.isEmptyObject(v2[0]))) {
+        return false;
+      }
+      if (!(!t1 && t2.length === 0 || t2.includes(t1) || t1 && types.isEmptyObject(t2[0]))) {
+        return false;
+      }
+      if (!(!l1 && l2.length === 0 || l2.includes(l1) || l1 && types.isEmptyObject(l2[0]))) {
+        return false;
+      }
+      return true;
+    }
+  }
+});
+
+// node_modules/jsonld/lib/compact.js
+var require_compact = __commonJS({
+  "node_modules/jsonld/lib/compact.js"(exports, module) {
+    "use strict";
+    var JsonLdError = require_JsonLdError();
+    var {
+      isArray: _isArray,
+      isObject: _isObject,
+      isString: _isString,
+      isUndefined: _isUndefined
+    } = require_types();
+    var {
+      isList: _isList,
+      isValue: _isValue,
+      isGraph: _isGraph,
+      isSimpleGraph: _isSimpleGraph,
+      isSubjectReference: _isSubjectReference
+    } = require_graphTypes();
+    var {
+      expandIri: _expandIri,
+      getContextValue: _getContextValue,
+      isKeyword: _isKeyword,
+      process: _processContext,
+      processingMode: _processingMode
+    } = require_context();
+    var {
+      removeBase: _removeBase,
+      prependBase: _prependBase
+    } = require_url();
+    var {
+      REGEX_KEYWORD,
+      addValue: _addValue,
+      asArray: _asArray,
+      compareShortestLeast: _compareShortestLeast
+    } = require_util4();
+    var api = {};
+    module.exports = api;
+    api.compact = async ({
+      activeCtx,
+      activeProperty = null,
+      element,
+      options = {}
+    }) => {
+      if (_isArray(element)) {
+        let rval = [];
+        for (let i2 = 0; i2 < element.length; ++i2) {
+          const compacted = await api.compact({
+            activeCtx,
+            activeProperty,
+            element: element[i2],
+            options
+          });
+          if (compacted === null) {
+            continue;
+          }
+          rval.push(compacted);
+        }
+        if (options.compactArrays && rval.length === 1) {
+          const container = _getContextValue(
+            activeCtx,
+            activeProperty,
+            "@container"
+          ) || [];
+          if (container.length === 0) {
+            rval = rval[0];
+          }
+        }
+        return rval;
+      }
+      const ctx = _getContextValue(activeCtx, activeProperty, "@context");
+      if (!_isUndefined(ctx)) {
+        activeCtx = await _processContext({
+          activeCtx,
+          localCtx: ctx,
+          propagate: true,
+          overrideProtected: true,
+          options
+        });
+      }
+      if (_isObject(element)) {
+        if (options.link && "@id" in element && options.link.hasOwnProperty(element["@id"])) {
+          const linked = options.link[element["@id"]];
+          for (let i2 = 0; i2 < linked.length; ++i2) {
+            if (linked[i2].expanded === element) {
+              return linked[i2].compacted;
+            }
+          }
+        }
+        if (_isValue(element) || _isSubjectReference(element)) {
+          const rval2 = api.compactValue({ activeCtx, activeProperty, value: element, options });
+          if (options.link && _isSubjectReference(element)) {
+            if (!options.link.hasOwnProperty(element["@id"])) {
+              options.link[element["@id"]] = [];
+            }
+            options.link[element["@id"]].push({ expanded: element, compacted: rval2 });
+          }
+          return rval2;
+        }
+        if (_isList(element)) {
+          const container = _getContextValue(
+            activeCtx,
+            activeProperty,
+            "@container"
+          ) || [];
+          if (container.includes("@list")) {
+            return api.compact({
+              activeCtx,
+              activeProperty,
+              element: element["@list"],
+              options
+            });
+          }
+        }
+        const insideReverse = activeProperty === "@reverse";
+        const rval = {};
+        const inputCtx = activeCtx;
+        if (!_isValue(element) && !_isSubjectReference(element)) {
+          activeCtx = activeCtx.revertToPreviousContext();
+        }
+        const propertyScopedCtx = _getContextValue(inputCtx, activeProperty, "@context");
+        if (!_isUndefined(propertyScopedCtx)) {
+          activeCtx = await _processContext({
+            activeCtx,
+            localCtx: propertyScopedCtx,
+            propagate: true,
+            overrideProtected: true,
+            options
+          });
+        }
+        if (options.link && "@id" in element) {
+          if (!options.link.hasOwnProperty(element["@id"])) {
+            options.link[element["@id"]] = [];
+          }
+          options.link[element["@id"]].push({ expanded: element, compacted: rval });
+        }
+        let types = element["@type"] || [];
+        if (types.length > 1) {
+          types = Array.from(types).sort();
+        }
+        const typeContext = activeCtx;
+        for (const type of types) {
+          const compactedType = api.compactIri(
+            { activeCtx: typeContext, iri: type, relativeTo: { vocab: true } }
+          );
+          const ctx2 = _getContextValue(inputCtx, compactedType, "@context");
+          if (!_isUndefined(ctx2)) {
+            activeCtx = await _processContext({
+              activeCtx,
+              localCtx: ctx2,
+              options,
+              propagate: false
+            });
+          }
+        }
+        const keys = Object.keys(element).sort();
+        for (const expandedProperty of keys) {
+          const expandedValue = element[expandedProperty];
+          if (expandedProperty === "@id") {
+            let compactedValue = _asArray(expandedValue).map(
+              (expandedIri) => api.compactIri({
+                activeCtx,
+                iri: expandedIri,
+                relativeTo: { vocab: false },
+                base: options.base
+              })
+            );
+            if (compactedValue.length === 1) {
+              compactedValue = compactedValue[0];
+            }
+            const alias = api.compactIri(
+              { activeCtx, iri: "@id", relativeTo: { vocab: true } }
+            );
+            rval[alias] = compactedValue;
+            continue;
+          }
+          if (expandedProperty === "@type") {
+            let compactedValue = _asArray(expandedValue).map(
+              (expandedIri) => api.compactIri({
+                activeCtx: inputCtx,
+                iri: expandedIri,
+                relativeTo: { vocab: true }
+              })
+            );
+            if (compactedValue.length === 1) {
+              compactedValue = compactedValue[0];
+            }
+            const alias = api.compactIri(
+              { activeCtx, iri: "@type", relativeTo: { vocab: true } }
+            );
+            const container = _getContextValue(
+              activeCtx,
+              alias,
+              "@container"
+            ) || [];
+            const typeAsSet = container.includes("@set") && _processingMode(activeCtx, 1.1);
+            const isArray = typeAsSet || _isArray(compactedValue) && expandedValue.length === 0;
+            _addValue(rval, alias, compactedValue, { propertyIsArray: isArray });
+            continue;
+          }
+          if (expandedProperty === "@reverse") {
+            const compactedValue = await api.compact({
+              activeCtx,
+              activeProperty: "@reverse",
+              element: expandedValue,
+              options
+            });
+            for (const compactedProperty in compactedValue) {
+              if (activeCtx.mappings.has(compactedProperty) && activeCtx.mappings.get(compactedProperty).reverse) {
+                const value = compactedValue[compactedProperty];
+                const container = _getContextValue(
+                  activeCtx,
+                  compactedProperty,
+                  "@container"
+                ) || [];
+                const useArray = container.includes("@set") || !options.compactArrays;
+                _addValue(
+                  rval,
+                  compactedProperty,
+                  value,
+                  { propertyIsArray: useArray }
+                );
+                delete compactedValue[compactedProperty];
+              }
+            }
+            if (Object.keys(compactedValue).length > 0) {
+              const alias = api.compactIri({
+                activeCtx,
+                iri: expandedProperty,
+                relativeTo: { vocab: true }
+              });
+              _addValue(rval, alias, compactedValue);
+            }
+            continue;
+          }
+          if (expandedProperty === "@preserve") {
+            const compactedValue = await api.compact({
+              activeCtx,
+              activeProperty,
+              element: expandedValue,
+              options
+            });
+            if (!(_isArray(compactedValue) && compactedValue.length === 0)) {
+              _addValue(rval, expandedProperty, compactedValue);
+            }
+            continue;
+          }
+          if (expandedProperty === "@index") {
+            const container = _getContextValue(
+              activeCtx,
+              activeProperty,
+              "@container"
+            ) || [];
+            if (container.includes("@index")) {
+              continue;
+            }
+            const alias = api.compactIri({
+              activeCtx,
+              iri: expandedProperty,
+              relativeTo: { vocab: true }
+            });
+            _addValue(rval, alias, expandedValue);
+            continue;
+          }
+          if (expandedProperty !== "@graph" && expandedProperty !== "@list" && expandedProperty !== "@included" && _isKeyword(expandedProperty)) {
+            const alias = api.compactIri({
+              activeCtx,
+              iri: expandedProperty,
+              relativeTo: { vocab: true }
+            });
+            _addValue(rval, alias, expandedValue);
+            continue;
+          }
+          if (!_isArray(expandedValue)) {
+            throw new JsonLdError(
+              "JSON-LD expansion error; expanded value must be an array.",
+              "jsonld.SyntaxError"
+            );
+          }
+          if (expandedValue.length === 0) {
+            const itemActiveProperty = api.compactIri({
+              activeCtx,
+              iri: expandedProperty,
+              value: expandedValue,
+              relativeTo: { vocab: true },
+              reverse: insideReverse
+            });
+            const nestProperty = activeCtx.mappings.has(itemActiveProperty) ? activeCtx.mappings.get(itemActiveProperty)["@nest"] : null;
+            let nestResult = rval;
+            if (nestProperty) {
+              _checkNestProperty(activeCtx, nestProperty, options);
+              if (!_isObject(rval[nestProperty])) {
+                rval[nestProperty] = {};
+              }
+              nestResult = rval[nestProperty];
+            }
+            _addValue(
+              nestResult,
+              itemActiveProperty,
+              expandedValue,
+              {
+                propertyIsArray: true
+              }
+            );
+          }
+          for (const expandedItem of expandedValue) {
+            const itemActiveProperty = api.compactIri({
+              activeCtx,
+              iri: expandedProperty,
+              value: expandedItem,
+              relativeTo: { vocab: true },
+              reverse: insideReverse
+            });
+            const nestProperty = activeCtx.mappings.has(itemActiveProperty) ? activeCtx.mappings.get(itemActiveProperty)["@nest"] : null;
+            let nestResult = rval;
+            if (nestProperty) {
+              _checkNestProperty(activeCtx, nestProperty, options);
+              if (!_isObject(rval[nestProperty])) {
+                rval[nestProperty] = {};
+              }
+              nestResult = rval[nestProperty];
+            }
+            const container = _getContextValue(
+              activeCtx,
+              itemActiveProperty,
+              "@container"
+            ) || [];
+            const isGraph = _isGraph(expandedItem);
+            const isList = _isList(expandedItem);
+            let inner;
+            if (isList) {
+              inner = expandedItem["@list"];
+            } else if (isGraph) {
+              inner = expandedItem["@graph"];
+            }
+            let compactedItem = await api.compact({
+              activeCtx,
+              activeProperty: itemActiveProperty,
+              element: isList || isGraph ? inner : expandedItem,
+              options
+            });
+            if (isList) {
+              if (!_isArray(compactedItem)) {
+                compactedItem = [compactedItem];
+              }
+              if (!container.includes("@list")) {
+                compactedItem = {
+                  [api.compactIri({
+                    activeCtx,
+                    iri: "@list",
+                    relativeTo: { vocab: true }
+                  })]: compactedItem
+                };
+                if ("@index" in expandedItem) {
+                  compactedItem[api.compactIri({
+                    activeCtx,
+                    iri: "@index",
+                    relativeTo: { vocab: true }
+                  })] = expandedItem["@index"];
+                }
+              } else {
+                _addValue(nestResult, itemActiveProperty, compactedItem, {
+                  valueIsArray: true,
+                  allowDuplicate: true
+                });
+                continue;
+              }
+            }
+            if (isGraph) {
+              if (container.includes("@graph") && (container.includes("@id") || container.includes("@index") && _isSimpleGraph(expandedItem))) {
+                let mapObject;
+                if (nestResult.hasOwnProperty(itemActiveProperty)) {
+                  mapObject = nestResult[itemActiveProperty];
+                } else {
+                  nestResult[itemActiveProperty] = mapObject = {};
+                }
+                const key = (container.includes("@id") ? expandedItem["@id"] : expandedItem["@index"]) || api.compactIri({
+                  activeCtx,
+                  iri: "@none",
+                  relativeTo: { vocab: true }
+                });
+                _addValue(
+                  mapObject,
+                  key,
+                  compactedItem,
+                  {
+                    propertyIsArray: !options.compactArrays || container.includes("@set")
+                  }
+                );
+              } else if (container.includes("@graph") && _isSimpleGraph(expandedItem)) {
+                if (_isArray(compactedItem) && compactedItem.length > 1) {
+                  compactedItem = { "@included": compactedItem };
+                }
+                _addValue(
+                  nestResult,
+                  itemActiveProperty,
+                  compactedItem,
+                  {
+                    propertyIsArray: !options.compactArrays || container.includes("@set")
+                  }
+                );
+              } else {
+                if (_isArray(compactedItem) && compactedItem.length === 1 && options.compactArrays) {
+                  compactedItem = compactedItem[0];
+                }
+                compactedItem = {
+                  [api.compactIri({
+                    activeCtx,
+                    iri: "@graph",
+                    relativeTo: { vocab: true }
+                  })]: compactedItem
+                };
+                if ("@id" in expandedItem) {
+                  compactedItem[api.compactIri({
+                    activeCtx,
+                    iri: "@id",
+                    relativeTo: { vocab: true }
+                  })] = expandedItem["@id"];
+                }
+                if ("@index" in expandedItem) {
+                  compactedItem[api.compactIri({
+                    activeCtx,
+                    iri: "@index",
+                    relativeTo: { vocab: true }
+                  })] = expandedItem["@index"];
+                }
+                _addValue(
+                  nestResult,
+                  itemActiveProperty,
+                  compactedItem,
+                  {
+                    propertyIsArray: !options.compactArrays || container.includes("@set")
+                  }
+                );
+              }
+            } else if (container.includes("@language") || container.includes("@index") || container.includes("@id") || container.includes("@type")) {
+              let mapObject;
+              if (nestResult.hasOwnProperty(itemActiveProperty)) {
+                mapObject = nestResult[itemActiveProperty];
+              } else {
+                nestResult[itemActiveProperty] = mapObject = {};
+              }
+              let key;
+              if (container.includes("@language")) {
+                if (_isValue(compactedItem)) {
+                  compactedItem = compactedItem["@value"];
+                }
+                key = expandedItem["@language"];
+              } else if (container.includes("@index")) {
+                const indexKey = _getContextValue(
+                  activeCtx,
+                  itemActiveProperty,
+                  "@index"
+                ) || "@index";
+                const containerKey = api.compactIri(
+                  { activeCtx, iri: indexKey, relativeTo: { vocab: true } }
+                );
+                if (indexKey === "@index") {
+                  key = expandedItem["@index"];
+                  delete compactedItem[containerKey];
+                } else {
+                  let others;
+                  [key, ...others] = _asArray(compactedItem[indexKey] || []);
+                  if (!_isString(key)) {
+                    key = null;
+                  } else {
+                    switch (others.length) {
+                      case 0:
+                        delete compactedItem[indexKey];
+                        break;
+                      case 1:
+                        compactedItem[indexKey] = others[0];
+                        break;
+                      default:
+                        compactedItem[indexKey] = others;
+                        break;
+                    }
+                  }
+                }
+              } else if (container.includes("@id")) {
+                const idKey = api.compactIri({
+                  activeCtx,
+                  iri: "@id",
+                  relativeTo: { vocab: true }
+                });
+                key = compactedItem[idKey];
+                delete compactedItem[idKey];
+              } else if (container.includes("@type")) {
+                const typeKey = api.compactIri({
+                  activeCtx,
+                  iri: "@type",
+                  relativeTo: { vocab: true }
+                });
+                let types2;
+                [key, ...types2] = _asArray(compactedItem[typeKey] || []);
+                switch (types2.length) {
+                  case 0:
+                    delete compactedItem[typeKey];
+                    break;
+                  case 1:
+                    compactedItem[typeKey] = types2[0];
+                    break;
+                  default:
+                    compactedItem[typeKey] = types2;
+                    break;
+                }
+                if (Object.keys(compactedItem).length === 1 && "@id" in expandedItem) {
+                  compactedItem = await api.compact({
+                    activeCtx,
+                    activeProperty: itemActiveProperty,
+                    element: { "@id": expandedItem["@id"] },
+                    options
+                  });
+                }
+              }
+              if (!key) {
+                key = api.compactIri({
+                  activeCtx,
+                  iri: "@none",
+                  relativeTo: { vocab: true }
+                });
+              }
+              _addValue(
+                mapObject,
+                key,
+                compactedItem,
+                {
+                  propertyIsArray: container.includes("@set")
+                }
+              );
+            } else {
+              const isArray = !options.compactArrays || container.includes("@set") || container.includes("@list") || _isArray(compactedItem) && compactedItem.length === 0 || expandedProperty === "@list" || expandedProperty === "@graph";
+              _addValue(
+                nestResult,
+                itemActiveProperty,
+                compactedItem,
+                { propertyIsArray: isArray }
+              );
+            }
+          }
+        }
+        return rval;
+      }
+      return element;
+    };
+    api.compactIri = ({
+      activeCtx,
+      iri,
+      value = null,
+      relativeTo = { vocab: false },
+      reverse = false,
+      base = null
+    }) => {
+      if (iri === null) {
+        return iri;
+      }
+      if (activeCtx.isPropertyTermScoped && activeCtx.previousContext) {
+        activeCtx = activeCtx.previousContext;
+      }
+      const inverseCtx = activeCtx.getInverse();
+      if (_isKeyword(iri) && iri in inverseCtx && "@none" in inverseCtx[iri] && "@type" in inverseCtx[iri]["@none"] && "@none" in inverseCtx[iri]["@none"]["@type"]) {
+        return inverseCtx[iri]["@none"]["@type"]["@none"];
+      }
+      if (relativeTo.vocab && iri in inverseCtx) {
+        const defaultLanguage = activeCtx["@language"] || "@none";
+        const containers = [];
+        if (_isObject(value) && "@index" in value && !("@graph" in value)) {
+          containers.push("@index", "@index@set");
+        }
+        if (_isObject(value) && "@preserve" in value) {
+          value = value["@preserve"][0];
+        }
+        if (_isGraph(value)) {
+          if ("@index" in value) {
+            containers.push(
+              "@graph@index",
+              "@graph@index@set",
+              "@index",
+              "@index@set"
+            );
+          }
+          if ("@id" in value) {
+            containers.push(
+              "@graph@id",
+              "@graph@id@set"
+            );
+          }
+          containers.push("@graph", "@graph@set", "@set");
+          if (!("@index" in value)) {
+            containers.push(
+              "@graph@index",
+              "@graph@index@set",
+              "@index",
+              "@index@set"
+            );
+          }
+          if (!("@id" in value)) {
+            containers.push("@graph@id", "@graph@id@set");
+          }
+        } else if (_isObject(value) && !_isValue(value)) {
+          containers.push("@id", "@id@set", "@type", "@set@type");
+        }
+        let typeOrLanguage = "@language";
+        let typeOrLanguageValue = "@null";
+        if (reverse) {
+          typeOrLanguage = "@type";
+          typeOrLanguageValue = "@reverse";
+          containers.push("@set");
+        } else if (_isList(value)) {
+          if (!("@index" in value)) {
+            containers.push("@list");
+          }
+          const list = value["@list"];
+          if (list.length === 0) {
+            typeOrLanguage = "@any";
+            typeOrLanguageValue = "@none";
+          } else {
+            let commonLanguage = list.length === 0 ? defaultLanguage : null;
+            let commonType = null;
+            for (let i2 = 0; i2 < list.length; ++i2) {
+              const item = list[i2];
+              let itemLanguage = "@none";
+              let itemType = "@none";
+              if (_isValue(item)) {
+                if ("@direction" in item) {
+                  const lang = (item["@language"] || "").toLowerCase();
+                  const dir = item["@direction"];
+                  itemLanguage = `${lang}_${dir}`;
+                } else if ("@language" in item) {
+                  itemLanguage = item["@language"].toLowerCase();
+                } else if ("@type" in item) {
+                  itemType = item["@type"];
+                } else {
+                  itemLanguage = "@null";
+                }
+              } else {
+                itemType = "@id";
+              }
+              if (commonLanguage === null) {
+                commonLanguage = itemLanguage;
+              } else if (itemLanguage !== commonLanguage && _isValue(item)) {
+                commonLanguage = "@none";
+              }
+              if (commonType === null) {
+                commonType = itemType;
+              } else if (itemType !== commonType) {
+                commonType = "@none";
+              }
+              if (commonLanguage === "@none" && commonType === "@none") {
+                break;
+              }
+            }
+            commonLanguage = commonLanguage || "@none";
+            commonType = commonType || "@none";
+            if (commonType !== "@none") {
+              typeOrLanguage = "@type";
+              typeOrLanguageValue = commonType;
+            } else {
+              typeOrLanguageValue = commonLanguage;
+            }
+          }
+        } else {
+          if (_isValue(value)) {
+            if ("@language" in value && !("@index" in value)) {
+              containers.push("@language", "@language@set");
+              typeOrLanguageValue = value["@language"];
+              const dir = value["@direction"];
+              if (dir) {
+                typeOrLanguageValue = `${typeOrLanguageValue}_${dir}`;
+              }
+            } else if ("@direction" in value && !("@index" in value)) {
+              typeOrLanguageValue = `_${value["@direction"]}`;
+            } else if ("@type" in value) {
+              typeOrLanguage = "@type";
+              typeOrLanguageValue = value["@type"];
+            }
+          } else {
+            typeOrLanguage = "@type";
+            typeOrLanguageValue = "@id";
+          }
+          containers.push("@set");
+        }
+        containers.push("@none");
+        if (_isObject(value) && !("@index" in value)) {
+          containers.push("@index", "@index@set");
+        }
+        if (_isValue(value) && Object.keys(value).length === 1) {
+          containers.push("@language", "@language@set");
+        }
+        const term = _selectTerm(
+          activeCtx,
+          iri,
+          value,
+          containers,
+          typeOrLanguage,
+          typeOrLanguageValue
+        );
+        if (term !== null) {
+          return term;
+        }
+      }
+      if (relativeTo.vocab) {
+        if ("@vocab" in activeCtx) {
+          const vocab = activeCtx["@vocab"];
+          if (iri.indexOf(vocab) === 0 && iri !== vocab) {
+            const suffix = iri.substr(vocab.length);
+            if (!activeCtx.mappings.has(suffix)) {
+              return suffix;
+            }
+          }
+        }
+      }
+      let choice = null;
+      const partialMatches = [];
+      let iriMap = activeCtx.fastCurieMap;
+      const maxPartialLength = iri.length - 1;
+      for (let i2 = 0; i2 < maxPartialLength && iri[i2] in iriMap; ++i2) {
+        iriMap = iriMap[iri[i2]];
+        if ("" in iriMap) {
+          partialMatches.push(iriMap[""][0]);
+        }
+      }
+      for (let i2 = partialMatches.length - 1; i2 >= 0; --i2) {
+        const entry = partialMatches[i2];
+        const terms = entry.terms;
+        for (const term of terms) {
+          const curie = term + ":" + iri.substr(entry.iri.length);
+          const isUsableCurie = activeCtx.mappings.get(term)._prefix && (!activeCtx.mappings.has(curie) || value === null && activeCtx.mappings.get(curie)["@id"] === iri);
+          if (isUsableCurie && (choice === null || _compareShortestLeast(curie, choice) < 0)) {
+            choice = curie;
+          }
+        }
+      }
+      if (choice !== null) {
+        return choice;
+      }
+      for (const [term, td] of activeCtx.mappings) {
+        if (td && td._prefix && iri.startsWith(term + ":")) {
+          throw new JsonLdError(
+            `Absolute IRI "${iri}" confused with prefix "${term}".`,
+            "jsonld.SyntaxError",
+            { code: "IRI confused with prefix", context: activeCtx }
+          );
+        }
+      }
+      if (!relativeTo.vocab) {
+        if ("@base" in activeCtx) {
+          if (!activeCtx["@base"]) {
+            return iri;
+          } else {
+            const _iri = _removeBase(_prependBase(base, activeCtx["@base"]), iri);
+            return REGEX_KEYWORD.test(_iri) ? `./${_iri}` : _iri;
+          }
+        } else {
+          return _removeBase(base, iri);
+        }
+      }
+      return iri;
+    };
+    api.compactValue = ({ activeCtx, activeProperty, value, options }) => {
+      if (_isValue(value)) {
+        const type2 = _getContextValue(activeCtx, activeProperty, "@type");
+        const language = _getContextValue(activeCtx, activeProperty, "@language");
+        const direction = _getContextValue(activeCtx, activeProperty, "@direction");
+        const container = _getContextValue(activeCtx, activeProperty, "@container") || [];
+        const preserveIndex = "@index" in value && !container.includes("@index");
+        if (!preserveIndex && type2 !== "@none") {
+          if (value["@type"] === type2) {
+            return value["@value"];
+          }
+          if ("@language" in value && value["@language"] === language && "@direction" in value && value["@direction"] === direction) {
+            return value["@value"];
+          }
+          if ("@language" in value && value["@language"] === language) {
+            return value["@value"];
+          }
+          if ("@direction" in value && value["@direction"] === direction) {
+            return value["@value"];
+          }
+        }
+        const keyCount = Object.keys(value).length;
+        const isValueOnlyKey = keyCount === 1 || keyCount === 2 && "@index" in value && !preserveIndex;
+        const hasDefaultLanguage = "@language" in activeCtx;
+        const isValueString = _isString(value["@value"]);
+        const hasNullMapping = activeCtx.mappings.has(activeProperty) && activeCtx.mappings.get(activeProperty)["@language"] === null;
+        if (isValueOnlyKey && type2 !== "@none" && (!hasDefaultLanguage || !isValueString || hasNullMapping)) {
+          return value["@value"];
+        }
+        const rval = {};
+        if (preserveIndex) {
+          rval[api.compactIri({
+            activeCtx,
+            iri: "@index",
+            relativeTo: { vocab: true }
+          })] = value["@index"];
+        }
+        if ("@type" in value) {
+          rval[api.compactIri({
+            activeCtx,
+            iri: "@type",
+            relativeTo: { vocab: true }
+          })] = api.compactIri(
+            { activeCtx, iri: value["@type"], relativeTo: { vocab: true } }
+          );
+        } else if ("@language" in value) {
+          rval[api.compactIri({
+            activeCtx,
+            iri: "@language",
+            relativeTo: { vocab: true }
+          })] = value["@language"];
+        }
+        if ("@direction" in value) {
+          rval[api.compactIri({
+            activeCtx,
+            iri: "@direction",
+            relativeTo: { vocab: true }
+          })] = value["@direction"];
+        }
+        rval[api.compactIri({
+          activeCtx,
+          iri: "@value",
+          relativeTo: { vocab: true }
+        })] = value["@value"];
+        return rval;
+      }
+      const expandedProperty = _expandIri(
+        activeCtx,
+        activeProperty,
+        { vocab: true },
+        options
+      );
+      const type = _getContextValue(activeCtx, activeProperty, "@type");
+      const compacted = api.compactIri({
+        activeCtx,
+        iri: value["@id"],
+        relativeTo: { vocab: type === "@vocab" },
+        base: options.base
+      });
+      if (type === "@id" || type === "@vocab" || expandedProperty === "@graph") {
+        return compacted;
+      }
+      return {
+        [api.compactIri({
+          activeCtx,
+          iri: "@id",
+          relativeTo: { vocab: true }
+        })]: compacted
+      };
+    };
+    function _selectTerm(activeCtx, iri, value, containers, typeOrLanguage, typeOrLanguageValue) {
+      if (typeOrLanguageValue === null) {
+        typeOrLanguageValue = "@null";
+      }
+      const prefs = [];
+      if ((typeOrLanguageValue === "@id" || typeOrLanguageValue === "@reverse") && _isObject(value) && "@id" in value) {
+        if (typeOrLanguageValue === "@reverse") {
+          prefs.push("@reverse");
+        }
+        const term = api.compactIri(
+          { activeCtx, iri: value["@id"], relativeTo: { vocab: true } }
+        );
+        if (activeCtx.mappings.has(term) && activeCtx.mappings.get(term) && activeCtx.mappings.get(term)["@id"] === value["@id"]) {
+          prefs.push.apply(prefs, ["@vocab", "@id"]);
+        } else {
+          prefs.push.apply(prefs, ["@id", "@vocab"]);
+        }
+      } else {
+        prefs.push(typeOrLanguageValue);
+        const langDir = prefs.find((el) => el.includes("_"));
+        if (langDir) {
+          prefs.push(langDir.replace(/^[^_]+_/, "_"));
+        }
+      }
+      prefs.push("@none");
+      const containerMap = activeCtx.inverse[iri];
+      for (const container of containers) {
+        if (!(container in containerMap)) {
+          continue;
+        }
+        const typeOrLanguageValueMap = containerMap[container][typeOrLanguage];
+        for (const pref of prefs) {
+          if (!(pref in typeOrLanguageValueMap)) {
+            continue;
+          }
+          return typeOrLanguageValueMap[pref];
+        }
+      }
+      return null;
+    }
+    function _checkNestProperty(activeCtx, nestProperty, options) {
+      if (_expandIri(activeCtx, nestProperty, { vocab: true }, options) !== "@nest") {
+        throw new JsonLdError(
+          "JSON-LD compact error; nested property must have an @nest value resolving to @nest.",
+          "jsonld.SyntaxError",
+          { code: "invalid @nest value" }
+        );
+      }
+    }
+  }
+});
+
+// node_modules/jsonld/lib/JsonLdProcessor.js
+var require_JsonLdProcessor = __commonJS({
+  "node_modules/jsonld/lib/JsonLdProcessor.js"(exports, module) {
+    "use strict";
+    module.exports = (jsonld2) => {
+      class JsonLdProcessor {
+        toString() {
+          return "[object JsonLdProcessor]";
+        }
+      }
+      Object.defineProperty(JsonLdProcessor, "prototype", {
+        writable: false,
+        enumerable: false
+      });
+      Object.defineProperty(JsonLdProcessor.prototype, "constructor", {
+        writable: true,
+        enumerable: false,
+        configurable: true,
+        value: JsonLdProcessor
+      });
+      JsonLdProcessor.compact = function(input, ctx) {
+        if (arguments.length < 2) {
+          return Promise.reject(
+            new TypeError("Could not compact, too few arguments.")
+          );
+        }
+        return jsonld2.compact(input, ctx);
+      };
+      JsonLdProcessor.expand = function(input) {
+        if (arguments.length < 1) {
+          return Promise.reject(
+            new TypeError("Could not expand, too few arguments.")
+          );
+        }
+        return jsonld2.expand(input);
+      };
+      JsonLdProcessor.flatten = function(input) {
+        if (arguments.length < 1) {
+          return Promise.reject(
+            new TypeError("Could not flatten, too few arguments.")
+          );
+        }
+        return jsonld2.flatten(input);
+      };
+      return JsonLdProcessor;
+    };
+  }
+});
+
+// node_modules/jsonld/lib/jsonld.js
+var require_jsonld = __commonJS({
+  "node_modules/jsonld/lib/jsonld.js"(exports, module) {
+    var canonize = require_rdf_canonize();
+    var platform = require_platform_browser();
+    var util = require_util4();
+    var ContextResolver = require_ContextResolver();
+    var IdentifierIssuer = util.IdentifierIssuer;
+    var JsonLdError = require_JsonLdError();
+    var LRU = require_lru_cache();
+    var NQuads = require_NQuads2();
+    var { expand: _expand } = require_expand();
+    var { flatten: _flatten } = require_flatten();
+    var { fromRDF: _fromRDF } = require_fromRdf();
+    var { toRDF: _toRDF } = require_toRdf();
+    var {
+      frameMergedOrDefault: _frameMergedOrDefault,
+      cleanupNull: _cleanupNull
+    } = require_frame();
+    var {
+      isArray: _isArray,
+      isObject: _isObject,
+      isString: _isString
+    } = require_types();
+    var {
+      isSubjectReference: _isSubjectReference
+    } = require_graphTypes();
+    var {
+      expandIri: _expandIri,
+      getInitialContext: _getInitialContext,
+      process: _processContext,
+      processingMode: _processingMode
+    } = require_context();
+    var {
+      compact: _compact,
+      compactIri: _compactIri
+    } = require_compact();
+    var {
+      createNodeMap: _createNodeMap,
+      createMergedNodeMap: _createMergedNodeMap,
+      mergeNodeMaps: _mergeNodeMaps
+    } = require_nodeMap();
+    var {
+      logEventHandler: _logEventHandler,
+      logWarningEventHandler: _logWarningEventHandler,
+      safeEventHandler: _safeEventHandler,
+      setDefaultEventHandler: _setDefaultEventHandler,
+      setupEventHandler: _setupEventHandler,
+      strictEventHandler: _strictEventHandler,
+      unhandledEventHandler: _unhandledEventHandler
+    } = require_events2();
+    var wrapper = function(jsonld2) {
+      const _rdfParsers = {};
+      const RESOLVED_CONTEXT_CACHE_MAX_SIZE = 100;
+      const _resolvedContextCache = new LRU({ max: RESOLVED_CONTEXT_CACHE_MAX_SIZE });
+      jsonld2.compact = async function(input, ctx, options) {
+        if (arguments.length < 2) {
+          throw new TypeError("Could not compact, too few arguments.");
+        }
+        if (ctx === null) {
+          throw new JsonLdError(
+            "The compaction context must not be null.",
+            "jsonld.CompactError",
+            { code: "invalid local context" }
+          );
+        }
+        if (input === null) {
+          return null;
+        }
+        options = _setDefaults(options, {
+          base: _isString(input) ? input : "",
+          compactArrays: true,
+          compactToRelative: true,
+          graph: false,
+          skipExpansion: false,
+          link: false,
+          issuer: new IdentifierIssuer("_:b"),
+          contextResolver: new ContextResolver(
+            { sharedCache: _resolvedContextCache }
+          )
+        });
+        if (options.link) {
+          options.skipExpansion = true;
+        }
+        if (!options.compactToRelative) {
+          delete options.base;
+        }
+        let expanded;
+        if (options.skipExpansion) {
+          expanded = input;
+        } else {
+          expanded = await jsonld2.expand(input, options);
+        }
+        const activeCtx = await jsonld2.processContext(
+          _getInitialContext(options),
+          ctx,
+          options
+        );
+        let compacted = await _compact({
+          activeCtx,
+          element: expanded,
+          options
+        });
+        if (options.compactArrays && !options.graph && _isArray(compacted)) {
+          if (compacted.length === 1) {
+            compacted = compacted[0];
+          } else if (compacted.length === 0) {
+            compacted = {};
+          }
+        } else if (options.graph && _isObject(compacted)) {
+          compacted = [compacted];
+        }
+        if (_isObject(ctx) && "@context" in ctx) {
+          ctx = ctx["@context"];
+        }
+        ctx = util.clone(ctx);
+        if (!_isArray(ctx)) {
+          ctx = [ctx];
+        }
+        const tmp = ctx;
+        ctx = [];
+        for (let i2 = 0; i2 < tmp.length; ++i2) {
+          if (!_isObject(tmp[i2]) || Object.keys(tmp[i2]).length > 0) {
+            ctx.push(tmp[i2]);
+          }
+        }
+        const hasContext = ctx.length > 0;
+        if (ctx.length === 1) {
+          ctx = ctx[0];
+        }
+        if (_isArray(compacted)) {
+          const graphAlias = _compactIri({
+            activeCtx,
+            iri: "@graph",
+            relativeTo: { vocab: true }
+          });
+          const graph = compacted;
+          compacted = {};
+          if (hasContext) {
+            compacted["@context"] = ctx;
+          }
+          compacted[graphAlias] = graph;
+        } else if (_isObject(compacted) && hasContext) {
+          const graph = compacted;
+          compacted = { "@context": ctx };
+          for (const key in graph) {
+            compacted[key] = graph[key];
+          }
+        }
+        return compacted;
+      };
+      jsonld2.expand = async function(input, options) {
+        if (arguments.length < 1) {
+          throw new TypeError("Could not expand, too few arguments.");
+        }
+        options = _setDefaults(options, {
+          keepFreeFloatingNodes: false,
+          contextResolver: new ContextResolver(
+            { sharedCache: _resolvedContextCache }
+          )
+        });
+        const toResolve = {};
+        const contextsToProcess = [];
+        if ("expandContext" in options) {
+          const expandContext = util.clone(options.expandContext);
+          if (_isObject(expandContext) && "@context" in expandContext) {
+            toResolve.expandContext = expandContext;
+          } else {
+            toResolve.expandContext = { "@context": expandContext };
+          }
+          contextsToProcess.push(toResolve.expandContext);
+        }
+        let defaultBase;
+        if (!_isString(input)) {
+          toResolve.input = util.clone(input);
+        } else {
+          const remoteDoc = await jsonld2.get(input, options);
+          defaultBase = remoteDoc.documentUrl;
+          toResolve.input = remoteDoc.document;
+          if (remoteDoc.contextUrl) {
+            toResolve.remoteContext = { "@context": remoteDoc.contextUrl };
+            contextsToProcess.push(toResolve.remoteContext);
+          }
+        }
+        if (!("base" in options)) {
+          options.base = defaultBase || "";
+        }
+        let activeCtx = _getInitialContext(options);
+        for (const localCtx of contextsToProcess) {
+          activeCtx = await _processContext({ activeCtx, localCtx, options });
+        }
+        let expanded = await _expand({
+          activeCtx,
+          element: toResolve.input,
+          options
+        });
+        if (_isObject(expanded) && "@graph" in expanded && Object.keys(expanded).length === 1) {
+          expanded = expanded["@graph"];
+        } else if (expanded === null) {
+          expanded = [];
+        }
+        if (!_isArray(expanded)) {
+          expanded = [expanded];
+        }
+        return expanded;
+      };
+      jsonld2.flatten = async function(input, ctx, options) {
+        if (arguments.length < 1) {
+          return new TypeError("Could not flatten, too few arguments.");
+        }
+        if (typeof ctx === "function") {
+          ctx = null;
+        } else {
+          ctx = ctx || null;
+        }
+        options = _setDefaults(options, {
+          base: _isString(input) ? input : "",
+          contextResolver: new ContextResolver(
+            { sharedCache: _resolvedContextCache }
+          )
+        });
+        const expanded = await jsonld2.expand(input, options);
+        const flattened = _flatten(expanded);
+        if (ctx === null) {
+          return flattened;
+        }
+        options.graph = true;
+        options.skipExpansion = true;
+        const compacted = await jsonld2.compact(flattened, ctx, options);
+        return compacted;
+      };
+      jsonld2.frame = async function(input, frame, options) {
+        if (arguments.length < 2) {
+          throw new TypeError("Could not frame, too few arguments.");
+        }
+        options = _setDefaults(options, {
+          base: _isString(input) ? input : "",
+          embed: "@once",
+          explicit: false,
+          requireAll: false,
+          omitDefault: false,
+          bnodesToClear: [],
+          contextResolver: new ContextResolver(
+            { sharedCache: _resolvedContextCache }
+          )
+        });
+        if (_isString(frame)) {
+          const remoteDoc = await jsonld2.get(frame, options);
+          frame = remoteDoc.document;
+          if (remoteDoc.contextUrl) {
+            let ctx = frame["@context"];
+            if (!ctx) {
+              ctx = remoteDoc.contextUrl;
+            } else if (_isArray(ctx)) {
+              ctx.push(remoteDoc.contextUrl);
+            } else {
+              ctx = [ctx, remoteDoc.contextUrl];
+            }
+            frame["@context"] = ctx;
+          }
+        }
+        const frameContext = frame ? frame["@context"] || {} : {};
+        const activeCtx = await jsonld2.processContext(
+          _getInitialContext(options),
+          frameContext,
+          options
+        );
+        if (!options.hasOwnProperty("omitGraph")) {
+          options.omitGraph = _processingMode(activeCtx, 1.1);
+        }
+        if (!options.hasOwnProperty("pruneBlankNodeIdentifiers")) {
+          options.pruneBlankNodeIdentifiers = _processingMode(activeCtx, 1.1);
+        }
+        const expanded = await jsonld2.expand(input, options);
+        const opts = { ...options };
+        opts.isFrame = true;
+        opts.keepFreeFloatingNodes = true;
+        const expandedFrame = await jsonld2.expand(frame, opts);
+        const frameKeys = Object.keys(frame).map((key) => _expandIri(activeCtx, key, { vocab: true }));
+        opts.merged = !frameKeys.includes("@graph");
+        opts.is11 = _processingMode(activeCtx, 1.1);
+        const framed = _frameMergedOrDefault(expanded, expandedFrame, opts);
+        opts.graph = !options.omitGraph;
+        opts.skipExpansion = true;
+        opts.link = {};
+        opts.framing = true;
+        let compacted = await jsonld2.compact(framed, frameContext, opts);
+        opts.link = {};
+        compacted = _cleanupNull(compacted, opts);
+        return compacted;
+      };
+      jsonld2.link = async function(input, ctx, options) {
+        const frame = {};
+        if (ctx) {
+          frame["@context"] = ctx;
+        }
+        frame["@embed"] = "@link";
+        return jsonld2.frame(input, frame, options);
+      };
+      jsonld2.normalize = jsonld2.canonize = async function(input, options) {
+        if (arguments.length < 1) {
+          throw new TypeError("Could not canonize, too few arguments.");
+        }
+        options = _setDefaults(options, {
+          base: _isString(input) ? input : null,
+          algorithm: "URDNA2015",
+          skipExpansion: false,
+          safe: true,
+          contextResolver: new ContextResolver(
+            { sharedCache: _resolvedContextCache }
+          )
+        });
+        if ("inputFormat" in options) {
+          if (options.inputFormat !== "application/n-quads" && options.inputFormat !== "application/nquads") {
+            throw new JsonLdError(
+              "Unknown canonicalization input format.",
+              "jsonld.CanonizeError"
+            );
+          }
+          const parsedInput = NQuads.parse(input);
+          return canonize.canonize(parsedInput, options);
+        }
+        const opts = { ...options };
+        delete opts.format;
+        opts.produceGeneralizedRdf = false;
+        const dataset = await jsonld2.toRDF(input, opts);
+        return canonize.canonize(dataset, options);
+      };
+      jsonld2.fromRDF = async function(dataset, options) {
+        if (arguments.length < 1) {
+          throw new TypeError("Could not convert from RDF, too few arguments.");
+        }
+        options = _setDefaults(options, {
+          format: _isString(dataset) ? "application/n-quads" : void 0
+        });
+        const { format } = options;
+        let { rdfParser } = options;
+        if (format) {
+          rdfParser = rdfParser || _rdfParsers[format];
+          if (!rdfParser) {
+            throw new JsonLdError(
+              "Unknown input format.",
+              "jsonld.UnknownFormat",
+              { format }
+            );
+          }
+        } else {
+          rdfParser = () => dataset;
+        }
+        const parsedDataset = await rdfParser(dataset);
+        return _fromRDF(parsedDataset, options);
+      };
+      jsonld2.toRDF = async function(input, options) {
+        if (arguments.length < 1) {
+          throw new TypeError("Could not convert to RDF, too few arguments.");
+        }
+        options = _setDefaults(options, {
+          base: _isString(input) ? input : "",
+          skipExpansion: false,
+          contextResolver: new ContextResolver(
+            { sharedCache: _resolvedContextCache }
+          )
+        });
+        let expanded;
+        if (options.skipExpansion) {
+          expanded = input;
+        } else {
+          expanded = await jsonld2.expand(input, options);
+        }
+        const dataset = _toRDF(expanded, options);
+        if (options.format) {
+          if (options.format === "application/n-quads" || options.format === "application/nquads") {
+            return NQuads.serialize(dataset);
+          }
+          throw new JsonLdError(
+            "Unknown output format.",
+            "jsonld.UnknownFormat",
+            { format: options.format }
+          );
+        }
+        return dataset;
+      };
+      jsonld2.createNodeMap = async function(input, options) {
+        if (arguments.length < 1) {
+          throw new TypeError("Could not create node map, too few arguments.");
+        }
+        options = _setDefaults(options, {
+          base: _isString(input) ? input : "",
+          contextResolver: new ContextResolver(
+            { sharedCache: _resolvedContextCache }
+          )
+        });
+        const expanded = await jsonld2.expand(input, options);
+        return _createMergedNodeMap(expanded, options);
+      };
+      jsonld2.merge = async function(docs, ctx, options) {
+        if (arguments.length < 1) {
+          throw new TypeError("Could not merge, too few arguments.");
+        }
+        if (!_isArray(docs)) {
+          throw new TypeError('Could not merge, "docs" must be an array.');
+        }
+        if (typeof ctx === "function") {
+          ctx = null;
+        } else {
+          ctx = ctx || null;
+        }
+        options = _setDefaults(options, {
+          contextResolver: new ContextResolver(
+            { sharedCache: _resolvedContextCache }
+          )
+        });
+        const expanded = await Promise.all(docs.map((doc) => {
+          const opts = { ...options };
+          return jsonld2.expand(doc, opts);
+        }));
+        let mergeNodes = true;
+        if ("mergeNodes" in options) {
+          mergeNodes = options.mergeNodes;
+        }
+        const issuer = options.issuer || new IdentifierIssuer("_:b");
+        const graphs = { "@default": {} };
+        for (let i2 = 0; i2 < expanded.length; ++i2) {
+          const doc = util.relabelBlankNodes(expanded[i2], {
+            issuer: new IdentifierIssuer("_:b" + i2 + "-")
+          });
+          const _graphs = mergeNodes || i2 === 0 ? graphs : { "@default": {} };
+          _createNodeMap(doc, _graphs, "@default", issuer);
+          if (_graphs !== graphs) {
+            for (const graphName in _graphs) {
+              const _nodeMap = _graphs[graphName];
+              if (!(graphName in graphs)) {
+                graphs[graphName] = _nodeMap;
+                continue;
+              }
+              const nodeMap = graphs[graphName];
+              for (const key in _nodeMap) {
+                if (!(key in nodeMap)) {
+                  nodeMap[key] = _nodeMap[key];
+                }
+              }
+            }
+          }
+        }
+        const defaultGraph = _mergeNodeMaps(graphs);
+        const flattened = [];
+        const keys = Object.keys(defaultGraph).sort();
+        for (let ki = 0; ki < keys.length; ++ki) {
+          const node = defaultGraph[keys[ki]];
+          if (!_isSubjectReference(node)) {
+            flattened.push(node);
+          }
+        }
+        if (ctx === null) {
+          return flattened;
+        }
+        options.graph = true;
+        options.skipExpansion = true;
+        const compacted = await jsonld2.compact(flattened, ctx, options);
+        return compacted;
+      };
+      Object.defineProperty(jsonld2, "documentLoader", {
+        get: () => jsonld2._documentLoader,
+        set: (v) => jsonld2._documentLoader = v
+      });
+      jsonld2.documentLoader = async (url) => {
+        throw new JsonLdError(
+          "Could not retrieve a JSON-LD document from the URL. URL dereferencing not implemented.",
+          "jsonld.LoadDocumentError",
+          { code: "loading document failed", url }
+        );
+      };
+      jsonld2.get = async function(url, options) {
+        let load;
+        if (typeof options.documentLoader === "function") {
+          load = options.documentLoader;
+        } else {
+          load = jsonld2.documentLoader;
+        }
+        const remoteDoc = await load(url);
+        try {
+          if (!remoteDoc.document) {
+            throw new JsonLdError(
+              "No remote document found at the given URL.",
+              "jsonld.NullRemoteDocument"
+            );
+          }
+          if (_isString(remoteDoc.document)) {
+            remoteDoc.document = JSON.parse(remoteDoc.document);
+          }
+        } catch (e) {
+          throw new JsonLdError(
+            "Could not retrieve a JSON-LD document from the URL.",
+            "jsonld.LoadDocumentError",
+            {
+              code: "loading document failed",
+              cause: e,
+              remoteDoc
+            }
+          );
+        }
+        return remoteDoc;
+      };
+      jsonld2.processContext = async function(activeCtx, localCtx, options) {
+        options = _setDefaults(options, {
+          base: "",
+          contextResolver: new ContextResolver(
+            { sharedCache: _resolvedContextCache }
+          )
+        });
+        if (localCtx === null) {
+          return _getInitialContext(options);
+        }
+        localCtx = util.clone(localCtx);
+        if (!(_isObject(localCtx) && "@context" in localCtx)) {
+          localCtx = { "@context": localCtx };
+        }
+        return _processContext({ activeCtx, localCtx, options });
+      };
+      jsonld2.getContextValue = require_context().getContextValue;
+      jsonld2.documentLoaders = {};
+      jsonld2.useDocumentLoader = function(type) {
+        if (!(type in jsonld2.documentLoaders)) {
+          throw new JsonLdError(
+            'Unknown document loader type: "' + type + '"',
+            "jsonld.UnknownDocumentLoader",
+            { type }
+          );
+        }
+        jsonld2.documentLoader = jsonld2.documentLoaders[type].apply(
+          jsonld2,
+          Array.prototype.slice.call(arguments, 1)
+        );
+      };
+      jsonld2.registerRDFParser = function(contentType, parser) {
+        _rdfParsers[contentType] = parser;
+      };
+      jsonld2.unregisterRDFParser = function(contentType) {
+        delete _rdfParsers[contentType];
+      };
+      jsonld2.registerRDFParser("application/n-quads", NQuads.parse);
+      jsonld2.registerRDFParser("application/nquads", NQuads.parse);
+      jsonld2.url = require_url();
+      jsonld2.logEventHandler = _logEventHandler;
+      jsonld2.logWarningEventHandler = _logWarningEventHandler;
+      jsonld2.safeEventHandler = _safeEventHandler;
+      jsonld2.setDefaultEventHandler = _setDefaultEventHandler;
+      jsonld2.strictEventHandler = _strictEventHandler;
+      jsonld2.unhandledEventHandler = _unhandledEventHandler;
+      jsonld2.util = util;
+      Object.assign(jsonld2, util);
+      jsonld2.promises = jsonld2;
+      jsonld2.RequestQueue = require_RequestQueue();
+      jsonld2.JsonLdProcessor = require_JsonLdProcessor()(jsonld2);
+      platform.setupGlobals(jsonld2);
+      platform.setupDocumentLoaders(jsonld2);
+      function _setDefaults(options, {
+        documentLoader = jsonld2.documentLoader,
+        ...defaults
+      }) {
+        if (options && "compactionMap" in options) {
+          throw new JsonLdError(
+            '"compactionMap" not supported.',
+            "jsonld.OptionsError"
+          );
+        }
+        if (options && "expansionMap" in options) {
+          throw new JsonLdError(
+            '"expansionMap" not supported.',
+            "jsonld.OptionsError"
+          );
+        }
+        return Object.assign(
+          {},
+          { documentLoader },
+          defaults,
+          options,
+          { eventHandler: _setupEventHandler({ options }) }
+        );
+      }
+      return jsonld2;
+    };
+    var factory2 = function() {
+      return wrapper(function() {
+        return factory2();
+      });
+    };
+    wrapper(factory2);
+    module.exports = factory2;
+  }
+});
+
+// node_modules/lodash/_trimmedEndIndex.js
+var require_trimmedEndIndex = __commonJS({
+  "node_modules/lodash/_trimmedEndIndex.js"(exports, module) {
+    var reWhitespace = /\s/;
+    function trimmedEndIndex(string) {
+      var index = string.length;
+      while (index-- && reWhitespace.test(string.charAt(index))) {
+      }
+      return index;
+    }
+    module.exports = trimmedEndIndex;
+  }
+});
+
+// node_modules/lodash/_baseTrim.js
+var require_baseTrim = __commonJS({
+  "node_modules/lodash/_baseTrim.js"(exports, module) {
+    var trimmedEndIndex = require_trimmedEndIndex();
+    var reTrimStart = /^\s+/;
+    function baseTrim(string) {
+      return string ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, "") : string;
+    }
+    module.exports = baseTrim;
+  }
+});
+
+// node_modules/lodash/isObject.js
+var require_isObject = __commonJS({
+  "node_modules/lodash/isObject.js"(exports, module) {
+    function isObject(value) {
+      var type = typeof value;
+      return value != null && (type == "object" || type == "function");
+    }
+    module.exports = isObject;
+  }
+});
+
+// node_modules/lodash/_freeGlobal.js
+var require_freeGlobal = __commonJS({
+  "node_modules/lodash/_freeGlobal.js"(exports, module) {
+    var freeGlobal = typeof global == "object" && global && global.Object === Object && global;
+    module.exports = freeGlobal;
+  }
+});
+
+// node_modules/lodash/_root.js
+var require_root = __commonJS({
+  "node_modules/lodash/_root.js"(exports, module) {
+    var freeGlobal = require_freeGlobal();
+    var freeSelf = typeof self == "object" && self && self.Object === Object && self;
+    var root = freeGlobal || freeSelf || Function("return this")();
+    module.exports = root;
+  }
+});
+
+// node_modules/lodash/_Symbol.js
+var require_Symbol = __commonJS({
+  "node_modules/lodash/_Symbol.js"(exports, module) {
+    var root = require_root();
+    var Symbol2 = root.Symbol;
+    module.exports = Symbol2;
+  }
+});
+
+// node_modules/lodash/_getRawTag.js
+var require_getRawTag = __commonJS({
+  "node_modules/lodash/_getRawTag.js"(exports, module) {
+    var Symbol2 = require_Symbol();
+    var objectProto = Object.prototype;
+    var hasOwnProperty = objectProto.hasOwnProperty;
+    var nativeObjectToString = objectProto.toString;
+    var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
+    function getRawTag(value) {
+      var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
+      try {
+        value[symToStringTag] = void 0;
+        var unmasked = true;
+      } catch (e) {
+      }
+      var result = nativeObjectToString.call(value);
+      if (unmasked) {
+        if (isOwn) {
+          value[symToStringTag] = tag;
+        } else {
+          delete value[symToStringTag];
+        }
+      }
+      return result;
+    }
+    module.exports = getRawTag;
+  }
+});
+
+// node_modules/lodash/_objectToString.js
+var require_objectToString = __commonJS({
+  "node_modules/lodash/_objectToString.js"(exports, module) {
+    var objectProto = Object.prototype;
+    var nativeObjectToString = objectProto.toString;
+    function objectToString(value) {
+      return nativeObjectToString.call(value);
+    }
+    module.exports = objectToString;
+  }
+});
+
+// node_modules/lodash/_baseGetTag.js
+var require_baseGetTag = __commonJS({
+  "node_modules/lodash/_baseGetTag.js"(exports, module) {
+    var Symbol2 = require_Symbol();
+    var getRawTag = require_getRawTag();
+    var objectToString = require_objectToString();
+    var nullTag = "[object Null]";
+    var undefinedTag = "[object Undefined]";
+    var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
+    function baseGetTag(value) {
+      if (value == null) {
+        return value === void 0 ? undefinedTag : nullTag;
+      }
+      return symToStringTag && symToStringTag in Object(value) ? getRawTag(value) : objectToString(value);
+    }
+    module.exports = baseGetTag;
+  }
+});
+
+// node_modules/lodash/isObjectLike.js
+var require_isObjectLike2 = __commonJS({
+  "node_modules/lodash/isObjectLike.js"(exports, module) {
+    function isObjectLike(value) {
+      return value != null && typeof value == "object";
+    }
+    module.exports = isObjectLike;
+  }
+});
+
+// node_modules/lodash/isSymbol.js
+var require_isSymbol = __commonJS({
+  "node_modules/lodash/isSymbol.js"(exports, module) {
+    var baseGetTag = require_baseGetTag();
+    var isObjectLike = require_isObjectLike2();
+    var symbolTag = "[object Symbol]";
+    function isSymbol(value) {
+      return typeof value == "symbol" || isObjectLike(value) && baseGetTag(value) == symbolTag;
+    }
+    module.exports = isSymbol;
+  }
+});
+
+// node_modules/lodash/toNumber.js
+var require_toNumber = __commonJS({
+  "node_modules/lodash/toNumber.js"(exports, module) {
+    var baseTrim = require_baseTrim();
+    var isObject = require_isObject();
+    var isSymbol = require_isSymbol();
+    var NAN = 0 / 0;
+    var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+    var reIsBinary = /^0b[01]+$/i;
+    var reIsOctal = /^0o[0-7]+$/i;
+    var freeParseInt = parseInt;
+    function toNumber(value) {
+      if (typeof value == "number") {
+        return value;
+      }
+      if (isSymbol(value)) {
+        return NAN;
+      }
+      if (isObject(value)) {
+        var other = typeof value.valueOf == "function" ? value.valueOf() : value;
+        value = isObject(other) ? other + "" : other;
+      }
+      if (typeof value != "string") {
+        return value === 0 ? value : +value;
+      }
+      value = baseTrim(value);
+      var isBinary = reIsBinary.test(value);
+      return isBinary || reIsOctal.test(value) ? freeParseInt(value.slice(2), isBinary ? 2 : 8) : reIsBadHex.test(value) ? NAN : +value;
+    }
+    module.exports = toNumber;
+  }
+});
+
+// node_modules/lodash/toFinite.js
+var require_toFinite = __commonJS({
+  "node_modules/lodash/toFinite.js"(exports, module) {
+    var toNumber = require_toNumber();
+    var INFINITY = 1 / 0;
+    var MAX_INTEGER = 17976931348623157e292;
+    function toFinite(value) {
+      if (!value) {
+        return value === 0 ? value : 0;
+      }
+      value = toNumber(value);
+      if (value === INFINITY || value === -INFINITY) {
+        var sign = value < 0 ? -1 : 1;
+        return sign * MAX_INTEGER;
+      }
+      return value === value ? value : 0;
+    }
+    module.exports = toFinite;
+  }
+});
+
+// node_modules/lodash/toInteger.js
+var require_toInteger = __commonJS({
+  "node_modules/lodash/toInteger.js"(exports, module) {
+    var toFinite = require_toFinite();
+    function toInteger(value) {
+      var result = toFinite(value), remainder = result % 1;
+      return result === result ? remainder ? result - remainder : result : 0;
+    }
+    module.exports = toInteger;
+  }
+});
+
+// node_modules/lodash/before.js
+var require_before = __commonJS({
+  "node_modules/lodash/before.js"(exports, module) {
+    var toInteger = require_toInteger();
+    var FUNC_ERROR_TEXT = "Expected a function";
+    function before(n, func) {
+      var result;
+      if (typeof func != "function") {
+        throw new TypeError(FUNC_ERROR_TEXT);
+      }
+      n = toInteger(n);
+      return function() {
+        if (--n > 0) {
+          result = func.apply(this, arguments);
+        }
+        if (n <= 1) {
+          func = void 0;
+        }
+        return result;
+      };
+    }
+    module.exports = before;
+  }
+});
+
+// node_modules/lodash/once.js
+var require_once = __commonJS({
+  "node_modules/lodash/once.js"(exports, module) {
+    var before = require_before();
+    function once2(func) {
+      return before(2, func);
+    }
+    module.exports = once2;
+  }
+});
+
 // node_modules/@jcubic/wayne/index.min.js
 var root_url = location.pathname.replace(/\/[^\/]+$/, "");
 var root_url_re = new RegExp("^" + escape_re(root_url));
@@ -69040,7 +77496,7 @@ function RouteParser() {
       const result = [];
       let index = 0;
       let parentheses = 0;
-      str = str.split(tokenizer_re).map(function(chunk, i2, chunks2) {
+      str = str.split(tokenizer_re).map(function(chunk, i2, chunks) {
         if (chunk === open_group) {
           parentheses++;
         } else if (chunk === close_group) {
@@ -69224,605 +77680,6 @@ var Wayne = class {
 // src/library/ldsparql.js
 var import_query_sparql_rdfjs = __toESM(require_index_browser2());
 
-// node_modules/@rdfjs/dataset/DatasetCore.js
-function isString(s) {
-  return typeof s === "string" || s instanceof String;
-}
-var xsdString = "http://www.w3.org/2001/XMLSchema#string";
-function termToId(term) {
-  if (typeof term === "string") {
-    return term;
-  }
-  if (!term) {
-    return "";
-  }
-  if (typeof term.id !== "undefined" && term.termType !== "Quad") {
-    return term.id;
-  }
-  let subject, predicate, object, graph;
-  switch (term.termType) {
-    case "NamedNode":
-      return term.value;
-    case "BlankNode":
-      return `_:${term.value}`;
-    case "Variable":
-      return `?${term.value}`;
-    case "DefaultGraph":
-      return "";
-    case "Literal":
-      if (term.language) {
-        return `"${term.value}"@${term.language}`;
-      }
-      return `"${term.value}"${term.datatype && term.datatype.value !== xsdString ? `^^${term.datatype.value}` : ""}`;
-    case "Quad":
-      subject = escapeQuotes(termToId(term.subject));
-      predicate = escapeQuotes(termToId(term.predicate));
-      object = escapeQuotes(termToId(term.object));
-      graph = term.graph.termType === "DefaultGraph" ? "" : ` ${termToId(term.graph)}`;
-      return `<<${subject} ${predicate} ${object}${graph}>>`;
-    default:
-      throw new Error(`Unexpected termType: ${term.termType}`);
-  }
-}
-var escapedLiteral = /^"(.*".*)(?="[^"]*$)/;
-function escapeQuotes(id) {
-  return id.replace(escapedLiteral, (_, quoted) => `"${quoted.replace(/"/g, '""')}`);
-}
-var DatasetCore = class {
-  constructor(quads) {
-    this._size = 0;
-    this._graphs = /* @__PURE__ */ Object.create(null);
-    this._id = 0;
-    this._ids = /* @__PURE__ */ Object.create(null);
-    this._ids["><"] = 0;
-    this._entities = /* @__PURE__ */ Object.create(null);
-    this._quads = /* @__PURE__ */ new Map();
-    if (quads) {
-      for (const quad of quads) {
-        this.add(quad);
-      }
-    }
-  }
-  get size() {
-    let size = this._size;
-    if (size !== null) {
-      return size;
-    }
-    size = 0;
-    const graphs = this._graphs;
-    let subjects, subject;
-    for (const graphKey in graphs) {
-      for (const subjectKey in subjects = graphs[graphKey].subjects) {
-        for (const predicateKey in subject = subjects[subjectKey]) {
-          size += Object.keys(subject[predicateKey]).length;
-        }
-      }
-    }
-    this._size = size;
-    return this._size;
-  }
-  add(quad) {
-    let subject = termToId(quad.subject);
-    let predicate = termToId(quad.predicate);
-    let object = termToId(quad.object);
-    const graph = termToId(quad.graph);
-    let graphItem = this._graphs[graph];
-    if (!graphItem) {
-      graphItem = this._graphs[graph] = { subjects: {}, predicates: {}, objects: {} };
-      Object.freeze(graphItem);
-    }
-    const ids = this._ids;
-    const entities = this._entities;
-    subject = ids[subject] || (ids[entities[++this._id] = subject] = this._id);
-    predicate = ids[predicate] || (ids[entities[++this._id] = predicate] = this._id);
-    object = ids[object] || (ids[entities[++this._id] = object] = this._id);
-    this._addToIndex(graphItem.subjects, subject, predicate, object);
-    this._addToIndex(graphItem.predicates, predicate, object, subject);
-    this._addToIndex(graphItem.objects, object, subject, predicate);
-    this._setQuad(subject, predicate, object, graph, quad);
-    this._size = null;
-    return this;
-  }
-  delete(quad) {
-    let subject = termToId(quad.subject);
-    let predicate = termToId(quad.predicate);
-    let object = termToId(quad.object);
-    const graph = termToId(quad.graph);
-    const ids = this._ids;
-    const graphs = this._graphs;
-    let graphItem, subjects, predicates;
-    if (!(subject = ids[subject]) || !(predicate = ids[predicate]) || !(object = ids[object]) || !(graphItem = graphs[graph]) || !(subjects = graphItem.subjects[subject]) || !(predicates = subjects[predicate]) || !(object in predicates)) {
-      return this;
-    }
-    this._removeFromIndex(graphItem.subjects, subject, predicate, object);
-    this._removeFromIndex(graphItem.predicates, predicate, object, subject);
-    this._removeFromIndex(graphItem.objects, object, subject, predicate);
-    if (this._size !== null) {
-      this._size--;
-    }
-    this._deleteQuad(subject, predicate, object, graph);
-    for (subject in graphItem.subjects) {
-      return this;
-    }
-    delete graphs[graph];
-    return this;
-  }
-  has(quad) {
-    const subject = termToId(quad.subject);
-    const predicate = termToId(quad.predicate);
-    const object = termToId(quad.object);
-    const graph = termToId(quad.graph);
-    const graphItem = this._graphs[graph];
-    if (!graphItem) {
-      return false;
-    }
-    const ids = this._ids;
-    let subjectId, predicateId, objectId;
-    if (isString(subject) && !(subjectId = ids[subject]) || isString(predicate) && !(predicateId = ids[predicate]) || isString(object) && !(objectId = ids[object])) {
-      return false;
-    }
-    return this._countInIndex(graphItem.objects, objectId, subjectId, predicateId) === 1;
-  }
-  match(subject, predicate, object, graph) {
-    return this._createDataset(this._match(subject, predicate, object, graph));
-  }
-  [Symbol.iterator]() {
-    return this._match()[Symbol.iterator]();
-  }
-  // ## Private methods
-  // ### `_addToIndex` adds a quad to a three-layered index.
-  // Returns if the index has changed, if the entry did not already exist.
-  _addToIndex(index0, key0, key1, key2) {
-    const index1 = index0[key0] || (index0[key0] = {});
-    const index2 = index1[key1] || (index1[key1] = {});
-    const existed = key2 in index2;
-    if (!existed) {
-      index2[key2] = null;
-    }
-    return !existed;
-  }
-  // ### `_removeFromIndex` removes a quad from a three-layered index
-  _removeFromIndex(index0, key0, key1, key2) {
-    const index1 = index0[key0];
-    const index2 = index1[key1];
-    delete index2[key2];
-    for (const key in index2) {
-      return;
-    }
-    delete index1[key1];
-    for (const key in index1) {
-      return;
-    }
-    delete index0[key0];
-  }
-  // ### `_findInIndex` finds a set of quads in a three-layered index.
-  // The index base is `index0` and the keys at each level are `key0`, `key1`, and `key2`.
-  // Any of these keys can be undefined, which is interpreted as a wildcard.
-  // `name0`, `name1`, and `name2` are the names of the keys at each level,
-  // used when reconstructing the resulting quad
-  // (for instance: _subject_, _predicate_, and _object_).
-  // Finally, `graph` will be the graph of the created quads.
-  // If `callback` is given, each result is passed through it
-  // and iteration halts when it returns truthy for any quad.
-  // If instead `array` is given, each result is added to the array.
-  _findInIndex(index0, key0, key1, key2, name0, name1, name2, graph, callback, array) {
-    let tmp, index1, index2;
-    if (key0) {
-      (tmp = index0, index0 = {})[key0] = tmp[key0];
-    }
-    for (const value0 in index0) {
-      index1 = index0[value0];
-      if (index1) {
-        if (key1) {
-          (tmp = index1, index1 = {})[key1] = tmp[key1];
-        }
-        for (const value1 in index1) {
-          index2 = index1[value1];
-          if (index2) {
-            const values = key2 ? key2 in index2 ? [key2] : [] : Object.keys(index2);
-            for (let l = 0; l < values.length; l++) {
-              const parts = {
-                [name0]: value0,
-                [name1]: value1,
-                [name2]: values[l]
-              };
-              const quad = this._getQuad(parts.subject, parts.predicate, parts.object, graph);
-              if (array) {
-                array.push(quad);
-              } else if (callback(quad)) {
-                return true;
-              }
-            }
-          }
-        }
-      }
-    }
-    return array;
-  }
-  // ### `_countInIndex` counts matching quads in a three-layered index.
-  // The index base is `index0` and the keys at each level are `key0`, `key1`, and `key2`.
-  // Any of these keys can be undefined, which is interpreted as a wildcard.
-  _countInIndex(index0, key0, key1, key2) {
-    let count = 0;
-    let tmp, index1, index2;
-    if (key0) {
-      (tmp = index0, index0 = {})[key0] = tmp[key0];
-    }
-    for (const value0 in index0) {
-      index1 = index0[value0];
-      if (index1) {
-        if (key1) {
-          (tmp = index1, index1 = {})[key1] = tmp[key1];
-        }
-        for (const value1 in index1) {
-          index2 = index1[value1];
-          if (index2) {
-            if (key2) {
-              key2 in index2 && count++;
-            } else {
-              count += Object.keys(index2).length;
-            }
-          }
-        }
-      }
-    }
-    return count;
-  }
-  // ### `_getGraphs` returns an array with the given graph,
-  // or all graphs if the argument is null or undefined.
-  _getGraphs(graph) {
-    if (!isString(graph)) {
-      return this._graphs;
-    }
-    return {
-      [graph]: this._graphs[graph]
-    };
-  }
-  _match(subject, predicate, object, graph) {
-    subject = subject && termToId(subject);
-    predicate = predicate && termToId(predicate);
-    object = object && termToId(object);
-    graph = graph && termToId(graph);
-    const quads = [];
-    const graphs = this._getGraphs(graph);
-    const ids = this._ids;
-    let content, subjectId, predicateId, objectId;
-    if (isString(subject) && !(subjectId = ids[subject]) || isString(predicate) && !(predicateId = ids[predicate]) || isString(object) && !(objectId = ids[object])) {
-      return quads;
-    }
-    for (const graphId in graphs) {
-      content = graphs[graphId];
-      if (content) {
-        if (subjectId) {
-          if (objectId) {
-            this._findInIndex(content.objects, objectId, subjectId, predicateId, "object", "subject", "predicate", graphId, null, quads);
-          } else {
-            this._findInIndex(content.subjects, subjectId, predicateId, null, "subject", "predicate", "object", graphId, null, quads);
-          }
-        } else if (predicateId) {
-          this._findInIndex(content.predicates, predicateId, objectId, null, "predicate", "object", "subject", graphId, null, quads);
-        } else if (objectId) {
-          this._findInIndex(content.objects, objectId, null, null, "object", "subject", "predicate", graphId, null, quads);
-        } else {
-          this._findInIndex(content.subjects, null, null, null, "subject", "predicate", "object", graphId, null, quads);
-        }
-      }
-    }
-    return quads;
-  }
-  _getQuad(subjectId, predicateId, objectId, graphId) {
-    return this._quads.get(this._toId(subjectId, predicateId, objectId, graphId));
-  }
-  _setQuad(subjectId, predicateId, objectId, graphId, quad) {
-    this._quads.set(this._toId(subjectId, predicateId, objectId, graphId), quad);
-  }
-  _deleteQuad(subjectId, predicateId, objectId, graphId) {
-    this._quads.delete(this._toId(subjectId, predicateId, objectId, graphId));
-  }
-  _createDataset(quads) {
-    return new this.constructor(quads);
-  }
-  _toId(subjectId, predicateId, objectId, graphId) {
-    return `${subjectId}:${predicateId}:${objectId}:${graphId}`;
-  }
-};
-var DatasetCore_default = DatasetCore;
-
-// node_modules/@rdfjs/dataset/Factory.js
-var Factory = class {
-  dataset(quads) {
-    return new DatasetCore_default(quads);
-  }
-};
-Factory.exports = ["dataset"];
-var Factory_default = Factory;
-
-// node_modules/@rdfjs/dataset/index.js
-var factory = new Factory_default();
-var dataset_default = factory;
-
-// node_modules/stream-chunks/chunks.js
-async function chunks(stream) {
-  const chunks2 = [];
-  for await (const chunk of stream) {
-    chunks2.push(chunk);
-  }
-  return chunks2;
-}
-var chunks_default = chunks;
-
-// node_modules/stream-chunks/concatChunks.js
-function concatChunks(chunks2) {
-  const length = chunks2.reduce((length2, chunk) => length2 + chunk.length, 0);
-  const merged = new Uint8Array(length);
-  let offset = 0;
-  for (const chunk of chunks2) {
-    merged.set(chunk, offset);
-    offset += chunk.length;
-  }
-  return merged;
-}
-var concatChunks_default = concatChunks;
-
-// node_modules/nodeify-fetch/lib/patchRequest.browser.js
-async function patch(options = {}) {
-  if (!options.body || !options.body.readable) {
-    return options;
-  }
-  const content = await chunks_default(options.body);
-  if (content.length > 0) {
-    if (content[0].BYTES_PER_ELEMENT === 1) {
-      options.body = concatChunks_default(content);
-    } else {
-      options.body = content.join("");
-    }
-  } else {
-    options.body = "";
-  }
-  return options;
-}
-var patchRequest_browser_default = patch;
-
-// node_modules/nodeify-fetch/lib/patchResponse.browser.js
-var import_readable_stream3 = __toESM(require_browser3(), 1);
-
-// node_modules/nodeify-fetch/lib/arrayBufferToReadable.js
-var import_once = __toESM(require_once(), 1);
-var import_readable_stream = __toESM(require_browser3(), 1);
-function arrayBufferToReadable(callback) {
-  return new import_readable_stream.Readable({
-    read: (0, import_once.default)(async function() {
-      try {
-        this.push(new Uint8Array(await callback()));
-        this.push(null);
-      } catch (err) {
-        this.destroy(err);
-      }
-    })
-  });
-}
-var arrayBufferToReadable_default = arrayBufferToReadable;
-
-// node_modules/nodeify-fetch/lib/Patchable.js
-var Patchable = class _Patchable {
-  constructor(obj, patch3) {
-    this.obj = obj;
-    for (const [key, value] of Object.entries(patch3)) {
-      this[key] = value;
-    }
-    for (const key of _Patchable.properties(obj)) {
-      if (key in this) {
-        continue;
-      }
-      if (typeof this.obj[key] === "function") {
-        this[key] = (...args) => this.obj[key].call(obj, args);
-      } else {
-        Object.defineProperty(this, key, {
-          get: () => {
-            return this.obj[key];
-          },
-          set: (value) => {
-            this.obj[key] = value;
-          },
-          enumerable: true,
-          configurable: true
-        });
-      }
-    }
-  }
-  static properties(obj) {
-    return Object.getOwnPropertyNames(Object.getPrototypeOf(obj));
-  }
-};
-var Patchable_default = Patchable;
-
-// node_modules/nodeify-fetch/lib/whatwgToReadable.js
-var import_readable_stream2 = __toESM(require_browser3(), 1);
-function whatwgToReadable(whatwg) {
-  return new import_readable_stream2.Readable({
-    read: async function() {
-      try {
-        let chunk, full;
-        do {
-          chunk = await whatwg.read();
-          if (chunk.done) {
-            this.push(null);
-          } else {
-            full = !this.push(chunk.value);
-          }
-        } while (!chunk.done && !full);
-      } catch (err) {
-        this.destroy(err);
-      }
-    }
-  });
-}
-var whatwgToReadable_default = whatwgToReadable;
-
-// node_modules/nodeify-fetch/lib/patchResponse.browser.js
-function patch2(res) {
-  if (res.bodyUsed) {
-    const body = new import_readable_stream3.Readable({
-      read: () => body.destroy(new Error("body already in use"))
-    });
-    res.body = body;
-    return res;
-  }
-  if (res.body && res.body.readable) {
-    return res;
-  }
-  if (res.body && typeof res.body.getReader === "function") {
-    return new Patchable_default(res, {
-      // ...and replace the body with a readable stream
-      body: whatwgToReadable_default(res.body.getReader())
-    });
-  }
-  res.body = arrayBufferToReadable_default(() => res.arrayBuffer());
-  return res;
-}
-var patchResponse_browser_default = patch2;
-
-// node_modules/nodeify-fetch/browser.js
-var Headers2 = window.Headers;
-function nodeifyFetch(url, options) {
-  return patchRequest_browser_default(options).then((options2) => {
-    return fetch(url, options2).then((res) => {
-      return patchResponse_browser_default(res);
-    });
-  });
-}
-
-// node_modules/@rdfjs/fetch-lite/node_modules/is-stream/index.js
-function isStream(stream) {
-  return stream !== null && typeof stream === "object" && typeof stream.pipe === "function";
-}
-function isReadableStream(stream) {
-  return isStream(stream) && stream.readable !== false && typeof stream._read === "function" && typeof stream._readableState === "object";
-}
-
-// node_modules/@rdfjs/fetch-lite/lib/patchRequest.js
-var import_readable_stream4 = __toESM(require_browser3(), 1);
-function patchRequest(options, formats2) {
-  options.headers = new Headers2(options.headers);
-  if (!options.headers.has("accept")) {
-    options.headers.set("accept", [...formats2.parsers.keys()].join(", "));
-  }
-  if (!options.body) {
-    return options;
-  }
-  if (typeof options.body === "string") {
-    return options;
-  }
-  let contentType = options.headers.get("content-type");
-  if (contentType && !formats2.serializers.has(contentType)) {
-    throw new Error(`no serializer found for media type: ${options.headers.get("content-type")}`);
-  }
-  if (!contentType) {
-    contentType = formats2.serializers.keys().next().value;
-    options.headers.set("content-type", contentType);
-  }
-  if (!isReadableStream(options.body) && options.body[Symbol.iterator]) {
-    options.body = import_readable_stream4.Readable.from(options.body);
-  }
-  options.body = formats2.serializers.import(contentType, options.body);
-  return options;
-}
-var patchRequest_default = patchRequest;
-
-// node_modules/@rdfjs/fetch-lite/lib/fromStream.js
-async function fromStream(dataset, stream) {
-  for await (const quad of stream) {
-    dataset.add(quad);
-  }
-  return dataset;
-}
-var fromStream_default = fromStream;
-
-// node_modules/@rdfjs/fetch-lite/lib/attachDataset.js
-function attachDataset(res, factory3) {
-  res.dataset = async () => {
-    const stream = await res.quadStream();
-    return fromStream_default(factory3.dataset(), stream);
-  };
-}
-var attachDataset_default = attachDataset;
-
-// node_modules/@rdfjs/fetch-lite/lib/jsonldContextLinkUrl.js
-var linkRegExp = /<(.*)>/;
-function jsonldContextLinkUrl(res, contentType) {
-  if (contentType !== "application/json") {
-    return null;
-  }
-  if (!res.headers.has("link")) {
-    return null;
-  }
-  const links = res.headers.get("link").split(",").map((link) => link.trim());
-  const contextLink = links.find((link) => link.includes('rel="http://www.w3.org/ns/json-ld#context"'));
-  if (!contextLink) {
-    return null;
-  }
-  const contextUrl = (linkRegExp.exec(contextLink) || []).slice(-1)[0];
-  if (!contextUrl) {
-    return null;
-  }
-  return new URL(contextUrl, res.url).toString();
-}
-var jsonldContextLinkUrl_default = jsonldContextLinkUrl;
-
-// node_modules/@rdfjs/fetch-lite/lib/attachQuadStream.js
-function attachQuadStream(res, fetch2, parsers2) {
-  res.quadStream = async () => {
-    if (!res.headers.get("content-type")) {
-      throw new Error("Content-Type header missing: couldn't determine parser");
-    }
-    let contentType = res.headers.get("content-type").split(";")[0];
-    const contextLinkUrl = jsonldContextLinkUrl_default(res, contentType);
-    if (contextLinkUrl) {
-      contentType = "application/ld+json";
-    }
-    if (!parsers2.has(contentType)) {
-      return Promise.reject(new Error(`unknown content type: ${contentType}`));
-    }
-    let jsonldContext;
-    if (contextLinkUrl) {
-      jsonldContext = await fetch2(contextLinkUrl).then((res2) => res2.json());
-    }
-    return parsers2.import(contentType, res.body, {
-      baseIRI: res.url,
-      context: jsonldContext
-    });
-  };
-}
-var attachQuadStream_default = attachQuadStream;
-
-// node_modules/@rdfjs/fetch-lite/lib/patchResponse.js
-function patchResponse(res, factory3, fetch2, parsers2) {
-  const contentHeader = [...res.headers.keys()].some((header) => header.startsWith("content-"));
-  const chunkedEncoding = res.headers.get("transfer-encoding") === "chunked";
-  const hasBody = contentHeader || chunkedEncoding;
-  if (hasBody) {
-    attachQuadStream_default(res, fetch2, parsers2);
-    if (factory3) {
-      attachDataset_default(res, factory3);
-    }
-  }
-  return res;
-}
-var patchResponse_default = patchResponse;
-
-// node_modules/@rdfjs/fetch-lite/index.js
-async function rdfFetch(url, options = {}) {
-  const factory3 = options.factory;
-  const fetch2 = options.fetch || nodeifyFetch;
-  const formats2 = options.formats;
-  if (!formats2) {
-    throw new Error("no formats given");
-  }
-  options = patchRequest_default(options, formats2);
-  const res = await fetch2(url, options);
-  return patchResponse_default(res, factory3, fetch2, formats2.parsers);
-}
-
 // node_modules/@rdfjs/sink/index.js
 var Sink = class {
   constructor(Impl, options) {
@@ -69867,31 +77724,31 @@ DefaultGraph.prototype.value = "";
 var DefaultGraph_default = DefaultGraph;
 
 // node_modules/@rdfjs/data-model/lib/fromTerm.js
-function fromTerm(factory3, original) {
+function fromTerm(factory2, original) {
   if (!original) {
     return null;
   }
   if (original.termType === "BlankNode") {
-    return factory3.blankNode(original.value);
+    return factory2.blankNode(original.value);
   }
   if (original.termType === "DefaultGraph") {
-    return factory3.defaultGraph();
+    return factory2.defaultGraph();
   }
   if (original.termType === "Literal") {
-    return factory3.literal(original.value, original.language || factory3.namedNode(original.datatype.value));
+    return factory2.literal(original.value, original.language || factory2.namedNode(original.datatype.value));
   }
   if (original.termType === "NamedNode") {
-    return factory3.namedNode(original.value);
+    return factory2.namedNode(original.value);
   }
   if (original.termType === "Quad") {
-    const subject = factory3.fromTerm(original.subject);
-    const predicate = factory3.fromTerm(original.predicate);
-    const object = factory3.fromTerm(original.object);
-    const graph = factory3.fromTerm(original.graph);
-    return factory3.quad(subject, predicate, object, graph);
+    const subject = factory2.fromTerm(original.subject);
+    const predicate = factory2.fromTerm(original.predicate);
+    const object = factory2.fromTerm(original.object);
+    const graph = factory2.fromTerm(original.graph);
+    return factory2.quad(subject, predicate, object, graph);
   }
   if (original.termType === "Variable") {
-    return factory3.variable(original.value);
+    return factory2.variable(original.value);
   }
   throw new Error(`unknown termType ${original.termType}`);
 }
@@ -70004,11 +77861,11 @@ DataFactory.exports = [
   "quad",
   "variable"
 ];
-var Factory_default2 = DataFactory;
+var Factory_default = DataFactory;
 
 // node_modules/@rdfjs/data-model/index.js
-var factory2 = new Factory_default2();
-var data_model_default = factory2;
+var factory = new Factory_default();
+var data_model_default = factory;
 
 // node_modules/duplex-to/readable.js
 var blackList = /* @__PURE__ */ new Set(["_write", "_writableState", "writable"]);
@@ -70042,9 +77899,9 @@ var readable_default = readable;
 
 // node_modules/@rdfjs/parser-jsonld/lib/ParserStream.js
 var import_jsonld_streaming_parser = __toESM(require_jsonld_streaming_parser(), 1);
-var import_readable_stream5 = __toESM(require_browser3(), 1);
+var import_readable_stream = __toESM(require_browser3(), 1);
 var relativeIriProtocol = "null:";
-function termCleanup(factory3) {
+function termCleanup(factory2) {
   return (term) => {
     if (term.termType !== "NamedNode") {
       return null;
@@ -70052,18 +77909,18 @@ function termCleanup(factory3) {
     if (!term.value.startsWith(relativeIriProtocol)) {
       return null;
     }
-    return factory3.namedNode(term.value.slice(relativeIriProtocol.length));
+    return factory2.namedNode(term.value.slice(relativeIriProtocol.length));
   };
 }
-function quadCleanup(factory3) {
-  const cleanup = termCleanup(factory3);
+function quadCleanup(factory2) {
+  const cleanup = termCleanup(factory2);
   return (quad) => {
     const subject = cleanup(quad.subject);
     const predicate = cleanup(quad.predicate);
     const object = cleanup(quad.object);
     const graph = cleanup(quad.graph);
     if (subject || predicate || object || graph) {
-      return factory3.quad(
+      return factory2.quad(
         subject || quad.subject,
         predicate || quad.predicate,
         object || quad.object,
@@ -70074,17 +77931,17 @@ function quadCleanup(factory3) {
   };
 }
 var ParserStream = class {
-  constructor(input, { baseIRI = relativeIriProtocol, context = null, documentLoader, factory: factory3 = data_model_default } = {}) {
+  constructor(input, { baseIRI = relativeIriProtocol, context = null, documentLoader, factory: factory2 = data_model_default } = {}) {
     const parser = new import_jsonld_streaming_parser.JsonLdParser({
       baseIRI,
       context,
-      dataFactory: factory3,
+      dataFactory: factory2,
       documentLoader,
       streamingProfile: false
     });
     input.pipe(parser);
-    const cleanup = quadCleanup(factory3);
-    const transform = new import_readable_stream5.Transform({
+    const cleanup = quadCleanup(factory2);
+    const transform = new import_readable_stream.Transform({
       objectMode: true,
       transform: (quad, encoding, callback) => {
         callback(null, cleanup(quad));
@@ -70092,7 +77949,7 @@ var ParserStream = class {
     });
     parser.on("context", (context2) => {
       Object.entries(context2).forEach(([prefix, iri]) => {
-        transform.emit("prefix", prefix, factory3.namedNode(iri));
+        transform.emit("prefix", prefix, factory2.namedNode(iri));
       });
     });
     parser.on("error", (err) => transform.destroy(err));
@@ -70113,13 +77970,13 @@ var parser_jsonld_default = Parser;
 // node_modules/@rdfjs/parser-n3/lib/ParserStream.js
 var import_n3 = __toESM(require_lib43(), 1);
 var ParserStream2 = class {
-  constructor(input, { baseIRI = "", factory: factory3 = data_model_default, ...rest } = {}) {
+  constructor(input, { baseIRI = "", factory: factory2 = data_model_default, ...rest } = {}) {
     const boundFactory = {
-      blankNode: factory3.blankNode.bind(factory3),
-      defaultGraph: factory3.defaultGraph.bind(factory3),
-      literal: factory3.literal.bind(factory3),
-      namedNode: factory3.namedNode.bind(factory3),
-      quad: factory3.quad.bind(factory3)
+      blankNode: factory2.blankNode.bind(factory2),
+      defaultGraph: factory2.defaultGraph.bind(factory2),
+      literal: factory2.literal.bind(factory2),
+      namedNode: factory2.namedNode.bind(factory2),
+      quad: factory2.quad.bind(factory2)
     };
     const parser = new import_n3.StreamParser({ baseIRI, factory: boundFactory, ...rest });
     input.pipe(parser);
@@ -70138,10 +77995,10 @@ var parser_n3_default = Parser2;
 
 // node_modules/@rdfjs/serializer-ntriples/lib/SerializerStream.js
 var import_to_ntriples = __toESM(require_to_ntriples(), 1);
-var import_readable_stream6 = __toESM(require_browser3(), 1);
+var import_readable_stream2 = __toESM(require_browser3(), 1);
 var SerializerStream = class {
   constructor(input) {
-    const stream = new import_readable_stream6.Transform({
+    const stream = new import_readable_stream2.Transform({
       objectMode: true,
       transform: (quad, encoding, callback) => {
         callback(null, `${(0, import_to_ntriples.default)(quad)}
@@ -70175,7 +78032,7 @@ var SinkMap = class extends Map {
 var sink_map_default = SinkMap;
 
 // node_modules/@rdfjs/serializer-jsonld/lib/SerializerStream.js
-var import_readable_stream7 = __toESM(require_browser3(), 1);
+var import_readable_stream3 = __toESM(require_browser3(), 1);
 
 // node_modules/@rdfjs/serializer-jsonld/lib/ObjectEncoder.js
 var ObjectEncoder = class {
@@ -70183,8 +78040,8 @@ var ObjectEncoder = class {
     this.stream = stream;
     this.array = [];
   }
-  push(jsonld) {
-    this.array.push(jsonld);
+  push(jsonld2) {
+    this.array.push(jsonld2);
   }
   end() {
     this.stream.push(this.array);
@@ -70200,13 +78057,13 @@ var StringEncoder = class {
     this.first = true;
     this.stream.push("[");
   }
-  push(jsonld) {
+  push(jsonld2) {
     if (this.first) {
       this.first = false;
     } else {
       this.stream.push(",");
     }
-    this.stream.push(JSON.stringify(jsonld));
+    this.stream.push(JSON.stringify(jsonld2));
   }
   end() {
     this.stream.push("]");
@@ -70216,7 +78073,7 @@ var StringEncoder = class {
 var StringEncoder_default = StringEncoder;
 
 // node_modules/@rdfjs/serializer-jsonld/lib/SerializerStream.js
-var SerializerStream2 = class _SerializerStream extends import_readable_stream7.Readable {
+var SerializerStream2 = class _SerializerStream extends import_readable_stream3.Readable {
   constructor(input, { encoding = "object" } = {}) {
     super({
       objectMode: true,
@@ -70233,12 +78090,12 @@ var SerializerStream2 = class _SerializerStream extends import_readable_stream7.
       throw new Error(`unknown encoding: ${encoding}`);
     }
     input.on("data", (quad) => {
-      const jsonld = {};
-      let triple = jsonld;
+      const jsonld2 = {};
+      let triple = jsonld2;
       if (quad.graph.termType !== "DefaultGraph") {
-        jsonld["@id"] = quad.graph.value;
-        jsonld["@graph"] = {};
-        triple = jsonld["@graph"];
+        jsonld2["@id"] = quad.graph.value;
+        jsonld2["@graph"] = {};
+        triple = jsonld2["@graph"];
       }
       triple["@id"] = _SerializerStream.subjectValue(quad.subject);
       if (quad.predicate.value === "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") {
@@ -70246,7 +78103,7 @@ var SerializerStream2 = class _SerializerStream extends import_readable_stream7.
       } else {
         triple[quad.predicate.value] = _SerializerStream.objectValue(quad.object);
       }
-      this.encoder.push(jsonld);
+      this.encoder.push(jsonld2);
     });
     input.on("end", () => this.encoder.end());
     input.on("error", (err) => this.emit("error", err));
@@ -70291,8 +78148,8 @@ var CustomJsonLdSerializer_default = CustomJsonLdSerializer;
 // node_modules/@rdfjs/formats-common/lib/CustomRdfXmlParser.js
 var import_rdfxml_streaming_parser = __toESM(require_rdfxml_streaming_parser(), 1);
 var CustomRdfXmlParser = class extends import_rdfxml_streaming_parser.RdfXmlParser {
-  constructor({ factory: factory3, ...args } = {}) {
-    super({ ...args, dataFactory: factory3 });
+  constructor({ factory: factory2, ...args } = {}) {
+    super({ ...args, dataFactory: factory2 });
   }
 };
 var CustomRdfXmlParser_default = CustomRdfXmlParser;
@@ -70318,35 +78175,144 @@ formats.serializers.set("text/n3", new serializer_ntriples_default());
 formats.serializers.set("text/turtle", new serializer_ntriples_default());
 var formats_common_default = formats;
 
-// node_modules/@rdfjs/fetch/index.js
-function rdfFetch2(url, { factory: factory3 = dataset_default, formats: formats2 = formats_common_default, ...options } = {}) {
-  return rdfFetch(url, { factory: factory3, formats: formats2, ...options });
+// src/library/ldsparql.js
+var import_jsonld = __toESM(require_jsonld());
+var import_n32 = __toESM(require_lib43());
+
+// node_modules/nodeify-fetch/lib/patchResponse.browser.js
+var import_readable_stream6 = __toESM(require_browser3(), 1);
+
+// node_modules/nodeify-fetch/lib/arrayBufferToReadable.js
+var import_once = __toESM(require_once(), 1);
+var import_readable_stream4 = __toESM(require_browser3(), 1);
+function arrayBufferToReadable(callback) {
+  return new import_readable_stream4.Readable({
+    read: (0, import_once.default)(async function() {
+      try {
+        this.push(new Uint8Array(await callback()));
+        this.push(null);
+      } catch (err) {
+        this.destroy(err);
+      }
+    })
+  });
 }
+var arrayBufferToReadable_default = arrayBufferToReadable;
+
+// node_modules/nodeify-fetch/lib/Patchable.js
+var Patchable = class _Patchable {
+  constructor(obj, patch2) {
+    this.obj = obj;
+    for (const [key, value] of Object.entries(patch2)) {
+      this[key] = value;
+    }
+    for (const key of _Patchable.properties(obj)) {
+      if (key in this) {
+        continue;
+      }
+      if (typeof this.obj[key] === "function") {
+        this[key] = (...args) => this.obj[key].call(obj, args);
+      } else {
+        Object.defineProperty(this, key, {
+          get: () => {
+            return this.obj[key];
+          },
+          set: (value) => {
+            this.obj[key] = value;
+          },
+          enumerable: true,
+          configurable: true
+        });
+      }
+    }
+  }
+  static properties(obj) {
+    return Object.getOwnPropertyNames(Object.getPrototypeOf(obj));
+  }
+};
+var Patchable_default = Patchable;
+
+// node_modules/nodeify-fetch/lib/whatwgToReadable.js
+var import_readable_stream5 = __toESM(require_browser3(), 1);
+function whatwgToReadable(whatwg) {
+  return new import_readable_stream5.Readable({
+    read: async function() {
+      try {
+        let chunk, full;
+        do {
+          chunk = await whatwg.read();
+          if (chunk.done) {
+            this.push(null);
+          } else {
+            full = !this.push(chunk.value);
+          }
+        } while (!chunk.done && !full);
+      } catch (err) {
+        this.destroy(err);
+      }
+    }
+  });
+}
+var whatwgToReadable_default = whatwgToReadable;
+
+// node_modules/nodeify-fetch/lib/patchResponse.browser.js
+function patch(res) {
+  if (res.bodyUsed) {
+    const body = new import_readable_stream6.Readable({
+      read: () => body.destroy(new Error("body already in use"))
+    });
+    res.body = body;
+    return res;
+  }
+  if (res.body && res.body.readable) {
+    return res;
+  }
+  if (res.body && typeof res.body.getReader === "function") {
+    return new Patchable_default(res, {
+      // ...and replace the body with a readable stream
+      body: whatwgToReadable_default(res.body.getReader())
+    });
+  }
+  res.body = arrayBufferToReadable_default(() => res.arrayBuffer());
+  return res;
+}
+var patchResponse_browser_default = patch;
 
 // src/library/ldsparql.js
-var import_n32 = __toESM(require_lib43());
 var import_sparqljs = __toESM(require_sparql());
-formats_common_default.parsers.set("application/json", formats_common_default.parsers.get("application/ld+json"));
+async function addToStore(url, store) {
+  const graph = import_n32.DataFactory.namedNode(url);
+  const parsers2 = formats_common_default.parsers;
+  const res = await fetch(url, {
+    headers: new Headers({
+      accept: [...parsers2.keys()].join(", ")
+    })
+  });
+  const type = res.headers.get("content-type").split(";")[0];
+  if (type === "application/json" || type === "application/ld+json") {
+    const json = await res.json();
+    const quads = await import_jsonld.default.toRDF(json);
+    for (const quad of quads) {
+      quad.graph = graph;
+      store.add(quad);
+    }
+  } else if (parsers2.has(type)) {
+    const body = patchResponse_browser_default(res).body;
+    const stream = parsers2.import(type, body, { baseIRI: url });
+    for await (const quad of stream) {
+      quad.graph = graph;
+      store.add(quad);
+    }
+  } else {
+    return Promise.reject(new Error(`unknown content type: ${type}`));
+  }
+}
 async function getStore(query) {
   const parser = new import_sparqljs.Parser({ skipValidation: true, factory: import_n32.DataFactory });
   const parsed = parser.parse(query);
-  const store = new import_n32.Store();
   const graphs = [...parsed.from?.default ?? [], ...parsed.from?.named ?? []];
-  await Promise.all(
-    graphs.map(async (graph) => {
-      const res = await rdfFetch2(graph.value, {
-        headers: new Headers({
-          accept: "application/ld+json"
-        }),
-        formats: formats_common_default
-      });
-      const stream = await res.quadStream();
-      for await (const quad of stream) {
-        quad.graph = graph;
-        store.add(quad);
-      }
-    })
-  );
+  const store = new import_n32.Store();
+  await Promise.all(graphs.map((graph) => addToStore(graph.value, store)));
   return store;
 }
 async function ldsparql(query, mimetype) {
@@ -70425,5 +78391,92 @@ xmlchars/xmlns/1.0/ed3.js:
    * @author Louis-Dominique Dubeau
    * @license MIT
    * @copyright Louis-Dominique Dubeau
+   *)
+
+rdf-canonize/lib/MessageDigest-browser.js:
+  (*!
+   * Copyright (c) 2016-2022 Digital Bazaar, Inc. All rights reserved.
+   *)
+
+rdf-canonize/lib/Permuter.js:
+  (*!
+   * Copyright (c) 2016-2022 Digital Bazaar, Inc. All rights reserved.
+   *)
+
+rdf-canonize/lib/NQuads.js:
+  (*!
+   * Copyright (c) 2016-2022 Digital Bazaar, Inc. All rights reserved.
+   *)
+
+rdf-canonize/lib/URDNA2015.js:
+  (*!
+   * Copyright (c) 2016-2022 Digital Bazaar, Inc. All rights reserved.
+   *)
+
+rdf-canonize/lib/URGNA2012.js:
+  (*!
+   * Copyright (c) 2016-2022 Digital Bazaar, Inc. All rights reserved.
+   *)
+
+rdf-canonize/lib/URDNA2015Sync.js:
+  (*!
+   * Copyright (c) 2016-2022 Digital Bazaar, Inc. All rights reserved.
+   *)
+
+rdf-canonize/lib/URGNA2012Sync.js:
+  (*!
+   * Copyright (c) 2016-2021 Digital Bazaar, Inc. All rights reserved.
+   *)
+
+jsonld/lib/context.js:
+  (* disallow aliasing @context and @preserve *)
+
+jsonld/lib/frame.js:
+  (* remove @preserve from results *)
+  (**
+   * Removes the @preserve keywords from expanded result of framing.
+   *
+   * @param input the framed, framed output.
+   * @param options the framing options used.
+   *
+   * @return the resulting output.
+   *)
+  (* remove @preserve *)
+
+jsonld/lib/jsonld.js:
+  (**
+   * A JavaScript implementation of the JSON-LD API.
+   *
+   * @author Dave Longley
+   *
+   * @license BSD 3-Clause License
+   * Copyright (c) 2011-2022 Digital Bazaar, Inc.
+   * All rights reserved.
+   *
+   * Redistribution and use in source and binary forms, with or without
+   * modification, are permitted provided that the following conditions are met:
+   *
+   * Redistributions of source code must retain the above copyright notice,
+   * this list of conditions and the following disclaimer.
+   *
+   * Redistributions in binary form must reproduce the above copyright
+   * notice, this list of conditions and the following disclaimer in the
+   * documentation and/or other materials provided with the distribution.
+   *
+   * Neither the name of the Digital Bazaar, Inc. nor the names of its
+   * contributors may be used to endorse or promote products derived from
+   * this software without specific prior written permission.
+   *
+   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+   * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+   * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+   * PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+   * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+   * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+   * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+   * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+   * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+   * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+   * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    *)
 */

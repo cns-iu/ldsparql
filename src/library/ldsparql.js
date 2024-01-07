@@ -1,34 +1,45 @@
 import { QueryEngine } from '@comunica/query-sparql-rdfjs';
-import rdfFetch from '@rdfjs/fetch';
-import defaultFormats from '@rdfjs/formats-common';
+import formats from '@rdfjs/formats-common';
+import jsonld from 'jsonld';
 import { DataFactory, Store } from 'n3';
+import patchResponse from 'nodeify-fetch/lib/patchResponse.browser.js';
 import { Parser } from 'sparqljs';
 
-defaultFormats.parsers.set('application/json', defaultFormats.parsers.get('application/ld+json'));
+async function addToStore(url, store) {
+  const graph = DataFactory.namedNode(url);
+  const parsers = formats.parsers;
+  const res = await fetch(url, {
+    headers: new Headers({
+      accept: [...parsers.keys()].join(', '),
+    }),
+  });
+
+  const type = res.headers.get('content-type').split(';')[0];
+  if (type === 'application/json' || type === 'application/ld+json') {
+    const json = await res.json();
+    const quads = await jsonld.toRDF(json);
+    for (const quad of quads) {
+      quad.graph = graph;
+      store.add(quad);
+    }
+  } else if (parsers.has(type)) {
+    const body = patchResponse(res).body;
+    const stream = parsers.import(type, body, { baseIRI: url });
+    for await (const quad of stream) {
+      quad.graph = graph;
+      store.add(quad);
+    }
+  } else {
+    return Promise.reject(new Error(`unknown content type: ${type}`));
+  }
+}
 
 async function getStore(query) {
   const parser = new Parser({ skipValidation: true, factory: DataFactory });
   const parsed = parser.parse(query);
-  const store = new Store();
-
   const graphs = [...(parsed.from?.default ?? []), ...(parsed.from?.named ?? [])];
-  await Promise.all(
-    graphs.map(async (graph) => {
-      const res = await rdfFetch(graph.value, {
-        headers: new Headers({
-          accept: 'application/ld+json',
-        }),
-        formats: defaultFormats,
-      });
-
-      const stream = await res.quadStream();
-      for await (const quad of stream) {
-        quad.graph = graph;
-        store.add(quad);
-      }
-    })
-  );
-
+  const store = new Store();
+  await Promise.all(graphs.map((graph) => addToStore(graph.value, store)));
   return store;
 }
 
