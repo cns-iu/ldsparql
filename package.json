@@ -3,8 +3,13 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "build": "esbuild src/service-worker/sw.js --bundle --banner:js='globalThis.global = globalThis; globalThis.window = globalThis;'    --format=esm --outfile=docs/sw.js",
+    "start": "npm-run-all build start:server",
+    "build": "npm-run-all build:code build:deploy",
+    "build:deploy": "cp dist/sw.js docs/sw.js",
+    "build:code": "node ./scripts/build.js",
+    "start:server": "nodemon ./dist/server.js -w dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -13,14 +18,20 @@
     "@comunica/query-sparql-rdfjs": "^2.10.1",
     "@jcubic/wayne": "^0.11.2",
     "@rdfjs/formats-common": "^3.1.0",
+    "cors": "^2.8.5",
     "express": "^4.18.2",
+    "express-queue": "^0.0.13",
     "helmet": "^7.1.0",
+    "http-proxy-middleware": "^2.0.6",
     "jsonld": "^8.3.2",
     "n3": "^1.17.2",
+    "node-fetch": "^3.3.2",
     "nodeify-fetch": "^3.1.0",
     "sparqljs": "^3.7.1"
   },
   "devDependencies": {
-    "esbuild": "^0.19.11"
+    "esbuild": "^0.19.11",
+    "nodemon": "^3.0.1",
+    "npm-run-all": "^4.1.5"
   }
 }
