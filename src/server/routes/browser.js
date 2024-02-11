@@ -4,6 +4,7 @@ const browserRoute = (_req, res, _next) => {
   res.send(`<!DOCTYPE html>
 <html>
   <head>
+    <title>LDSPARQL: Query Linked Data with LDSPARQL</title>
     <link href="https://unpkg.com/@triply/yasgui/build/yasgui.min.css" rel="stylesheet" type="text/css" />
     <script src="https://unpkg.com/@triply/yasgui/build/yasgui.min.js"></script>
   </head>
