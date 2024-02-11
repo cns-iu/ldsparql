@@ -34,15 +34,18 @@
     "@comunica/query-sparql-rdfjs": "^2.10.1",
     "@jcubic/wayne": "^0.11.2",
     "@rdfjs/formats-common": "^3.1.0",
+    "@rdfjs/to-ntriples": "^3.0.1",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "express-queue": "^0.0.13",
     "helmet": "^7.1.0",
     "http-proxy-middleware": "^2.0.6",
+    "is-stream": "^3.0.0",
     "jsonld": "^8.3.2",
     "n3": "^1.17.2",
     "node-fetch": "^3.3.2",
     "nodeify-fetch": "^3.1.0",
+    "papaparse": "^5.4.1",
     "sparqljs": "^3.7.1"
   },
   "devDependencies": {
