@@ -1,8 +1,21 @@
 {
   "name": "ldsparql",
-  "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
+  "version": "0.1.0",
+  "description": "Query Linked Data with SPARQL",
+  "keywords": [
+    "sparql",
+    "rdf",
+    "lod",
+    "linked-open-data"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/cns-iu/ldsparql#readme",
+  "bugs": "https://github.com/cns-iu/ldsparql/issues",
+  "repository": "github:cns-iu/ldsparql",
+  "main": "dist/index.js",
+  "bin": {
+    "ldsparql": "./dist/server.js"
+  },
   "type": "module",
   "scripts": {
     "start": "npm-run-all build start:server",
@@ -12,8 +25,11 @@
     "start:server": "nodemon ./dist/server.js -w dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "MIT",
+  "author": {
+    "name": "Bruce W. Herr II",
+    "email": "bh2@bh2.net",
+    "url": "https://github.com/bherr2"
+  },
   "dependencies": {
     "@comunica/query-sparql-rdfjs": "^2.10.1",
     "@jcubic/wayne": "^0.11.2",
