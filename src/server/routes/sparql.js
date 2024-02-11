@@ -28,6 +28,6 @@ const proxyOptions = {
   timeout: 90000,
 };
 
-const sparqlProxy = createProxyMiddleware('/v1/sparql', proxyOptions);
+const sparqlProxy = createProxyMiddleware('/sparql', proxyOptions);
 
 export default sparqlProxy;
