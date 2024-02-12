@@ -1,4 +1,4 @@
-import { toNT } from '@rdfjs/to-ntriples';
+import toNT from '@rdfjs/to-ntriples';
 import { getQuads } from '../utils/fetch-linked-data.js';
 import { parseNamedGraphs } from '../utils/named-graphs.js';
 import { namedGraphs } from './named-graphs.js';

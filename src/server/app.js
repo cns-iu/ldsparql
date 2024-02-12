@@ -6,7 +6,7 @@ import qs from 'qs';
 import { longCache, noCache } from './cache-middleware.js';
 import { activeQueryLimit } from './environment.js';
 import browserRoute from './routes/browser.js';
-import sparqlProxy from './routes/sparql.js';
+import sparql from './routes/sparql.js';
 
 const app = express();
 
@@ -43,7 +43,7 @@ app.set('json spaces', 2);
 
 app.use('/', longCache, browserRoute);
 
-const procesingQueue = queue({ activeLimit: activeQueryLimit(), queuedLimit: -1 });
-app.use('/sparql', noCache, procesingQueue, sparqlProxy);
+const processingQueue = queue({ activeLimit: activeQueryLimit(), queuedLimit: -1 });
+app.use('/', noCache, processingQueue, sparql);
 
 export default app;
