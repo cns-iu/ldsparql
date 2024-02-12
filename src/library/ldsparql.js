@@ -10,7 +10,7 @@ async function addToStore(url, store) {
   const parsers = formats.parsers;
   const res = await fetch(url, {
     headers: new Headers({
-      accept: [...parsers.keys()].join(', '),
+      accept: [...parsers.keys()].sort().reverse().join(', '),
     }),
   });
 
