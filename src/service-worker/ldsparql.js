@@ -1,4 +1,4 @@
-import { ldsparql } from '../library/ldsparql.js';
+import { ldsparql } from '../library/ldsparql.oxigraph.js';
 
 function routes(app) {
   return app.post('/api/ld/sparql', async function (req, res) {
