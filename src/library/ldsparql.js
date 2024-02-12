@@ -30,7 +30,17 @@ async function addToStore(url, store) {
       store.add(quad);
     }
   } else {
-    return Promise.reject(new Error(`unknown content type: ${type}`));
+    // Try to parse the response as a JSON-LD string
+    try {
+      const json = JSON.parse(await res.text());
+      const quads = await jsonld.toRDF(json);
+      for (const quad of quads) {
+        quad.graph = graph;
+        store.add(quad);
+      }
+    } catch (err) {
+      return Promise.reject(new Error(`unknown content type: ${type}`));
+    }
   }
 }
 
