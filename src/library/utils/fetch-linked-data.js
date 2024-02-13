@@ -18,7 +18,7 @@ export async function getQuads(url) {
     return quads;
   } else if (parsers.has(type)) {
     let body = res.body;
-    if (!isReadableStream(body))  {
+    if (!isReadableStream(body)) {
       body = patchResponse(res).body;
     }
     const stream = parsers.import(type, body, { baseIRI: url, factory: store.factory });
@@ -28,10 +28,7 @@ export async function getQuads(url) {
     try {
       const json = JSON.parse(await res.text());
       const quads = await jsonld.toRDF(json);
-      for (const quad of quads) {
-        quad.graph = graph;
-        store.add(quad);
-      }
+      return quads;
     } catch (err) {
       return Promise.reject(new Error(`unknown content type: ${type}`));
     }

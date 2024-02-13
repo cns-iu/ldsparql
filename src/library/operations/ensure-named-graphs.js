@@ -1,4 +1,6 @@
 import toNT from '@rdfjs/to-ntriples';
+import fetch from 'node-fetch';
+import { Readable } from 'stream';
 import { getQuads } from '../utils/fetch-linked-data.js';
 import { parseNamedGraphs } from '../utils/named-graphs.js';
 import { namedGraphs } from './named-graphs.js';
@@ -12,27 +14,31 @@ export async function ensureNamedGraphs(query, endpoint) {
   }
 }
 
-export async function addToEndpoint(graph, quads, endpoint) {
-  const stream = new ReadableStream({
-    async start(controller) {
-      controller.enqueue(`CLEAR GRAPH <${graph}>;`);
-      controller.enqueue(`INSERT DATA {\nGRAPH <${graph}> {`);
-      for (const quad of quads) {
-        const subject = toNT(quad.subject);
-        const predicate = toNT(quad.predicate);
-        const object = toNT(quad.object);
-        const line = `${subject} ${predicate} ${object} .`;
-        controller.enqueue(line);
-      }
-      controller.enqueue('}}');
-    },
-  });
+function toTripleString(quad) {
+  const subject = toNT(quad.subject);
+  const predicate = toNT(quad.predicate);
+  const object = toNT(quad.object);
+  return `${subject} ${predicate} ${object} .`;
+}
 
+function* sparqlUpdateIterator(graph, quads) {
+  yield `
+CLEAR GRAPH <${graph}>;
+INSERT DATA {
+GRAPH <${graph}> {
+`;
+  for (const quad of quads) {
+    yield toTripleString(quad) + '\n';
+  }
+  yield '}}\n';
+}
+
+export async function addToEndpoint(graph, quads, endpoint) {
   return fetch(endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/sparql-update',
     },
-    body: stream,
+    body: Readable.from(sparqlUpdateIterator(graph, quads)),
   });
 }
