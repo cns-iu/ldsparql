@@ -28,9 +28,9 @@ export async function getQuads(url) {
     }),
   });
 
-  let type = res.headers.get('content-type').split(';')[0];
-  const extensionType = EXTENSION_MAPPING[url.split('.').slice(-1)[0]];
-  const guessedType = parsers.has(type) ? type : parsers.has(extensionType) ? extensionType : undefined;
+  const type = res.headers.get('content-type').split(';')[0];
+  const extension = EXTENSION_MAPPING[url.split('.').slice(-1)[0]];
+  const guessedType = parsers.has(type) ? type : parsers.has(extension) ? extension : undefined;
   if (type === 'application/json' || guessedType === 'application/ld+json') {
     const json = await res.json();
     const quads = await jsonld.toRDF(json);
