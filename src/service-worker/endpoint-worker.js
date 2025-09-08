@@ -1,5 +1,4 @@
-import { N3Endpoint, OxigraphEndpoint, QuadstoreEndpoint } from '../library/endpoints/';
-import { RemoteEndpoint } from '../library/endpoints/remote';
+import { N3Endpoint, OxigraphEndpoint, QuadstoreEndpoint, RemoteEndpoint } from '../library/endpoints/';
 
 const params = new URL(self.location).searchParams;
 const endpointType = params.get('endpoint') ?? 'oxigraph';
