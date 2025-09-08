@@ -4,7 +4,7 @@ import { SparqlEndpoint } from '../shared/sparql-endpoint.js';
 import { fetchGraphData } from '../utils/fetch-linked-data.js';
 import { namedGraphsInQuery } from '../utils/sparql-parser.js';
 
-export class OxigraphDb extends SparqlEndpoint {
+export class OxigraphEndpoint extends SparqlEndpoint {
   async initialize() {
     await init({ module_or_path: wasm });
     this.store = new oxigraph.Store();

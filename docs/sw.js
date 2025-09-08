@@ -18579,8 +18579,8 @@ var e=eye[r];if(e!==void 0)return e.exports;var t=eye[r]={exports:{}};return oWe
 o_.g=function(){if(typeof globalThis=="object")return globalThis;try{return this||new Function("return this")()}catch{if(typeof window==
 "object")return window}}();var tye=o_("./src/index.js"),rye=tye.D,u_t=tye.H;var g_e=ti(Pt(),1);async function Uk(r,e){let t=performance.now();console.log("starting",r);let n=await e,a=((performance.now()-t)/1e3).toFixed(
 2);return console.log(r,`took ${a} s`),n}var nN=class{#s;constructor(){this.#s=this.initialize()}async initialize(){}async prepareQuery(e){}async doQuery(e,t){throw new Error(
-"Must implement doQuery()")}async query(e,t){return await this.#s,await Uk("prepare query",this.prepareQuery(e)),await Uk(
-"query",this.doQuery(e,t))}};var Vk=class{constructor(e,t){this.Impl=e,this.options=t}import(e,t){let n=new this.Impl(e,{...this.options,...t});return e.
+"Must implement doQuery()")}async query(e,t="application/sparql-results+json"){return await this.#s,await Uk("prepare qu\
+ery",this.prepareQuery(e)),await Uk("query",this.doQuery(e,t))}};var Vk=class{constructor(e,t){this.Impl=e,this.options=t}import(e,t){let n=new this.Impl(e,{...this.options,...t});return e.
 on("end",()=>{n.readable||n.emit("end")}),e.on("error",i=>{n.emit("error",i)}),n}},zf=Vk;var iN=class{constructor(e){this.value=e}equals(e){return!!e&&e.termType===this.termType&&e.value===this.value}};iN.prototype.
 termType="BlankNode";var nye=iN;var _w=class{equals(e){return!!e&&e.termType===this.termType}};_w.prototype.termType="DefaultGraph";_w.prototype.value="";
 var iye=_w;function uWe(r,e){if(!e)return null;if(e.termType==="BlankNode")return r.blankNode(e.value);if(e.termType==="DefaultGrap\
@@ -18648,9 +18648,9 @@ o==="application/ld+json"){let u=await i.json();return await TP.default.toRDF(u)
 i).body);let c=t.import(o,u,{baseIRI:r}),l=[];for await(let d of c)l.push(d);return l}else try{let u=JSON.parse(await i.
 text());return await TP.default.toRDF(u)}catch(u){return console.log(u),Promise.reject(new Error(`unknown content type: ${a}`))}}else
 try{let t=typeof r=="string"?JSON.parse(r):r;return await TP.default.toRDF(t)}catch{return Promise.reject(new Error(`unk\
-nown content type: ${type}`))}}var p_e=ti(gd(),1);function Ott(r){let e=[];function t(n){if(n&&typeof n=="object"){n.type==="graph"&&n.name&&e.push(n.name);
+nown content type for ${r}`))}}var p_e=ti(gd(),1);function Ott(r){let e=[];function t(n){if(n&&typeof n=="object"){n.type==="graph"&&n.name&&e.push(n.name);
 for(let i in n)n.hasOwnProperty(i)&&t(n[i])}}return t(r),e}function y_e(r,e=void 0){let n=new p_e.Parser({skipValidation:!0,
-factory:e}).parse(r);return[...n.from?.default??[],...n.from?.named??[],...Ott(n)]}var SP=class extends nN{async initialize(){let e=this.dataFactory=new g_e.DataFactory,t=this.backend=new b_e.BrowserLevel(
+factory:e}).parse(r);return[...n.from?.default??[],...n.from?.named??[],...Ott(n)].filter(a=>a.value.startsWith("http"))}var SP=class extends nN{async initialize(){let e=this.dataFactory=new g_e.DataFactory,t=this.backend=new b_e.BrowserLevel(
 "ldsparql");this.store=new gw({backend:t,dataFactory:e}),await this.store.open(),this.engine=new rye(this.store),this.resultFormatter=
 new m_e.QueryEngine}async prepareQuery(e){let t=y_e(e,this.dataFactory);for(let n of t)if((await this.store.get({graph:n},
 {limit:1})).items.length===0){console.log("fetching",n.value);let a=await h_e(n.value);console.log("inserting",a.length,

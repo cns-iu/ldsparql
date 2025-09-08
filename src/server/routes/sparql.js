@@ -1,7 +1,6 @@
 import { Router } from 'express';
-import { ldsparql } from '../../library/operations/ldsparql.js';
-import { sparqlEndpoint } from '../environment.js';
-import { isReadableStream } from 'is-stream';
+import { RemoteEndpoint } from '../../library/endpoints/remote.js';
+import { isWritable, sparqlEndpoint } from '../environment.js';
 
 function parseString(value) {
   return typeof value === 'string' ? value : undefined;
@@ -56,14 +55,9 @@ const sparql = async (req, res, _next) => {
     res.format(mediaTypes);
   }
 
-  const results = await ldsparql(queryBody, mediaType, sparqlEndpoint());
-
-  const reader = results.body.getReader();
-  let chunk = await reader.read();
-  while (!chunk.done) {
-    res.write(chunk.value);
-    chunk = await reader.read();
-  }
+  const endpoint = new RemoteEndpoint(sparqlEndpoint(), isWritable());
+  const results = await endpoint.query(queryBody, mediaType);
+  res.write(results);
   res.end();
 };
 

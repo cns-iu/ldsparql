@@ -25,6 +25,6 @@ export function namedGraphsInQuery(query, dataFactory = undefined) {
     ...(parsed.from?.default ?? []),
     ...(parsed.from?.named ?? []),
     ...getGraphNamesWithTypeFromObject(parsed),
-  ];
+  ].filter((g) => g.value.startsWith('http'));
   return graphs;
 }

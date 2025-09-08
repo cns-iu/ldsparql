@@ -1,7 +1,7 @@
-import { QuadstoreDb } from '../library/endpoints/quadstore.js';
+import { QuadstoreEndpoint } from '../library/endpoints/quadstore.js';
 
 function routes(app) {
-  const db = new QuadstoreDb();
+  const db = new QuadstoreEndpoint();
   return app.post('/api/ld/sparql', async function (req, res) {
     const query = (await req.formData()).get('query');
     /** Content Negotiation */

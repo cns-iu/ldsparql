@@ -102,7 +102,7 @@ export async function getQuads(url, preferredFormat = 'text/turtle') {
       const quads = await jsonld.toRDF(json);
       return quads;
     } catch (err) {
-      return Promise.reject(new Error(`unknown content type: ${type}`));
+      return Promise.reject(new Error(`unknown content type for ${url}`));
     }
   }
 }

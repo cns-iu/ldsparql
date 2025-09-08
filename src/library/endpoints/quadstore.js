@@ -7,7 +7,7 @@ import { SparqlEndpoint } from '../shared/sparql-endpoint';
 import { getQuads } from '../utils/fetch-linked-data';
 import { namedGraphsInQuery } from '../utils/sparql-parser';
 
-export class QuadstoreDb extends SparqlEndpoint {
+export class QuadstoreEndpoint extends SparqlEndpoint {
   async initialize() {
     const dataFactory = (this.dataFactory = new DataFactory());
     const backend = (this.backend = new BrowserLevel('ldsparql'));

@@ -10,6 +10,7 @@ const sharedBuildOptions = {
     '.rq': 'text',
     '.yaml': 'text',
     '.jsonld': 'json',
+    '.wasm': 'binary'
   },
   format: 'esm',
   lineLimit: 120,

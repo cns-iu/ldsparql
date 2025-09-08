@@ -36,7 +36,7 @@ export class SparqlEndpoint {
    * @returns {Promise<string>} The result of the query.
    * @throws {Error} If not implemented in subclass.
    */
-  async query(query, mimetype) {
+  async query(query, mimetype = 'application/sparql-results+json') {
     await this.#initializer;
     await timer('prepare query', this.prepareQuery(query));
     return await timer('query', this.doQuery(query, mimetype));

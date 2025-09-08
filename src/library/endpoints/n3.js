@@ -5,7 +5,7 @@ import { SparqlEndpoint } from '../shared/sparql-endpoint';
 import { getQuads } from '../utils/fetch-linked-data';
 import { namedGraphsInQuery } from '../utils/sparql-parser';
 
-export class N3Db extends SparqlEndpoint {
+export class N3Endpoint extends SparqlEndpoint {
   async initialize() {
     this.store = new Store();
     this.dataFactory = new DataFactory();
@@ -26,7 +26,7 @@ export class N3Db extends SparqlEndpoint {
     }
   }
 
-  async query(query, mimetype = 'application/sparql-results+json') {
+  async doQuery(query, mimetype = 'application/sparql-results+json') {
     const result = await this.engine.query(query, { sources: [this.store] });
     const { data } = await this.engine.resultToString(result, mimetype);
     let output = '';

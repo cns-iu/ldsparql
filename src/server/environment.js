@@ -2,6 +2,10 @@ export function sparqlEndpoint() {
   return process.env.SPARQL_ENDPOINT ?? 'https://lod.humanatlas.io/sparql';
 }
 
+export function isWritable() {
+  return process.env.SPARQL_WRITABLE === 'true';
+}
+
 export function port() {
   return process.env.PORT || 3000;
 }
