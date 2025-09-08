@@ -1,7 +1,7 @@
-import { QuadstoreEndpoint } from '../library/endpoints/quadstore.js';
+import { OxigraphEndpoint } from '../library/endpoints/';
 
 function routes(app) {
-  const db = new QuadstoreEndpoint();
+  const db = new OxigraphEndpoint();
   return app.post('/api/ld/sparql', async function (req, res) {
     const query = (await req.formData()).get('query');
     /** Content Negotiation */

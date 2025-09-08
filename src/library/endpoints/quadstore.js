@@ -32,7 +32,11 @@ export class QuadstoreEndpoint extends SparqlEndpoint {
         console.log('fetching', graph.value);
         const quads = await getQuads(graph.value);
         console.log('inserting', quads.length, 'triples');
-        this.store.multiPut(quads);
+        this.store.multiPut(quads.map((quad) => {
+          quad = this.dataFactory.fromQuad(quad);
+          quad.graph = graph;
+          return quad;
+        }));
         console.log('added', graph.value);
       }
     }

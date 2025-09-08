@@ -13,14 +13,18 @@ export class N3Endpoint extends SparqlEndpoint {
   }
 
   async prepareQuery(query) {
-    const graphs = namedGraphsInQuery(query);
+    const graphs = namedGraphsInQuery(query, this.dataFactory);
     for (const graph of graphs) {
       const count = this.store.countQuads(undefined, undefined, undefined, graph);
       if (count === 0) {
         console.log('fetching', graph.value);
         const quads = await getQuads(graph.value);
         console.log('inserting', quads.length, 'triples');
-        this.store.addQuads(quads);
+        this.store.addAll(quads.map((quad) => {
+          quad = this.dataFactory.fromQuad(quad);
+          quad.graph = graph;
+          return quad;
+        }));
         console.log('added', graph.value);
       }
     }
