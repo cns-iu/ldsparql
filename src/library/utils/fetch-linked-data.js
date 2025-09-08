@@ -17,43 +17,92 @@ export const EXTENSION_MAPPING = {
   turtle: 'text/turtle',
   ttl: 'text/turtle',
   html: 'text/html',
-  htm: 'text/html'
+  htm: 'text/html',
 };
 
-export async function getQuads(url) {
-  const parsers = formats.parsers;
-  const res = await fetch(url, {
-    headers: new Headers({
-      accept: [...parsers.keys()].sort().reverse().join(', '),
-    }),
-  });
+export async function fetchGraphData(url, preferredFormat = 'text/turtle') {
+  if (typeof url === 'string' && url.startsWith('http')) {
+    const parsers = formats.parsers;
+    const otherFormats = Array.from(parsers.keys())
+      .filter((k) => k !== preferredFormat)
+      .sort()
+      .reverse();
 
-  const type = res.headers.get('content-type').split(';')[0];
-  const extension = EXTENSION_MAPPING[url.split('.').slice(-1)[0]];
-  const guessedType = parsers.has(type) ? type : parsers.has(extension) ? extension : undefined;
-  if (type === 'application/json' || guessedType === 'application/ld+json') {
-    const json = await res.json();
-    const quads = await jsonld.toRDF(json);
-    return quads;
-  } else if (guessedType) {
-    let body = res.body;
-    if (!isReadableStream(body)) {
-      body = patchResponse(res).body;
+    const res = await fetch(url, {
+      headers: new Headers({
+        accept: [preferredFormat, ...otherFormats].join(', '),
+      }),
+    });
+
+    const type = res.headers.get('content-type').split(';')[0];
+    const extension = EXTENSION_MAPPING[url.split('.').slice(-1)[0]];
+    const guessedType = parsers.has(type) ? type : parsers.has(extension) ? extension : undefined;
+    if (guessedType) {
+      const data = await res.text();
+      return { data, format: guessedType };
+    } else {
+      return Promise.reject(new Error(`unknown content type: ${type}`));
     }
-    const stream = parsers.import(guessedType, body, { baseIRI: url });
-    const quads = [];
-    for await (const quad of stream) {
-      quads.push(quad);
-    }
-    return quads;
   } else {
-    // Try to parse the response as a JSON-LD string
     try {
-      const json = JSON.parse(await res.text());
+      const json = typeof url === 'string' ? JSON.parse(url) : url;
+      return { data: JSON.stringify(json), format: 'application/ld+json' };
+    } catch (err) {
+      return Promise.reject(new Error(`unknown content type: ${url}`));
+    }
+  }
+}
+
+export async function getQuads(url, preferredFormat = 'text/turtle') {
+  if (typeof url === 'string' && url.startsWith('http')) {
+    const parsers = formats.parsers;
+    const otherFormats = Array.from(parsers.keys())
+      .filter((k) => k !== preferredFormat)
+      .sort()
+      .reverse();
+
+    const res = await fetch(url, {
+      headers: new Headers({
+        accept: [preferredFormat, ...otherFormats].join(', '),
+      }),
+    });
+
+    const type = res.headers.get('content-type').split(';')[0];
+    const extension = EXTENSION_MAPPING[url.split('.').slice(-1)[0]];
+    const guessedType = parsers.has(type) ? type : parsers.has(extension) ? extension : undefined;
+    if (type === 'application/json' || guessedType === 'application/ld+json') {
+      const json = await res.json();
+      const quads = await jsonld.toRDF(json);
+      return quads;
+    } else if (guessedType) {
+      let body = res.body;
+      if (!isReadableStream(body)) {
+        body = patchResponse(res).body;
+      }
+      const stream = parsers.import(guessedType, body, { baseIRI: url });
+      const quads = [];
+      for await (const quad of stream) {
+        quads.push(quad);
+      }
+      return quads;
+    } else {
+      // Try to parse the response as a JSON-LD string
+      try {
+        const json = JSON.parse(await res.text());
+        const quads = await jsonld.toRDF(json);
+        return quads;
+      } catch (err) {
+        console.log(err);
+        return Promise.reject(new Error(`unknown content type: ${type}`));
+      }
+    }
+  } else {
+    try {
+      const json = typeof url === 'string' ? JSON.parse(url) : url;
       const quads = await jsonld.toRDF(json);
       return quads;
     } catch (err) {
-      return Promise.reject(new Error(`unknown content type: ${type}`));
+      return Promise.reject(new Error(`unknown content type for ${url}`));
     }
   }
 }

@@ -10,6 +10,7 @@ const sharedBuildOptions = {
     '.rq': 'text',
     '.yaml': 'text',
     '.jsonld': 'json',
+    '.wasm': 'binary'
   },
   format: 'esm',
   lineLimit: 120,
@@ -41,7 +42,7 @@ const serviceWorker = {
 
 const library = {
   ...sharedBuildOptions,
-  entryPoints: ['src/library/index.js'],
+  entryPoints: ['src/library/endpoints/index.js'],
   outdir: 'dist',
   platform: 'node',
   packages: 'external',
