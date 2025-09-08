@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+  ubergraph:
+    image: phenoscape/blazegraph:latest
+    volumes:
+      - type: bind
+        source: ./blazegraph.properties
+        target: /data/blazegraph.properties
+      - type: bind
+        source: ./blazegraph.jnl
+        target: /data/blazegraph.jnl
+
+    stdin_open: true # docker run -i
+    tty: true # docker run -t
+    environment:
+      - BLAZEGRAPH_MEMORY=32G
+      - BLAZEGRAPH_TIMEOUT=16000000
+      - BLAZEGRAPH_READONLY=false
+
+    ports:
+      - 8080:8080

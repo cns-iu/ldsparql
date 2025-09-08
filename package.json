@@ -23,6 +23,7 @@
     "build:deploy": "cp dist/sw*.js docs/ && cp dist/endpoint-worker.js docs/",
     "build:code": "node ./scripts/build.js",
     "start:server": "nodemon ./dist/server.js -w dist",
+    "local-server": "SPARQL_ENDPOINT=http://localhost:8080/blazegraph/namespace/kb/sparql SPARQL_WRITABLE=true npm run start:server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": {
