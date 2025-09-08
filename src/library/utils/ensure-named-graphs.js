@@ -1,6 +1,6 @@
 import { addToEndpoint } from './add-to-endpoint.js';
 import { getQuads } from './fetch-linked-data.js';
-import { select } from './fetch-sparql';
+import { select } from './fetch-sparql.js';
 import { namedGraphsInQuery } from './sparql-parser.js';
 
 const QUERY = 'SELECT DISTINCT ?g WHERE {  GRAPH ?g { ?s ?p ?o . } }';

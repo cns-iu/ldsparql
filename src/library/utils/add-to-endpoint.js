@@ -1,6 +1,4 @@
 import toNT from '@rdfjs/to-ntriples';
-import fetch from 'node-fetch';
-import { Readable } from 'stream';
 
 function toTripleString(quad) {
   const subject = toNT(quad.subject).replace('_:_:', '_:');
@@ -27,6 +25,6 @@ export async function addToEndpoint(graph, quads, endpoint) {
     headers: {
       'Content-Type': 'application/sparql-update',
     },
-    body: Readable.from(sparqlUpdateIterator(graph, quads)),
+    body: Array.from(sparqlUpdateIterator(graph, quads)).join(''),
   });
 }

@@ -18,7 +18,8 @@ function routes(app) {
     .post('/api/ld/sparql', endpointRoute('oxigraph'))
     .post('/api/ld/oxigraph/sparql', endpointRoute('oxigraph'))
     .post('/api/ld/n3/sparql', endpointRoute('n3'))
-    .post('/api/ld/quadstore/sparql', endpointRoute('quadstore'));
+    .post('/api/ld/quadstore/sparql', endpointRoute('quadstore'))
+    .post('/api/ld/remote/sparql', endpointRoute('remote'));
 }
 
 export default routes;
