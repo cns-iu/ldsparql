@@ -1,6 +1,6 @@
 {
   "name": "ldsparql",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Query Linked Data with SPARQL",
   "keywords": [
     "sparql",
@@ -20,7 +20,7 @@
   "scripts": {
     "start": "npm-run-all build start:server",
     "build": "npm-run-all build:code build:deploy",
-    "build:deploy": "cp dist/sw.js docs/sw.js",
+    "build:deploy": "cp dist/sw-*.js docs/ && cp dist/endpoint-worker.js docs/",
     "build:code": "node ./scripts/build.js",
     "start:server": "nodemon ./dist/server.js -w dist",
     "test": "echo \"Error: no test specified\" && exit 1"

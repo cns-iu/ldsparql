@@ -30,7 +30,7 @@ const server = {
 
 const serviceWorker = {
   ...sharedBuildOptions,
-  entryPoints: ['src/service-worker/sw.js', 'src/service-worker/sw-loader.js'],
+  entryPoints: ['src/service-worker/sw.js', 'src/service-worker/sw-loader.js', 'src/service-worker/endpoint-worker.js'],
   platform: 'browser',
   minify: true,
   sourcemap: 'linked',
