@@ -11,13 +11,36 @@
     <script>
       const scope = location.pathname.replace(/\/[^\/]+$/, '/');
       const yasgui = new Yasgui(document.getElementById('yasgui'), {
-        requestConfig: { endpoint: `${scope}api/ld/sparql` },
+        requestConfig: {
+          endpoint: `${scope}api/ld/oxigraph/sparql`,
+          method: 'POST'
+        },
+        endpointCatalogueOptions: {
+          getData: () => [
+            {
+              endpoint: `${scope}api/ld/oxigraph/sparql`,
+              method: 'POST'
+            },
+            {
+              endpoint: `${scope}api/ld/n3/sparql`,
+              method: 'POST'
+            },
+            {
+              endpoint: `${scope}api/ld/quadstore/sparql`,
+              method: 'POST'
+            },
+            {
+              endpoint: `https://lod.humanatlas.io/sparql`,
+              method: 'POST'
+            },
+          ]
+        },
         yasqe: {
           value: `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT *
 FROM <https://cdn.humanatlas.io/digital-objects/catalog.ttl>
-FROM <https://cdn.humanatlas.io/digital-objects/asct-b/kidney/latest/graph.nt>
+FROM <https://purl.humanatlas.io/asct-b/kidney>
 WHERE {
   ?sub ?pred ?obj .
 } LIMIT 10
