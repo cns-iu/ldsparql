@@ -12,12 +12,12 @@ export async function namedGraphs(endpoint) {
 
 export async function ensureNamedGraphs(query, endpoint) {
   const existingGraphs = await namedGraphs(endpoint);
-  const graphs = namedGraphsInQuery(query).filter((graph) => !existingGraphs.has(graph));
+  const graphs = namedGraphsInQuery(query).filter((graph) => !existingGraphs.has(graph.value));
   for (const graph of graphs) {
-    console.log('fetching', graph);
-    const quads = await getQuads(graph);
+    console.log('fetching', graph.value);
+    const quads = await getQuads(graph.value);
     console.log('inserting', quads.length, 'triples');
-    await addToEndpoint(graph, quads, endpoint);
-    console.log('added', graph);
+    await addToEndpoint(graph.value, quads, endpoint);
+    console.log('added', graph.value);
   }
 }

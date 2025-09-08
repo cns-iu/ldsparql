@@ -1,5 +1,6 @@
 import app from './app.js';
 import { port } from './environment.js';
+import './fetch-polyfill.js';
 
 // Start the server
 const PORT = port();
