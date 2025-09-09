@@ -27,7 +27,7 @@ export class OxigraphEndpoint extends SparqlEndpoint {
   }
 
   async doQuery(query, mimetype = 'application/sparql-results+json') {
-    const result = this.store.query(query, { results_format: mimetype });
+    const result = this.store.query(query, { results_format: mimetype, use_default_graph_as_union: true });
     return result;
   }
 }
