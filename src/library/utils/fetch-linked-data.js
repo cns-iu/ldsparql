@@ -106,3 +106,22 @@ export async function getQuads(url, preferredFormat = 'text/turtle') {
     }
   }
 }
+
+/**
+ * Ensure quads use dataFactory instances of types
+ */
+export function reformatQuads(quads, graph, dataFactory) {
+  return quads.map((quad1) => {
+    // Ensure datatype uses the dataFactory's NamedNode to work around sDataFactory.js's implementation.
+    if (quad1.object.termType === 'Literal' && !quad1.object.datatype.equals) {
+      quad1.object.datatype = dataFactory.namedNode(quad1.object.datatype.value);
+    }
+    const quad = dataFactory.quad(
+      dataFactory.fromTerm(quad1.subject),
+      dataFactory.fromTerm(quad1.predicate),
+      dataFactory.fromTerm(quad1.object),
+      graph
+    );
+    return quad;
+  });
+}

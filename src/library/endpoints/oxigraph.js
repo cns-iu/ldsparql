@@ -1,3 +1,4 @@
+import jsonld from 'jsonld';
 import init, * as oxigraph from 'oxigraph/web.js';
 import wasm from 'oxigraph/web_bg.wasm';
 import { SparqlEndpoint } from '../shared/sparql-endpoint.js';
@@ -18,7 +19,13 @@ export class OxigraphEndpoint extends SparqlEndpoint {
     for (const graph of graphs) {
       if (!namedGraphs.has(graph.value)) {
         console.log('fetching', graph.value);
-        const { data, format } = await fetchGraphData(graph.value);
+        let { data, format } = await fetchGraphData(graph.value);
+        // oxigraph can't load JSON-LD files that reference external contexts
+        // work around it by using jsonld.js to parse and convert to n-quads
+        if (format === 'application/ld+json') {
+          format = 'application/n-quads';
+          data = await jsonld.toRDF(JSON.parse(data), { format });
+        }
         console.log('inserting', format, 'data,', data.length, 'bytes');
         this.store.load(data, { format, to_graph_name: graph });
         console.log('added', graph.value);

@@ -4,7 +4,7 @@ import { Quadstore } from 'quadstore';
 import { Engine } from 'quadstore-comunica';
 import { DataFactory } from 'rdf-data-factory';
 import { SparqlEndpoint } from '../shared/sparql-endpoint';
-import { getQuads } from '../utils/fetch-linked-data';
+import { getQuads, reformatQuads } from '../utils/fetch-linked-data';
 import { namedGraphsInQuery } from '../utils/sparql-parser';
 
 export class QuadstoreEndpoint extends SparqlEndpoint {
@@ -32,11 +32,7 @@ export class QuadstoreEndpoint extends SparqlEndpoint {
         console.log('fetching', graph.value);
         const quads = await getQuads(graph.value);
         console.log('inserting', quads.length, 'triples');
-        this.store.multiPut(quads.map((quad) => {
-          quad = this.dataFactory.fromQuad(quad);
-          quad.graph = graph;
-          return quad;
-        }));
+        this.store.multiPut(reformatQuads(quads, graph, this.dataFactory));
         console.log('added', graph.value);
       }
     }
